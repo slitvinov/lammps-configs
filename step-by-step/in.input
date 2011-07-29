@@ -1,0 +1,6 @@
+include "in.minsetup"
+# default value of the dimension 
+# can be overwritten with -var 
+# <lmp> -var ndim 2 -in in.input 
+variable ndim index 3
+print "ndim = ${ndim}"

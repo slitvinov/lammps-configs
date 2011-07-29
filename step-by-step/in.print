@@ -1,0 +1,7 @@
+include "in.minsetup"
+
+create_atoms 1 single 0 0 0 units box
+variable fy atom 1.0
+fix reverce_periodic all addforce 0.0 v_fy 0.0 
+
+run 10

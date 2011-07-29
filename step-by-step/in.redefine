@@ -1,0 +1,21 @@
+include "in.minsetup"
+variable x equal 10
+variable x equal 20
+print "x = $x"
+
+
+# IMPORTANT NOTE: When the input script line that defines a variable of
+# style {equal} or {atom} that contain a formula is encountered, the
+# formula is NOT immediately evaluated and the result stored.  See the
+# discussion below about "Immediate Evaluation of Variables" if you want
+# to do this.
+
+# IMPORTANT NOTE: When a variable command is encountered in the input
+# script and the variable name has already been specified, the command
+# is ignored.  This means variables can NOT be re-defined in an input
+# script (with 2 exceptions, read further).  This is to allow an input
+# script to be processed multiple times without resetting the variables;
+# see the "jump"_jump.html or "include"_include.html commands.  It also
+# means that using the "command-line switch"_Section_start.html#2_6 -var
+# will override a corresponding index variable setting in the input
+# script.

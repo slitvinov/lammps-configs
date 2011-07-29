@@ -1,0 +1,21 @@
+# a loop to gradualy decrease R0 in FENE chain takes R0 and H as
+# parametres gradualy decrease the maximizers extension of FENE spring
+# from 2*r0 to r0
+
+variable maxi equal 100
+label		loopa
+variable i loop ${maxi}
+	 variable _r equal 2.0*${r0}-${r0}*($i/${maxi})
+         print "r0 = ${_r}"
+	 bond_coeff	1 fene ${H} ${_r} 0.0 0.0
+	 neighbor	${_r} bin
+	 run		100
+	 if $i==${maxi} then "jump SELF break"
+next i
+jump SELF loopa
+label break
+
+variable i delete
+variable maxi delete
+variable _H delete
+variable _r delete

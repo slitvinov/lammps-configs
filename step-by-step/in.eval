@@ -1,0 +1,5 @@
+include "in.minsetup"
+echo both
+
+run 10 
+
