@@ -1,39 +1,9 @@
-# DPD example
-# Poiseuille flow with parameters from 
-# J.Chem.Phys 132, 144103 (2010)
-
-# the simulation produces spatially averages 
-# vy.av (velocity), rho.av (density), simtemp.av (temperature), sxy.av (shear stress)
-echo           both
-units		si
-# tolerance
-#variable        EPSILON 1e-8
-variable       ndim  index 3
-variable number_density equal 3  # Table 1
-variable        xsize equal 50   # p. 4
-variable        ysize equal 20
-if "${ndim}==3" then "variable        zsize equal 10"
-variable        kb equal 1.3806488e-23 
-variable        T equal 1.0/${kb} # Table 1
-variable        cutoff equal 2.0 # Table 1
-variable        cutoff_cons equal 2.0 # eq. (5)
-variable        sigma equal 3.0  # Table 1
-variable        gamma equal ${sigma}^2/(2*${T}*${kb}) # eq. (6)
-variable        sigma delete
-print           "gamma: ${gamma} (must be 4.5)" # Table 1
-
-variable        adpd     equal 25 # Table 1
-variable        m_power index  0.25 # Table 1
-variable        pmass    equal 1.0 # TODO:
-
-variable gy equal 0.025 # from 0.025 to 0.25  (p.6)
-
+include         in.fedosov-parameters
 # number of timesteps
-variable ntime equal 50000
-timestep	0.005 # TODO:
+variable ntime equal 10000
 
 dimension       ${ndim}
-atom_style	atomic
+atom_style	atomic 2
 communicate	single vel yes
 
 # lattice parameter
@@ -48,17 +18,21 @@ print "Npart = ${Npart}"
 
 if "${ndim}==3" then "region		box block 0 ${xsize} 0 ${ysize} 0 ${zsize} units box" else &
     "region		box block 0 ${xsize} 0 ${ysize} -0.01 0.01 units box"
-create_box	1 box
+create_box	2 box
 create_atoms	1 box
 
 # TODO: find the way to generate the right number of atoms
 # delete extra atoms
-group extra_atoms id > ${Npart}
-delete_atoms group extra_atoms
+#group extra_atoms id > ${Npart}
+#delete_atoms group extra_atoms
 mass		1 ${pmass}
+mass		2 ${pmass}
+
+print           ${cutoff}
+include         in.wall
 
 pair_style	dpd ${T} ${cutoff} 928948 vfd yes vfc no vfr no
-pair_coeff	1 1 ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_coeff	* * ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
 
 neighbor	0.5 bin
 neigh_modify    delay 0 every 1
@@ -77,14 +51,13 @@ fix av_temp all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_simtemp file "si
 # stresses are in units of pressure*volume must be divided by per-atom
 # volume to have units of stress (pressue); components of the stress
 # are in the following order xx(1), yy(2), zz(3), xy(4), xz(5), yz(6)
-compute stress all stress/atom
+compute stress flow stress/atom
 variable stress_pressure atom c_stress[4]*${number_density}
-fix av_xz_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_stress_pressure file "sxy.av"
+fix av_xz_stress flow ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_stress_pressure file "sxy.av"
 
-variable fy atom mass*${gy}*((x>${xsize}/2.0)-(x<${xsize}/2.0))
-fix reverce_periodic all addforce 0.0 v_fy 0.0 
+variable fbody atom mass*${gy}
+fix body_force flow addforce 0.0 v_fbody 0.0 
 
 thermo          100
-#dump myDump all image 1000 nb.*.ppm type type view 0 0
-run		${ntime} every 1000 "velocity all zero linear " &
-"velocity all zero angular"
+dump myDump all image 100 nb.*.ppm type type view 0 0
+run		${ntime}
