@@ -14,5 +14,6 @@ set          group wall type 2
 velocity     wall set 0.0 0.0 0.0
 fix	     fwall wall setforce 0.0 0.0 0.0
 
+fix lrefwall flow wall/reflect xlo ${lowerwallpos} xhi ${upperwallpos} units box
 variable      lowerwallpos delete
 variable      upperwallpos delete

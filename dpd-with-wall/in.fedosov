@@ -1,6 +1,6 @@
 include         in.fedosov-parameters
 # number of timesteps
-variable ntime equal 10000
+variable ntime equal 100000
 
 dimension       ${ndim}
 atom_style	atomic 2
@@ -16,6 +16,7 @@ if "${ndim}==3" then "variable Npart equal ${xsize}*${ysize}*${zsize}*${number_d
     "variable Npart equal ${xsize}*${ysize}*${number_density}"
 print "Npart = ${Npart}"
 
+boundary     f p p
 if "${ndim}==3" then "region		box block 0 ${xsize} 0 ${ysize} 0 ${zsize} units box" else &
     "region		box block 0 ${xsize} 0 ${ysize} -0.01 0.01 units box"
 create_box	2 box
@@ -59,5 +60,5 @@ variable fbody atom mass*${gy}
 fix body_force flow addforce 0.0 v_fbody 0.0 
 
 thermo          100
-dump myDump all image 100 nb.*.ppm type type view 0 0 zoom 1.8
+dump myDump all image 1000 nb.*.ppm type type view 0 0 zoom 1.8
 run		${ntime}
