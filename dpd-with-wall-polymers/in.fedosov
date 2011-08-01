@@ -1,0 +1,68 @@
+include         in.fedosov-parameters
+# number of timesteps
+variable ntime equal 100000
+
+dimension       ${ndim}
+atom_style	bond
+communicate	single vel yes
+
+# lattice parameter
+variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
+# lattice parameter
+variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
+if "${ndim}==3" then "lattice sc      ${lsp} origin 0.0 0.0 0.0" else "lattice sq  ${lsp} origin 0.1 0.1 0.0"
+variable  lsp   delete 
+
+if "${ndim}==3" then "variable Npart equal ${xsize}*${ysize}*${zsize}*${number_density}" else &
+    "variable Npart equal ${xsize}*${ysize}*${number_density}"
+print "Npart = ${Npart}"
+
+boundary     f p p
+read_data chain.in
+
+# TODO: find the way to generate the right number of atoms
+# delete extra atoms
+#group extra_atoms id > ${Npart}
+#delete_atoms group extra_atoms
+mass		1 ${pmass}
+mass		2 ${pmass}
+
+print           ${cutoff}
+variable     createflag   index 1
+include         in.wall
+
+pair_style	dpd ${T} ${cutoff} 928948 vfd yes vfc no vfr no
+pair_coeff	* * ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+#pair_style	dpd 0.0 ${cutoff} 928948 vfd yes vfc no vfr no
+#pair_coeff	* * 0.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+
+neighbor	0.5 bin
+neigh_modify    delay 0 every 1
+
+fix		1 all nve
+bond_style      fene
+#include         in.feneloop
+bond_coeff	1 ${H} ${r0} 0.0 0.0
+
+variable        Nfreq   equal  ${ntime}
+variable        Nrepeat equal  round(0.9*${ntime})
+fix av_vy all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.2 vy file "vy.av" units box 
+fix av_rho all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.5 density/number file "rho.av" units box
+
+# simulation temperature (do not use vy, flow goes in this direction)
+variable simtemp atom mass*vx^2
+fix av_temp all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_simtemp file "simtemp.av" units box
+
+# stresses are in units of pressure*volume must be divided by per-atom
+# volume to have units of stress (pressue); components of the stress
+# are in the following order xx(1), yy(2), zz(3), xy(4), xz(5), yz(6)
+compute stress flow stress/atom
+variable stress_pressure atom c_stress[4]*${number_density}
+fix av_xz_stress flow ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_stress_pressure file "sxy.av"
+
+variable fbody atom mass*${gy}
+fix body_force flow addforce 0.0 v_fbody 0.0 
+
+thermo          100
+dump myDump all image 10 nb.*.ppm type type bond type type atom no view 0 0 zoom 1.8 
+run		${ntime}
