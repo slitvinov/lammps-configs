@@ -14,9 +14,13 @@ group	     wall  union lower upper
 group	     flow subtract all wall
 set          group wall type 2
 
+dump predump all image 1 prerun.*.ppm type type atom yes view 0 0 zoom 1.8
+run          0
+undump predump
+
 velocity     wall set 0.0 0.0 0.0
 fix	     fwall wall setforce 0.0 0.0 0.0
-
 fix lrefwall flow wall/reflect xlo ${lowerwallpos} xhi ${upperwallpos} units box
+
 variable      lowerwallpos delete
 variable      upperwallpos delete

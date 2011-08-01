@@ -1,0 +1,5 @@
+region rvareg${crossid} block INF INF ${yposlo} ${yposhi} INF INF
+fix av_vy${crossid} all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.2 vy file vy.av.${crossid} units box region rvareg${crossid}
+variable yposlo delete
+variable yposhi delete
+variable cross_id delete
