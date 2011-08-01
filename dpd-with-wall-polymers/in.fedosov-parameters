@@ -11,7 +11,8 @@ units		si
 variable       ndim  index 2
 variable number_density equal 3  # Table 1
 variable        xsize equal 25   # p. 4
-variable        ysize equal 20
+variable        ysize equal 100
+variable        INF   equal 1e12*${ysize}
 if "${ndim}==3" then "variable        zsize equal 10"
 variable        kb equal 1.3806488e-23 
 variable        T equal 1.0/${kb} # Table 1
@@ -26,10 +27,10 @@ variable        adpd     equal 25 # Table 1
 variable        m_power index  0.25 # Table 1
 variable        pmass    equal 1.0 # TODO:
 
-variable gy equal 0.025 # from 0.025 to 0.25  (p.6)
+variable gy equal 0.05 # from 0.025 to 0.25  (p.6)
 
 # FENE parameters
 variable        r0 equal 1.0
-variable        H equal 50*${T}*${kb}/${r0}^2
+variable        H equal 50.0
 
 timestep	0.005 # TODO:

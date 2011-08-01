@@ -40,9 +40,13 @@ neighbor	0.5 bin
 neigh_modify    delay 0 every 1
 
 fix		1 all nve
-bond_style      fene
+
+bond_style hybrid fene stretching
 #include         in.feneloop
-bond_coeff	1 ${H} ${r0} 0.0 0.0
+variable        fstr equal 100
+variable        szone equal 0.25*${ysize}
+bond_coeff 1 stretching 0 ${fstr} 0 -${INF} ${INF} -${INF} ${szone} -${INF} ${INF}
+bond_coeff 2 fene ${H} ${r0} 0.0 0.0
 
 variable        Nfreq   equal  ${ntime}
 variable        Nrepeat equal  round(0.9*${ntime})
@@ -64,5 +68,5 @@ variable fbody atom mass*${gy}
 fix body_force flow addforce 0.0 v_fbody 0.0 
 
 thermo          100
-dump myDump all image 10 nb.*.ppm type type bond type type atom no view 0 0 zoom 1.8 
+dump myDump all image 1000 nb.*.ppm type type bond type type atom no view 0 0 zoom 1.8 
 run		${ntime}
