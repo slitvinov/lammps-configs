@@ -5,9 +5,9 @@ nochain  : name of region free of chain
 1               # of sets of chains (blank line + 6 values for each set)
 0               molecule tag rule: 0 = by mol, 1 = from 1 end, 2 = from 2 ends
 
-300             number of chains
-25               monomers/chain
+287             number of chains
+4               monomers/chain
 1               type of monomers (for output into LAMMPS file)
 1               type of bonds (for output into LAMMPS file)
-0.8            distance between monomers (in reduced units)
-0.7            no distance less than this from site i-1 to i+1 (reduced unit)
+0.40            distance between monomers (in reduced units)
+0.40            no distance less than this from site i-1 to i+1 (reduced unit)

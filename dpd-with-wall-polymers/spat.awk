@@ -1,7 +1,7 @@
 #! /usr/bin/awk -f 
-    BEGIN {
+BEGIN {
   nsnap =  0
-    }
+}
 
 NF==4{
   if (n==1) nspan++
