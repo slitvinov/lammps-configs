@@ -1,5 +1,10 @@
 /* A maxima file for "Morris SPH" */
 
+ndim: 2;
+norm2D: 63/478/%pi/cutoff^ndim$
+norm3D: 108/478/%pi/cutoff^ndim$
+norm[2]: norm2D;
+norm[3]: norm3D;
 h: 1.0$
 r[1]: 5.0$
 r[2]: 5.5$
@@ -15,8 +20,6 @@ c: 10.0$
 p(rho):= c^2*rho$
 
 cutoff: 3*h$
-norm2D: 63/478/%pi/cutoff^2$
-norm3D: 108/478/%pi/cutoff^3$
 
 wvect(s):= [
 (3 - s)^5 - 6*(2 - s)^5 + 15*(1 - s)^5,
@@ -35,8 +38,13 @@ else if x<3 then ''(diff(wvect(x)[3], x))
 else 0$
 
 
-w(x):= norm2D*wall(abs(x)/h)$
-dwdx(x):= norm2D/h*dwall(abs(x)/h)$
+w(x):= norm[ndim]*wall(abs(x)/h)$
+dwdx(x):= norm[ndim]/h*dwall(abs(x)/h)$
+
+infun(x):= 2^(ndim-1)*%pi*x^(ndim-1)*w(x);
+infun_dw(x):= 2^(ndim-1)*%pi*x^(ndim-1)*dwdx(x);
+quad_qags(infun(x), x, 0, 100);
+
 
 /*
 plot2d(w(x), [x, -3, 3]);
@@ -50,7 +58,7 @@ Fc(i, j):= block([pi, pj, r],
   pi: p(rho[i]),
   pj: p(rho[j]),
   r: abs(r[i] - r[j]),
-  m[j]/m[i] * (pi/rho[i]^2 + pj/rho[j]^2) * dwdx(r))$
+  - m[j]/m[i] * (pi/rho[i]^2 + pj/rho[j]^2) * dwdx(r))$
 
 Fd(i, j):= block([],
   r: abs(r[i] - r[j]),
@@ -58,5 +66,6 @@ Fd(i, j):= block([],
 
 F(i, j):=Fc(i,j) + Fd(i,j)$
 
-F(1, 2);
 float(w(0.5));
+print(float( [ w(0.5), rho[1], p(rho[1]), dwdx(0.5)] ));
+float(F(1, 2));

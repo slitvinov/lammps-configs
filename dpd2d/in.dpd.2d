@@ -10,11 +10,12 @@
 # the simulation produces spatially averages 
 # vy.av (velocity), rho.av (density), simtemp.av (temperature), sxy.av (shear stress)
 units		si
-variable       ndim  equal 2
+variable       ndim  index 2
 variable number_density equal 6
 # domain size 
 variable        xsize equal 12
 variable        ysize equal 8
+if "${ndim}==3" then "variable  zsize equal 8"  else "variable zsize equal 1"
 # temperature 
 variable        kb equal 1.3806488e-23
 variable        T equal 0.5/${kb}
@@ -24,10 +25,15 @@ variable        sigma equal 4.5
 # gamma is not given in [1] 
 # we get it using eq. (10) in [2]
 variable        gamma equal ${sigma}^2/(2*${T}*${kb})
+
+# "Conservative forces are not needed for this study and will be left
+# out" [1]
+variable       adpd    equal 0.0
+
 # body force (units of acceleration)
 variable gy equal 0.055
 # number of timesteps
-variable ntime equal 40000
+variable ntime equal 80000
 timestep	0.01
 
 dimension       ${ndim}
@@ -36,15 +42,18 @@ communicate	single vel yes
 
 # lattice parameter
 variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
-lattice sq      ${lsp} origin 0.5 0.5 0.0
-variable        Npart equal ${xsize}*${ysize}*${number_density}
+if "${ndim}==3" then "lattice sc      ${lsp} origin 0.0 0.0 0.0" else &
+    "lattice sq  ${lsp} origin 0.0 0.0 0.0"
 
-region		box block 0 ${xsize} 0 ${ysize} -0.1 0.1 units box
+if "${ndim}==3" then "region		box block 0 ${xsize} 0 ${ysize} 0 ${zsize} units box" else &
+    "region		box block 0 ${xsize} 0 ${ysize} -0.01 0.01 units box"
+
 create_box	1 box
 create_atoms	1 box
 
 # TODO: find the way to generate the right number of atoms
 # delete extra atoms
+variable        Npart equal ${xsize}*${ysize}*${zsize}*${number_density}
 group extra_atoms id > ${Npart}
 delete_atoms group extra_atoms
 
@@ -52,7 +61,7 @@ mass		1 1.0
 velocity	all create ${T} 87287 loop geom
 
 pair_style	dpd ${T} ${cutoff} 928948
-pair_coeff	1 1 ${gamma} ${sigma}
+pair_coeff	1 1 ${adpd} ${gamma}
 
 neighbor	0.5 bin
 neigh_modify    delay 0 every 1
@@ -80,4 +89,5 @@ dump mdump all custom 10000 dump.dpd id type xs ys vx vy
 variable fy atom mass*${gy}*((x>${xsize}/2.0)-(x<${xsize}/2.0))
 fix reverce_periodic all addforce 0.0 v_fy 0.0 
 
-run		${ntime}
+if "${ndim}<3" then  "fix e2d         all enforce2d"
+run		${ntime} every 1000 "velocity all zero linear"
