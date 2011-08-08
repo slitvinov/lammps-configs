@@ -6,19 +6,14 @@ eq[1]: D=tau*kb*T; /* (A9) */
 /* <...> the more sophisticated calculation gives a numerical
 prefactor and shows that nu^K = D/2. The kinetic and dissipative
 contributions are simply added. */
-
 eq[2]: nuK = D/2;
-
 eq[3]: sigma^2 = 2*gamma*kb*T; /* (5) */
-
-eq[4]: 1/tau = 4*%pi*gamma*rho/3 * integrate(r^2 * wD(r), r, 0, rc);
-
-
-eq[5]: etaD = 2*%pi*gamma*rho^2/15 * integrate(r^4 * wD(r), r, 0 ,rc);
+eq[4]: 1/tau = 4*%pi*gamma*rho/3 * integrate(r^2 * wD(r), r, 0, rc); /* (A8) */
+eq[5]: etaD = 2*%pi*gamma*rho^2/15 * integrate(r^4 * wD(r), r, 0 ,rc); /* (A4) */
 eq[6]: nuD = etaD/rho;
 eq[7]: nu = nuD + nuK;
 
 /* get viscosity */
 nu_expr: expand(assoc(nu, solve(eq, [nu, nuD, nuK, etaD, D, gamma, tau])[1]));
-
+float(ev(nu_expr, [rho=6, rc=1.0, sigma=4.5, kb=1.0, T=0.5]));
 
