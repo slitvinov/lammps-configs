@@ -1,17 +1,18 @@
 wD(r):=(1-r)^2; /* (6) */
 
-eq1: D=tau*kb*T; /* (A9) */
+eq[1]: D=tau*kb*T; /* (A9) */
 
 /* <...> the more sophisticated calculation gives a numerical
 prefactor and shows that nu^K = D/2. The kinetic and dissipative
 contributions are simply added. */
 
-eq2: nuK = D/2;
+eq[2]: nuK = D/2;
 
-eq3: sigma^2 = 2*gamma*kb*T; /* (5) */
+eq[3]: sigma^2 = 2*gamma*kb*T; /* (5) */
 
-eq4: 1/tau = 4*%pi*gamma*rho/3 * integrate(r^2 * wD(r), r, 0, 1);
+eq[4]: 1/tau = 4*%pi*gamma*rho/3 * integrate(r^2 * wD(r), r, 0, 1);
 
 
-eq5: etaD = 2*%pi*gamma*rho^2/15 * integrate(r^4 * wD(r)
-eq6: nuD = etaD/rho;
+eq[5]: etaD = 2*%pi*gamma*rho^2/15 * integrate(r^4 * wD(r), r, 0 ,1);
+eq[6]: nuD = etaD/rho;
+eq[7]: nu = nuD + nuK;
