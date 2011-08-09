@@ -1,25 +1,35 @@
 /* A maxima file for "Morris SPH" */
+load ("vector");
+load ("eigen");
 
 ndim: 2;
+
+/* number of particles */
+npart: 3;
+h: 1.0$
+cutoff: 3*h$
 norm2D: 63/478/%pi/cutoff^ndim$
 norm3D: 108/478/%pi/cutoff^ndim$
 norm[2]: norm2D;
 norm[3]: norm3D;
-h: 1.0$
-r[1]: 5.0$
-r[2]: 5.5$
-v[1]: 0.0$
-v[2]: 0.0$
-m[1]: 1.0$
-m[2]: 1.0$
-nu[1]: 1e-6$
-nu[2]: 1e-6$
+r: makelist([], i, 1, npart);
+v: makelist([], i, 1, npart);
+m: makelist(1.0, i, 1, npart);
+nu: makelist(1e-6, i, 1, npart);
+r[1]: [4.5, 5.0]$
+v[1]: [1.0, 0.0]$
+
+r[2]: [5.5, 5.0]$
+v[2]: [0.0, 1.0]$
+
+r[3]: [5.6, 5.1]$
+v[3]: [0.5, 0.1]$
 c: 10.0$
 
 /* equation of state */
 p(rho):= c^2*rho$
 
-cutoff: 3*h$
+
 
 wvect(s):= [
 (3 - s)^5 - 6*(2 - s)^5 + 15*(1 - s)^5,
@@ -37,35 +47,33 @@ else if x<2 then ''(diff(wvect(x)[2], x))
 else if x<3 then ''(diff(wvect(x)[3], x))
 else 0$
 
+/* vector abs */
+vabs(R):= sqrt(R.R);
 
-w(x):= norm[ndim]*wall(abs(x)/h)$
-dwdx(x):= norm[ndim]/h*dwall(abs(x)/h)$
+w(x):= norm[ndim]*wall(vabs(x)/h)$
+dwdx(x):= norm[ndim]/h*dwall(vabs(x)/h)$
 
 infun(x):= 2^(ndim-1)*%pi*x^(ndim-1)*w(x);
 infun_dw(x):= 2^(ndim-1)*%pi*x^(ndim-1)*dwdx(x);
 quad_qags(infun(x), x, 0, 100);
 
 
-/*
-plot2d(w(x), [x, -3, 3]);
-plot2d(dwdx(x), [x, 0, 3]);
-*/
+rho: makelist(
+  sum(m[j]*w(r[i]-r[j]), j, 1, npart), i, 1, npart
+  );
 
-rho[1]: sum(m[i]*w(r[2]-r[i]), i, 1, 2)$
-rho[2]: sum(m[i]*w(r[2]-r[i]), i, 1, 2)$
 
-Fc(i, j):= block([pi, pj, r],
+Fc(i, j):= block([pi, pj, rabs],
   pi: p(rho[i]),
   pj: p(rho[j]),
-  r: abs(r[i] - r[j]),
-  - m[j]/m[i] * (pi/rho[i]^2 + pj/rho[j]^2) * dwdx(r))$
+  rabs: vabs(r[i] - r[j]),
+  - m[j]/m[i] * (pi/rho[i]^2 + pj/rho[j]^2) * dwdx(rabs)) * unitvector(r[i] - r[j])$
 
-Fd(i, j):= block([],
-  r: abs(r[i] - r[j]),
-  m[j]/m[i] * (nu[i]/rho[j] + nu[j]/rho[i]) * dwdx(r)/r * (v[j]-v[i]))$
+Fd(i, j):= block([rabs],
+  rabs: vabs(r[i] - r[j]),
+  m[j]/m[i] * (nu[i]/rho[j] + nu[j]/rho[i]) * dwdx(rabs)/rabs * (v[i]-v[j]))$
 
-F(i, j):=Fc(i,j) + Fd(i,j)$
+Fpair(i, j):= Fc(i, j) + Fd(i, j);
 
-float(w(0.5));
-print(float( [ w(0.5), rho[1], p(rho[1]), dwdx(0.5)] ));
-float(F(1, 2));
+F(i):= sum( if i=j then 0 else Fpair(i, j), j, 1, npart);
+float(F(1));
