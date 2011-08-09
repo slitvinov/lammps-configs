@@ -22,5 +22,5 @@ call "saver.gp" "av"
 set term x11 2
 set xlabel "x"
 set ylabel "T, temperature"
-plot "simtemp.av.dim3" u 2:4 w lp, 0.5 t "theoretical"
+plot [][0:1] "simtemp.av.dim3" u 2:4 w lp, 0.5 t "theoretical"
 call "saver.gp" "rho"
