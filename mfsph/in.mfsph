@@ -4,7 +4,7 @@ echo            both
 units		si
 variable       ndim  equal 2
 # domain size 
-variable        Npx  equal 20
+variable        Npx  equal 40
 variable        xsize equal 2e-3
 variable        ysize equal 1e-3
 if "${ndim}==3" then "variable        zsize equal 1e-8"
@@ -62,8 +62,8 @@ fix av_rho all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.5 density/number fil
 variable simtemp atom mass*vx^2
 fix av_temp all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_simtemp file "simtemp.av"
 
-dump mdump all custom 1 dump.dpd.* id type xs ys vx vy
-dump myDump all image 1 nb.*.ppm type type view 0 0
+dump mdump all custom 1 dump.dpd.* id type xs ys vx vy sph_rho
+#dump myDump all image 1 nb.*.ppm type type view 0 0
 run 0
 
 variable fy atom mass*${gy}*((x>${xsize}/2.0)-(x<${xsize}/2.0))

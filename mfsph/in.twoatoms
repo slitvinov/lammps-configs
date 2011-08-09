@@ -1,5 +1,6 @@
 # move one atom with a constant acceleration
 variable    ndim index 2
+atom_style  mfsph
 include "in.minsetup"
 communicate	single vel yes
 
@@ -35,3 +36,5 @@ run 0
 variable f1 equal fx[1]
 variable f2 equal fy[1]
 print "f: ${f1} ${f2}"
+
+run 1
