@@ -2,10 +2,13 @@
 load ("vector");
 load ("eigen");
 
-ndim: 2;
-
+ndim: 2$
+rho0: 1e3;
 /* number of particles */
-npart: 3;
+xsize: 10.0$
+npart: nx*nx$
+nx: 8$
+dh: xsize/nx$
 h: 1.0$
 cutoff: 3*h$
 norm2D: 63/478/%pi/cutoff^ndim$
@@ -14,16 +17,20 @@ norm[2]: norm2D;
 norm[3]: norm3D;
 r: makelist([], i, 1, npart);
 v: makelist([], i, 1, npart);
-m: makelist(0.25, i, 1, npart);
+m: makelist(rho0*dh^2, i, 1, npart);
 nu: makelist(1e-6, i, 1, npart);
-r[1]: [4.5, 5.0]$
-v[1]: [1.0, 0.0]$
 
-r[2]: [5.5, 5.0]$
-v[2]: [0.0, 1.0]$
+for i:1 thru nx do (
+  for j:1 thru nx do
+  block([x, y, ipart],
+    x: dh*(i-0.5),
+    y: dh*(j-0.5),
+    ipart: (i-1)*nx + j,
+    r[ipart]: [x, y],
+    v[ipart]: [0, 0]
+    )
+  );
 
-r[3]: [5.6, 5.1]$
-v[3]: [0.5, 0.1]$
 c: 10.0$
 
 /* equation of state */
