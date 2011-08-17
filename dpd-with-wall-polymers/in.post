@@ -11,6 +11,10 @@ compute stress flow stress/atom
 variable stress_pressure atom c_stress[4]*${number_density}
 fix av_xz_stress flow ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_stress_pressure file "sxy.av"
 
+compute stress_poly flow stress/atom bond
+variable stress_pressure_poly atom c_stress_poly[4]*${number_density}
+fix av_xz_stress_poly flow ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_stress_pressure_poly file "sxy_poly.av"
+
 variable        ncross equal 100
 label		loopa
 variable crossid loop ${ncross}

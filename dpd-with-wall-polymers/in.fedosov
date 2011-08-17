@@ -45,8 +45,8 @@ variable        szone equal 0.5*${ysize}
 bond_coeff 1 stretching 0 ${fstr} 0 -${INF} ${INF} -${INF} ${szone} -${INF} ${INF}
 bond_coeff 2 fene ${H} ${r0} 0.0 0.0
 
-variable        Nfreq   equal  10000
-variable        Nrepeat equal  10000
+variable        Nfreq   equal  1000
+variable        Nrepeat equal  1000
 include         in.wall
 
 #neigh_modify    exclude type 2 2
@@ -57,8 +57,7 @@ variable fbody atom mass*${gy}
 fix body_force flow addforce 0.0 v_fbody 0.0 
 # do no calulate wall-wall interactions
 
-
 include in.post
 thermo          100
-dump myDump all image ${Nfreq} nb.*.ppm type type bond type type atom no view 0 0 zoom 1.8
+dump myDump all image ${Nfreq} nb.*.ppm type type bond type type atom no zoom 1.5
 run		${ntime}
