@@ -28,7 +28,7 @@ variable        adpdfw   equal 25 #
 variable        m_power index  0.25 # Table 1
 variable        pmass    equal 1.0 # TODO:
 
-variable gy equal 0.3
+variable gy equal 0.03
 
 # FENE parameters
 variable        r0 equal 1.0 # Table 1
