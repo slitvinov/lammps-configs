@@ -16,15 +16,15 @@ variable        ysize equal 150
 if "${ndim}==3" then "variable        zsize equal 10"
 variable        kb equal 1.3806488e-23
 variable        T equal 1.0/${kb} # Table 1
-variable        cutoff equal 1.5 # Table 1
-variable        cutoff_cons equal 1.0 # 2.0 in eq. (5)
+variable        cutoff equal 2.0 # Table 1
+variable        cutoff_cons equal 2.0 # 2.0 in eq. (5)
 variable        sigma equal 3.0  # Table 1
 variable        gamma equal ${sigma}^2/(2*${T}*${kb}) # eq. (6)
 variable        sigma delete
 print           "gamma: ${gamma} (must be 4.5)" # Table 1
 
 variable        adpd     equal 25 # 25 in Table 1
-variable        adpdfw   equal 25 # 
+variable        adpdfw   equal 5 # 
 variable        m_power index  0.25 # Table 1
 variable        pmass    equal 1.0 # TODO:
 
