@@ -10,10 +10,9 @@ units		si
 #variable        EPSILON 1e-8
 variable       ndim  index 3
 variable number_density equal 3  # Table 1
-variable        xsize equal 25   # 25 in p. 4
+variable        xsize equal 64   # 25 in p. 4
 variable        ysize equal 150
-
-if "${ndim}==3" then "variable        zsize equal 10"
+if "${ndim}==3" then "variable        zsize equal 12"
 variable        kb equal 1.3806488e-23
 variable        T equal 1.0/${kb} # Table 1
 variable        cutoff equal 2.0 # Table 1
@@ -24,11 +23,11 @@ variable        sigma delete
 print           "gamma: ${gamma} (must be 4.5)" # Table 1
 
 variable        adpd     equal 25 # 25 in Table 1
-variable        adpdfw   equal 5 # 
+variable        adpdfw   equal 25 # 
 variable        m_power index  0.25 # Table 1
 variable        pmass    equal 1.0 # TODO:
 
-variable gy equal 0.03
+variable gy equal 0.01
 
 # FENE parameters
 variable        r0 equal 1.0 # Table 1
