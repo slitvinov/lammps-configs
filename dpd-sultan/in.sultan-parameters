@@ -1,0 +1,36 @@
+# DPD example
+# Poiseuille flow with parameters from 
+# J.Chem.Phys 132, 144103 (2010)
+
+# the simulation produces spatially averages 
+# vy.av (velocity), rho.av (density), simtemp.av (temperature), sxy.av (shear stress)
+echo           both
+units		si
+# tolerance
+#variable        EPSILON 1e-8
+variable       ndim  index 3
+variable number_density equal 4  # Table 1
+variable        xsize equal 20   # 25 in p. 4
+variable        ysize equal 20
+if "${ndim}==3" then "variable        zsize equal 20"
+variable        kb equal 1.3806488e-23
+variable        T equal 0.1/${kb} # Table 1
+variable        cutoff equal 1.0 # Table 1
+variable        cutoff_cons equal 1.0 # 2.0 in eq. (5)
+variable        gamma equal 2.0
+
+
+variable        adpd     equal 1.0 # 25 in Table 1
+variable        adpdfw   equal 1.0 # 
+variable        m_power index  1.0 # Table 1
+variable        pmass    equal 1.0 # TODO:
+
+variable        gammadot equal 0.15
+
+# FENE parameters
+variable        r0 equal 3.0 # Table 1
+variable        H equal  0.5 # Table 1
+
+variable        dt equal	0.05 # TODO:
+variable        INF   equal 1e12*${ysize}
+
