@@ -8,8 +8,8 @@ echo           both
 units		si
 # tolerance
 #variable        EPSILON 1e-8
-variable       ndim  index 3
-variable number_density equal 4  # Table 1
+variable        ndim  index 3
+variable        number_density equal 4  # Table 1
 variable        xsize equal 20   # 25 in p. 4
 variable        ysize equal 20
 if "${ndim}==3" then "variable        zsize equal 20"
@@ -25,7 +25,7 @@ variable        adpdfw   equal 1.0 #
 variable        m_power index  1.0 # Table 1
 variable        pmass    equal 1.0 # TODO:
 
-variable        gammadot equal 0.15
+variable        gammadot equal 0.3162
 
 # FENE parameters
 variable        r0 equal 3.0 # Table 1
