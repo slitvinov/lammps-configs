@@ -17,7 +17,7 @@ function post-sphere() {
     mv /tmp/tmp-corr corr.dat
 }
 
-#post-solvent
+post-solvent
 post-sphere
 
 	
