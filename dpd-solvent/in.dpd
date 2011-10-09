@@ -94,8 +94,9 @@ compute stress all stress/atom
 variable stress_pressure atom c_stress[4]*${number_density}
 fix av_xy_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_stress_pressure file sxy.av.dim${ndim}
 
-if "${ndim}==2" then "dump mdump all custom 1000 dump.dpd${ndim}.* id type xu yu vx vy" else &
+if "${ndim}==2" then "dump mdump all custom 100 dump.dpd${ndim}.* id type xu yu vx vy" else &
 "dump mdump all custom 10000 dump.dpd${ndim}.* id type xu yu zu vx vy vz"
+dump_modify mdump sort id
 
 dump sphere_dump sphere custom 100 sphere.dpd${ndim} xu yu vx vy
 dump_modify sphere_dump append yes

@@ -28,11 +28,11 @@ variable        sigma equal 4.5
 variable        gamma equal ${sigma}^2/(2*${T}*${kb})
 variable        sigma delete
 # Conservative forces
-variable       adpd    equal 25.0
+variable       adpd    equal M4_aij
 # body force (units of acceleration)
 variable gy equal 0.055
 # number of timesteps
-variable ntime equal 8000
+variable ntime equal 2000000
 timestep	0.01
 
 dimension       ${ndim}
