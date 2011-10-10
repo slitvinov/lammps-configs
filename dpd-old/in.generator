@@ -17,8 +17,8 @@ variable        ysize equal 512
 if "${ndim}==3" then "variable        zsize equal 12"
 variable        kb equal 1.3806488e-23 
 variable        T equal 1.0/${kb} # Table 1
-variable        cutoff equal 1.0 # Table 1
-variable        cutoff_cons equal 1.0 # eq. (5)
+variable        cutoff equal 3.0 # Table 1
+variable        cutoff_cons equal 3.0 # eq. (5)
 variable        sigma equal 3.0  # Table 1
 variable        gamma equal ${sigma}^2/(2*${T}*${kb}) # eq. (6)
 variable        sigma delete
