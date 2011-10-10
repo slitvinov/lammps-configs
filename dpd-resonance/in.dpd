@@ -34,7 +34,7 @@ variable        sigma equal 4.5
 variable        gamma equal ${sigma}^2/(2*${T}*${kb})
 variable        sigma delete
 # Conservative forces
-variable       adpd    equal 25.0
+variable       adpd    equal 75.0
 # number of timesteps
 variable ntime equal 10000000
 variable        Nfreq   equal  ${ntime}
