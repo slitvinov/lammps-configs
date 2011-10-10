@@ -11,7 +11,7 @@ mass		2 ${mass_p}
 # variable        gamma_p equal ${gamma}/${mass_p}
 # pair_coeff	1 2 ${adpd_p} ${gamma_p} ${cutoff} 0.25 
 
-variable        K equal 1e-1
+variable        K equal 1e-2
 variable fx atom -mass*${K}*(x-${xcenter})
 variable fy atom -mass*${K}*(y-${ycenter})
 if "${ndim}==3" then "variable fz atom -mass*${K}*(z-${zcenter})"
