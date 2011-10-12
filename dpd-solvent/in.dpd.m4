@@ -28,11 +28,11 @@ variable        sigma equal 4.5
 variable        gamma equal ${sigma}^2/(2*${T}*${kb})
 variable        sigma delete
 # Conservative forces
-variable       adpd    equal 25.0
+variable       adpd    equal M4_aij
 # body force (units of acceleration)
 variable gy equal 0.055
 # number of timesteps
-variable ntime equal 80000000
+variable ntime equal 2000000
 timestep	0.01
 
 dimension       ${ndim}
@@ -66,7 +66,7 @@ variable        xcenter equal 0.5*${xsize}
 variable        ycenter equal 0.5*${ysize}
 create_atoms    2 single ${xcenter} ${ycenter} 0.0 units box
 mass		2 300.0
-variable        K equal 0.001
+variable        K equal M4_K
 variable fx atom -mass*${K}*(x-${xcenter})
 variable fy atom -mass*${K}*(y-${ycenter})
 group sphere  type 2
@@ -94,9 +94,8 @@ compute stress all stress/atom
 variable stress_pressure atom c_stress[4]*${number_density}
 fix av_xy_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_stress_pressure file sxy.av.dim${ndim}
 
-if "${ndim}==2" then "dump mdump all custom 100 dump.dpd${ndim}.* id type xu yu vx vy" else &
+if "${ndim}==2" then "dump mdump all custom 1000 dump.dpd${ndim}.* id type xu yu vx vy" else &
 "dump mdump all custom 10000 dump.dpd${ndim}.* id type xu yu zu vx vy vz"
-dump_modify mdump sort id
 
 dump sphere_dump sphere custom 100 sphere.dpd${ndim} xu yu vx vy
 dump_modify sphere_dump append yes
