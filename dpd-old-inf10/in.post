@@ -1,0 +1,25 @@
+fix av_rho all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.5 density/number file "rho.av" units box
+
+# simulation temperature (do not use vy, flow goes in this direction)
+variable simtemp atom mass*vx^2
+fix av_temp flow ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_simtemp file "simtemp.av" units box
+
+# stresses are in units of pressure*volume must be divided by per-atom
+# volume to have units of stress (pressue); components of the stress
+# are in the following order xx(1), yy(2), zz(3), xy(4), xz(5), yz(6)
+compute stress flow stress/atom
+variable stress_pressure atom c_stress[4]*${number_density}
+fix av_xz_stress flow ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_stress_pressure file "sxy.av"
+
+compute stress_poly flow stress/atom bond
+variable stress_pressure_poly atom c_stress_poly[4]*${number_density}
+fix av_xz_stress_poly flow ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_stress_pressure_poly file "sxy_poly.av"
+
+variable        ncross equal 100
+label		loopa
+variable crossid loop ${ncross}
+         variable yposlo equal (${crossid}-1)*${ysize}/${ncross}
+	 variable yposhi equal ${crossid}*${ysize}/${ncross}
+	 include in.av
+next crossid
+jump SELF loopa

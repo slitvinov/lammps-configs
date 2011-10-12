@@ -15,8 +15,8 @@ variable        ysize equal 512
 if "${ndim}==3" then "variable        zsize equal 12"
 variable        kb equal 1.3806488e-23
 variable        T equal 1.0/${kb} # Table 1
-variable        cutoff equal 1.0 # Table 1
-variable        cutoff_cons equal 1.0 # 2.0 in eq. (5)
+variable        cutoff equal 3.0 # Table 1
+variable        cutoff_cons equal 3.0 # 2.0 in eq. (5)
 variable        sigma equal 3.0  # Table 1
 variable        gamma equal ${sigma}^2/(2*${T}*${kb}) # eq. (6)
 variable        sigma delete
@@ -27,11 +27,11 @@ variable        adpdfw   equal 3 #
 variable        m_power index  1.0 # Table 1
 variable        pmass    equal 1.0 # TODO:
 
-variable gy equal 0.01
+variable gy equal 0.1
 
 # FENE parameters
-variable        r0 equal 1.0 # Table 1
-variable        H equal  50 # Table 1
+variable        r0 equal 3.0 # Table 1
+variable        H equal  5.0 # Table 1
 
 variable       dt equal	0.02 # TODO:
 variable        INF   equal 1e12*${ysize}

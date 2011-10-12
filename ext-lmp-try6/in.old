@@ -1,0 +1,68 @@
+echo            both
+include         in.old-parameters
+# number of timesteps
+variable ntime equal 10000000
+
+dimension       ${ndim}
+atom_style	bond
+communicate	single vel yes
+
+# lattice parameter
+variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
+# lattice parameter
+variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
+if "${ndim}==3" then "lattice sc      ${lsp} origin 0.0 0.0 0.0" else "lattice hex  ${lsp} origin 0.1 0.1 0.0"
+variable  lsp   delete 
+
+if "${ndim}==3" then "variable Npart equal ${xsize}*${ysize}*${zsize}*${number_density}" else &
+    "variable Npart equal ${xsize}*${ysize}*${number_density}"
+print "Npart = ${Npart}"
+
+boundary     f p p
+read_data chain.in
+
+# TODO: find the way to generate the right number of atoms
+# delete extra atoms
+#group extra_atoms id > ${Npart}
+#delete_atoms group extra_atoms
+mass		1 ${pmass}
+mass		2 ${pmass}
+
+pair_style	dpd ${T} ${cutoff} 928948 vfd yes vfc no vfr no
+pair_coeff	* * ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_coeff	1 2 ${adpdfw} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+#pair_style	dpd 0.0 ${cutoff} 928948 vfd yes vfc no vfr no
+#pair_coeff	* * 0.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+
+neighbor	0.5 bin
+neigh_modify    delay 0 every 1
+fix		1 all nve
+
+# only for      2 beads
+special_bonds   lj 1 1 1
+bond_style hybrid fene stretching
+variable        fstr equal -20.0
+variable        szone equal ${ysize}
+bond_coeff 1 stretching 0 ${fstr} 0 0 ${xsize} 0 ${szone} 0 ${zsize}
+bond_coeff 2 fene ${H} ${r0} 0.0 0.0
+
+variable        Nfreq   equal  1000
+variable        Nrepeat equal  1000
+include         in.wall
+
+#neigh_modify    exclude type 2 2
+# run before postprocessing 
+variable       predt equal 0.01*${dt}
+timestep      ${predt}
+variable       predt delete 
+run             1000
+
+variable fbody atom mass*${gy}
+fix body_force flow addforce 0.0 v_fbody 0.0 
+# do no calulate wall-wall interactions
+
+include in.post
+thermo          100
+dump myDump all image ${Nfreq} nb.*.ppm type type bond type type atom no zoom 1.7
+timestep        ${dt}
+run		${ntime}
