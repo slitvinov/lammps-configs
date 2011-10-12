@@ -36,7 +36,7 @@ variable        sigma delete
 # Conservative forces
 variable       adpd    equal 75.0
 # number of timesteps
-variable ntime equal 10000000
+variable ntime equal 2000000
 variable        Nfreq   equal  ${ntime}
 variable        Nrepeat equal  round(0.9*${ntime})
 timestep	0.005
@@ -67,6 +67,7 @@ mass		1 1.0
 pair_style	dpd ${T} ${cutoff} 928948
 pair_coeff	* * ${adpd} ${gamma} ${cutoff} 0.25 
 
+variable        K equal M4_K
 if "${use_sphere}==1" then "include         in.sphere"
 
 

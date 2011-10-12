@@ -31,7 +31,7 @@ function post-sphere() {
     msd -d 3 -f sphere.dat > sphere.msd
 }
 
-post-solvent
+#post-solvent
 
 if [ -r "sphere.dpd${NDIM}" ]; then
     post-sphere    

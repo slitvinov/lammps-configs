@@ -1,4 +1,6 @@
 #! /bin/bash
 
 bash post.sh
-cp corr.png ~/Dropbox/
+gnuplot corr.gp
+cp msd.png corr.png ~/Dropbox/
+
