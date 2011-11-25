@@ -1,5 +1,4 @@
 include "in.minsetup"
-echo both
 
 # simple variable
 variable q equal 10

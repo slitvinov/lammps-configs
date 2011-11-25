@@ -1,1 +1,29 @@
 A collection of minimal LAMPS scripts
+
+Minimal setup 10x10x10 box, no atoms
+[[file:in.minsetup]]
+
+Minimal run, no atoms
+[[file:in.eval]]
+
+Input variable from a command line
+[[file:in.input]]
+
+Loop example
+[[file:in.loop]]
+
+One atom example
+[[file:in.oneatom]]
+[[file:oneatom.mac]]
+
+Redefine "equal" variable
+[[file:in.redefine]]
+
+Move two atoms with DPD equation of motion
+[[file:in.twoatoms]]
+
+Move one atoms with DPD equation of motion
+[[file:in.two-one-fix]]
+
+Use variables
+[[file:in.variable]]

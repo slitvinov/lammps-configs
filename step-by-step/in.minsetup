@@ -1,4 +1,8 @@
 # minimum set up
+
+# log to the screen and to the log.lammps file
+echo     both
+
 variable    pmass index 1.0
 units       si
 atom_modify map array sort 0.0 0.0
