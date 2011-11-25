@@ -27,3 +27,14 @@ Move one atoms with DPD equation of motion
 
 Use variables
 [[file:in.variable]]
+
+Use dump_image
+[[file:in.dump_image]]
+
+Read atoms configuration from the input file
+[[file:in.readinput]]
+[[file:generator.input]]
+
+Create 2 beads polymer from input file
+[[file:in.polymer]]
+[[file:polymer.input]]
