@@ -38,3 +38,9 @@ Read atoms configuration from the input file
 Create 2 beads polymer from input file
 [[file:in.polymer]]
 [[file:polymer.input]]
+
+Two atoms with SPH
+[[file:in.sph-twoatoms]]
+
+Two dump with SPH
+[[file:in.sph-dump
