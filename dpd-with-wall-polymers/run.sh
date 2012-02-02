@@ -4,7 +4,8 @@ set -e
 set -u
 
 mpirun=/scratch/prefix-mpich/bin/mpirun
-np=2
+lmp=/scratch/work/lammps-ro/src/lmp_linux
+np=5
 
 /scratch/work/lammps-ro/tools/chain2/src/chain2 -i in.generator -o chain.in -d def.chain  -echo both --verbose --extra-bond --keep-atoms 
 totnbeads=$(awk '/^need:/ {print $2}' log.generator)
@@ -13,4 +14,4 @@ awk -v nbeads=${nbeads} -v totnbeads=${totnbeads} --lint=fatal \
     '/number of chains/{$1=int(totnbeads/nbeads)+1; print; next} 1' def.chain > def.chain.after
 
 /scratch/work/lammps-ro/tools/chain2/src/chain2 -i in.generator -o chain.in -d def.chain.after  -echo both --verbose --extra-bond --keep-atoms
-${mpirun} -np ${np} ../../src/lmp_linux -in in.fedosov
+${mpirun} -np ${np} ${lmp} -in in.fedosov

@@ -1,4 +1,4 @@
-# move one atom with a constant acceleration
+# move two atoms with DPD
 include "in.minsetup"
 communicate	single vel yes
 

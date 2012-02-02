@@ -14,7 +14,7 @@ norm[2]: norm2D;
 norm[3]: norm3D;
 r: makelist([], i, 1, npart);
 v: makelist([], i, 1, npart);
-m: makelist(1.0, i, 1, npart);
+m: makelist(0.25, i, 1, npart);
 nu: makelist(1e-6, i, 1, npart);
 r[1]: [4.5, 5.0]$
 v[1]: [1.0, 0.0]$
@@ -77,3 +77,4 @@ Fpair(i, j):= Fc(i, j) + Fd(i, j);
 
 F(i):= sum( if i=j then 0 else Fpair(i, j), j, 1, npart);
 float(F(1));
+float(rho);

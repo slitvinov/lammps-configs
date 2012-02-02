@@ -1,0 +1,29 @@
+/* velocity */
+kill(eq, sol, x, L, eta);
+eq: vz =ev(rho*gz/(2*eta)*(x*L-x^2), x=L/2);
+eta: assoc(eta, solve(eq, eta));
+
+/* Einstein-Stokes equation for spherical particles */
+kill(r, sol, eq);
+eq: D = kT/(6*%pi*eta*r);
+sol: solve(eq, r);
+r: assoc(r, sol);
+
+nu: eta/rho;
+tau_f: r^2/nu;
+tau_D: r^2/D;
+Sc: nu/D;
+gamma_st: 6*%pi*eta*R;
+tau_K: gamma_st/K;
+
+env_local: [rho = 6, R=0.5, vz=0.3, gz=0.055, D=0.008, L=6, kT=0.5];
+
+ev(float(eta), env_local);
+ev([float(r), float(tau_f), float(tau_D)], env_local);
+ev(Sc, env_local);
+ev(float(gamma_st), env_local);
+
+kill(sol, eq);
+eq: tau_K/tau_f = 60;
+K: assoc(K, solve(eq, K));
+ev(float(K), env_local);

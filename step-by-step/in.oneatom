@@ -1,5 +1,4 @@
 # move one atom with a constant acceleration
-variable pmass equal 1.0
 include "in.minsetup"
 
 create_atoms 1 single 5 5 5 units box
@@ -8,8 +7,8 @@ variable xpos equal x[1]
 # equation of motion is
 # d^2x/dt^2 = f(t), x(0)=0, dx/dt(0)=0. See oneatom.max
 #variable fx equal step*dt
-#variable fx equal sin(step*dt)
-variable fx atom sin(step*dt)+x
+variable fx equal sin(step*dt)
+#variable fx atom sin(step*dt)+x
 
 fix simpleforce all addforce  v_fx 0.0 0.0 
 timestep 0.01

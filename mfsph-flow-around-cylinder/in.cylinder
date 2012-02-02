@@ -1,0 +1,95 @@
+# SPH example
+# counter-flowing Poiseuille flow
+echo            both
+units		si
+variable       ndim  index 2
+# domain size 
+variable        Npx  equal 55
+variable        xsize equal 0.1
+variable        ysize equal 0.1
+variable     cx equal 0.5*${xsize}
+variable     cy equal 0.5*${ysize}
+if "${ndim}==3" then "variable        zsize equal 0.05"
+
+# radious of the cylinder
+variable        a equal 0.02
+
+if "${ndim}==3" then "variable Npart equal round(${Npx}^3*${ysize}/${xsize}*${zsize}/${xsize})" &
+    else "variable Npart equal round(${Npx}*${ysize}/${xsize}*${Npx})" 
+
+# interaction parameters
+variable        dh equal ${xsize}/${Npx}
+variable        EPS equal 0.1*${dh}
+variable        cutoff equal 3.0*${dh}
+
+# body force (units of acceleration)
+variable gy equal 1.5e-7
+
+variable        mu equal 1e-6
+variable        csound equal 5.77e-4
+variable        rho_sph equal 1e3
+variable        rho0 equal 1e3
+variable        gamma equal 7.0
+
+# number of timesteps
+variable ntime equal 50000
+
+include         in.timestep
+timestep	${dt_sph}
+
+dimension       ${ndim}
+atom_style	mfsph
+communicate	single vel yes
+
+if "${ndim}==3" then "lattice sc      ${dh} origin 0.5 0.5 0.5" else &
+    "lattice sq  ${dh} origin 0.5 0.5 0.0"
+if "${ndim}==3" then "region		box block 0 ${xsize} 0 ${ysize} 0 ${zsize} units box" else &
+    "region		box block 0 ${xsize} 0 ${ysize} -${EPS} ${EPS} units box"
+create_box	1 box
+#create_atoms    1 box
+create_atoms    1 random ${Npart} 123456 box
+ 
+variable        m equal ${rho_sph}*${dh}^${ndim}
+mass		1 ${m}
+print           "mass: ${m}"
+pair_style	mfsph ${cutoff}
+pair_coeff	1 1 ${mu} ${csound} ${rho0} ${gamma}
+
+neighbor	${EPS} bin
+neigh_modify    delay 0 every 1
+
+fix		1 all nve
+# equilibrate the system
+thermo_modify lost ignore flush yes
+run             1000
+
+
+variable        Nfreq   equal  ${ntime}
+variable        Nrepeat equal  round(0.1*${ntime})
+
+variable        crossid  equal 1
+variable        yposlo equal ${cy}-3.0*${dh}
+variable        yposhi equal ${cy}+3.0*${dh}
+include         in.profile
+
+variable        crossid  equal 2
+variable        yposlo equal ${ysize}-3.0*${dh}
+variable        yposhi equal ${ysize}
+include         in.profile
+
+if "${ndim}==3" then "dump mdump all custom 1000 dump.dpd.* id type x y z vx vy vz sph_rho" &
+    else "dump mdump all custom 1000 dump.dpd.* id type x y vx vy sph_rho"
+
+dump_modify mdump sort id
+#dump myDump all image 1000 nb.*.ppm type type view 0 0
+
+variable fy atom mass*${gy}
+fix reverce_periodic all addforce 0.0 v_fy 0.0
+
+region	     acylinder cylinder z ${cx} ${cy} ${a} INF INF units box
+group	     cylinder_gropup region acylinder
+
+velocity     cylinder_gropup set 0.0 0.0 0.0
+fix	     fcyl cylinder_gropup setforce 0.0 0.0 0.0
+
+run		${ntime}

@@ -2,49 +2,50 @@
 # counter-flowing Poiseuille flow
 echo            both
 units		si
-variable       ndim  equal 2
+variable       ndim  index 2
 # domain size 
-variable        Npx  equal 40
+variable        Npx  equal 55
 variable        xsize equal 2e-3
 variable        ysize equal 1e-3
-if "${ndim}==3" then "variable        zsize equal 1e-8"
-# temperature 
+if "${ndim}==3" then "variable        zsize equal 1e-3"
+
+if "${ndim}==3" then "variable Npart equal round(${Npx}^3*${ysize}/${xsize}*${zsize}/${xsize})" &
+    else "variable Npart equal round(${Npx}*${ysize}/${xsize}*${Npx})" 
 
 # interaction parameters
-variable        cutoff equal 3.0*${xsize}/${Npx}
-# "Conservative forces are not needed for this study and will be left
-# out" [1]
-# body force (units of acceleration)
-#variable gy equal 1e-4
-variable gy equal 1e-4
+variable        EPS equal 0.1*${dh}
+variable        cutoff equal 3.0*${dh}
 
-variable        mu equal 1e-3
-variable        csound equal 0.0
+# body force (units of acceleration)
+variable gy equal 1e-4
+#variable gy equal 0.0
+
+variable        mu equal 1e-6
+variable        csound equal 1e-2
 variable        rho_sph equal 1e3
 variable        rho0 equal 1e3
 variable        gamma equal 7.0
 
 # number of timesteps
-variable ntime equal 1
-timestep	1e-7
+variable ntime equal 5000
+timestep	1e-4
 
 dimension       ${ndim}
 atom_style	mfsph
 communicate	single vel yes
 
-# lattice parameter
-variable        dh equal ${xsize}/${Npx}
 if "${ndim}==3" then "lattice sc      ${dh} origin 0.5 0.5 0.5" else &
     "lattice sq  ${dh} origin 0.5 0.5 0.0"
-
 if "${ndim}==3" then "region		box block 0 ${xsize} 0 ${ysize} 0 ${zsize} units box" else &
-    "region		box block 0 ${xsize} 0 ${ysize} -${dh} ${dh} units box"
+    "region		box block 0 ${xsize} 0 ${ysize} -${EPS} ${EPS} units box"
 create_box	1 box
-create_atoms	1 box
-
+create_atoms    1 box
+#create_atoms    1 random ${Npart} 123456 box
+ 
 variable        dh equal ${xsize}/${Npx}
 variable        m equal ${rho_sph}*${dh}^${ndim}
 mass		1 ${m}
+print           "mass: ${m}"
 pair_style	mfsph ${cutoff}
 pair_coeff	1 1 ${mu} ${csound} ${rho0} ${gamma}
 
@@ -58,16 +59,14 @@ variable        Nrepeat equal  round(0.9*${ntime})
 fix av_vy all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.2 vy file "vy.av"
 fix av_rho all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.5 density/number file "rho.av"
 
-# simulation temperature (do not use vy, flow goes in this direction)
-variable simtemp atom mass*vx^2
-fix av_temp all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_simtemp file "simtemp.av"
+if "${ndim}==3" then "dump mdump all custom 1000 dump.dpd.* id type x y z vx vy vz sph_rho" &
+    else "dump mdump all custom 1000 dump.dpd.* id type x y vx vy sph_rho"
 
-dump mdump all custom 1 dump.dpd.* id type xs ys vx vy sph_rho
-#dump myDump all image 1 nb.*.ppm type type view 0 0
-run 0
+dump_modify mdump sort id
+#dump myDump all image 1000 nb.*.ppm type type view 0 0
+#run 0
 
 variable fy atom mass*${gy}*((x>${xsize}/2.0)-(x<${xsize}/2.0))
 fix reverce_periodic all addforce 0.0 v_fy 0.0 
 
-
-run		${ntime}
+run		${ntime} every 1000 "velocity all zero linear"

@@ -10,11 +10,11 @@ echo           both
 units		si
 # tolerance
 #variable        EPSILON 1e-8
-variable       ndim  index 2
+variable       ndim  index 3
 variable number_density equal 3  # Table 1
-variable        xsize equal 25   # p. 4
-variable        ysize equal 50
-if "${ndim}==3" then "variable        zsize equal 10"
+variable        xsize equal 64   # p. 4
+variable        ysize equal 150
+if "${ndim}==3" then "variable        zsize equal 12"
 variable        kb equal 1.3806488e-23 
 variable        T equal 1.0/${kb} # Table 1
 variable        cutoff equal 1.5 # Table 1

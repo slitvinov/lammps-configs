@@ -1,0 +1,16 @@
+/* solve equation of motion for two DPD atoms */
+rc: 1.0;
+A: 1.0;
+m: 1.0;
+gamma: 1.0;
+w(r):=block([s], s: abs(r/rc), if (abs(s)<=1.0) then (1 - s)^m else 0);
+uvec(ri, rj):=(rj - ri)/abs(rj - ri);
+  
+eq1: vi;
+eq2: vj;
+eq3: A*w(xj-xi) * uvec(xj, xi) - gamma*uvec(xi, xj)*abs(xi-xj)*(vi-vj)*w(xj-xi)^2;
+eq4: A*w(xi-xj) * uvec(xi, xj) - gamma*uvec(xi, xj)*abs(xj-xi)*(vj-vi)*w(xj-xi)^2;
+vars: [xi, xj, vi, vj];
+
+sol: rk([eq1, eq2, eq3, eq4], vars, [0.0, 0.5, 0, 0], [t, 0, 1.0, 1.0e-2])$
+last(sol)[3] - last(sol)[2];
