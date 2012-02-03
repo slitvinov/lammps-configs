@@ -23,7 +23,7 @@ ev([float(r), float(tau_f), float(tau_D)], env_local);
 ev(Sc, env_local);
 ev(float(gamma_st), env_local);
 
-kill(sol, eq);
+kill(sol, eq, K);
 eq: tau_K/tau_f = 60;
 K: assoc(K, solve(eq, K));
 ev(float(K), env_local);

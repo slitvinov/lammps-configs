@@ -27,7 +27,7 @@ if "${ndim}==3" then "variable  zsize equal 12"  else "variable zsize equal 1"
 variable        kb equal 1.3806488e-23
 variable        T equal 0.5/${kb}
 # interaction parameters
-variable        cutoff equal 1.0
+variable        cutoff equal 1.5
 variable        sigma equal 4.5
 # gamma is not given in [1] 
 # we get it using eq. (10) in [2]

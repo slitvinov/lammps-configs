@@ -4,7 +4,7 @@ variable        ycenter equal 0.5*${ysize}
 if "${ndim}==3" then "variable        zcenter equal 0.5*${zsize}"
 if "${ndim}==3" then "create_atoms    2 single ${xcenter} ${ycenter} ${zcenter} units box" else &
                      "create_atoms    2 single ${xcenter} ${ycenter} 0.0 units box"
-variable        mass_p equal 335.0
+variable        mass_p equal 1.0
 mass		2 ${mass_p}
 
 # variable        adpd_p equal ${adpd}/${mass_p}

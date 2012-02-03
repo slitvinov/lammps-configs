@@ -1,7 +1,7 @@
 #! /bin/bash
 
-for K in 0.01 0.03 0.10 0.31 1.00; do
-    dname=k${K}a75.0
+for K in 20.0 30.0 50.0 80.0 ; do
+    dname=k${K}a75.0mass1.0big
     mkdir ${dname}
     cp *.* ${dname}
     cd ${dname}
