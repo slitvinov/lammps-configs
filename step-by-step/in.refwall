@@ -29,11 +29,16 @@ timestep 0.01
 fix	     1 all nve
 
 variable     pxwall equal 6.0
-fix xwalls all wall/reflect xlo EDGE xhi ${pxwall} units box
+fix xwalls all wall/reflect xlo EDGE xhi ${pxwall} units box reftype back
 
 variable     nstep equal 80
 run ${nstep}
 variable xpos equal x[1]
 variable ypos equal y[1]
+variable xvel equal vx[1]
+variable yvel equal vy[1]
+
 print "x = ${xpos}"
 print "y = ${ypos}"
+print "vx = ${xvel}"
+print "vy = ${yvel}"
