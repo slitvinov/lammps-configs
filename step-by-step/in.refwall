@@ -1,0 +1,31 @@
+# move one atom with a constant acceleration
+# testing reflective wall
+
+# log to the screen and to the log.lammps file
+echo     both
+
+variable    pmass index 1.0
+units       si
+atom_modify map array sort 0.0 0.0
+region	    box block 0 10 0 10 0 10 units box
+boundary    f p p
+create_box	1 box
+mass            1 ${pmass}
+# end of minimum setup
+
+
+create_atoms 1 single 5 5 5 units box
+variable xpos equal x[1]
+
+# equation of motion is
+# d^2x/dt^2 = f(t), x(0)=0, dx/dt(0)=0. See refwall.mac
+variable fx equal 1.0
+
+fix simpleforce all addforce  v_fx 0.0 0.0 
+timestep 0.01
+fix	     1 all nve
+
+fix xwalls all wall/reflect xlo EDGE xhi 6.0 units box
+
+run 140
+print "x(t=1) = ${xpos}"
