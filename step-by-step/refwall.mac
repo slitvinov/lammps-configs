@@ -17,4 +17,5 @@ eqofm: ic2(ode2(eq, x, t ), t=0, x=x0, 'diff(x, t)=v0)$
 xend: float(rhs(subst( [t=nstep*dt], eqofm)));
 
 /* take reflection into account */
-pxwall + (6.0 - xend);
+disp(xend)$
+disp(pxwall + (6.0 - xend))$
