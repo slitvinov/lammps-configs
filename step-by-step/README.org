@@ -43,4 +43,4 @@ Two atoms with SPH
 [[file:in.sph-twoatoms]]
 
 Two dump with SPH
-[[file:in.sph-dump
+[[file:in.sph-dump]]
