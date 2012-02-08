@@ -48,11 +48,6 @@ region		box block 0 ${xsize} 0 ${ysize} -0.01 0.01 units box
 create_box	1 box
 create_atoms	1 box
 
-# delete extra atoms
-variable        Npart equal ${xsize}*${ysize}*${zsize}*${number_density}
-group extra_atoms id > ${Npart}
-delete_atoms group extra_atoms
-
 mass		1 1.0
 velocity	all create ${T} 87287 loop geom
 
