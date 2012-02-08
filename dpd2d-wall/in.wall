@@ -1,0 +1,16 @@
+variable     lowerwallpos equal 2.0*${lsp}
+variable     upperwallpos equal ${ysize}-3.0*${lsp}
+
+region	     rlwall block INF INF INF ${lowerwallpos} INF INF units box
+group	     lower region rlwall
+
+region	     ruwall block INF INF ${upperwallpos} INF INF INF units box
+group	     upper region ruwall
+
+group	     wall  union lower upper
+group	     flow subtract all wall
+set          group wall type 1
+
+fix lrefwall flow wall/reflect ylo ${lowerwallpos} yhi ${upperwallpos} units box
+variable      lowerwallpos delete
+variable      upperwallpos delete
