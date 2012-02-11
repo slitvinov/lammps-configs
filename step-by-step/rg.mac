@@ -1,0 +1,9 @@
+/* Rg of the atoms */
+
+R: [[5, 5, 5], 
+    [4, 5, 4]
+    ];
+
+N: length(R);
+Rcm: 1/N*sum(R[i], i, 1, N);
+dR: 1/N*sum( (R[i] - Rcm)^^2, i, 1, N);
