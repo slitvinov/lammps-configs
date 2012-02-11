@@ -44,3 +44,12 @@ Two atoms with SPH
 
 Two dump with SPH
 [[file:in.sph-dump]]
+
+LE style boundary conditions
+[[file:in.le]]
+
+compute tests
+[[file:in.compute.global]]
+[[file:in.compute.own]]
+[[file:in.compute.userdef]]
+
