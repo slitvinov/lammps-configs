@@ -7,8 +7,8 @@ output="$3"
 
 set term dumb
 f(x) = a*x + b
-fit [20:80] f(x) file_hi u 1:4  via a, b
-plot [20:80]\
+fit [20:100] f(x) file_hi u 1:4  via a, b
+plot [20:100] \
      file_hi u 1:4 w lp, \
      file_low u 1:4 w lp, \
      f(x)

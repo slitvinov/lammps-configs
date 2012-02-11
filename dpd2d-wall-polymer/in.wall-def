@@ -1,5 +1,4 @@
 # this file is included by in.geninit and in.dpd
-variable     eps equal 1e-6*${ysize}
 variable     lowerwallpos equal 2.0*${lsp}+${eps}
 variable     upperwallpos equal floor(${ysize}/${lsp}-2.0)*${lsp}-${eps}
 variable     Lp equal ${upperwallpos}-${lowerwallpos}
