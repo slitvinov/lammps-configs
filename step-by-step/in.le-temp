@@ -1,6 +1,5 @@
 # Measure temperature of atom with LE boundary conditions
 
-# log to the screen and to the log.lammps file
 echo     both
 variable        pmass index 1.0
 units           si
