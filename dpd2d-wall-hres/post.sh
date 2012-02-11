@@ -2,11 +2,9 @@
 
 set -e
 set u
-n1time=$(./genid.sh  list=ntime | awk 'NR==1')
-n2time=$(./genid.sh  list=ntime | awk 'NR==2')
-
-for fwallx in $(./genid.sh  list=fwallx); do
-    a=$(./fitvx.sh $(./genid.sh p=vx.av.id ntime=${n1time} fwallx=${fwallx})  $(./genid.sh p=vx.av.id ntime=${n2time} fwallx=${fwallx}) gp${fwallx})
+source vars.sh
+for fwallx in ${fxlist} ; do
+    a=$(./fitvx.sh vy.av.$(ntime=${n2time} getid).dat vy.av.$(ntime=${n1time} getid).dat  gp${fwallx})
     echo ${fwallx} ${a}
 done
 

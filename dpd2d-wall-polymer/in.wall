@@ -1,0 +1,27 @@
+include      in.wall-def
+
+#create wall particles
+create_atoms	1 region rlwall
+group	     lower region rlwall
+
+create_atoms	1 region ruwall
+group	     upper region ruwall
+
+group	     wall  union lower upper
+group	     flow subtract all wall
+
+variable     lrw equal  ${lowerwallpos}+${eps}
+variable     urw equal  ${upperwallpos}-${eps}
+
+fix lrefwall flow wall/reflect ylo ${lrw} yhi ${urw} units box reftype back
+
+variable     nfx equal -${fwallx}
+fix	     fupper upper addforce ${fwallx} 0.0 0.0
+fix	     flower lower addforce ${nfx} 0.0 0.0
+fix	     nupper upper setforce NULL 0.0 0.0
+fix	     nlower lower setforce NULL 0.0 0.0
+
+fix          rupper upper rigid single torque * off off off
+fix          rlower lower rigid single torque * off off off
+
+

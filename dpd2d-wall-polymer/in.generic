@@ -1,0 +1,14 @@
+log            log.lammps.${id}
+units	       si
+variable       ndim  equal 2
+variable       number_density equal 6
+# domain size 
+variable        xsize equal 12
+variable        ysize equal 8
+
+dimension       ${ndim}
+atom_style	bond
+
+# lattice parameter
+variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
+lattice sq      ${lsp} origin 0.0 0.0 0.0

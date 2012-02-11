@@ -8,7 +8,13 @@ n2time=$(./genid.sh  list=ntime | awk 'NR==2')
 for fwallx in $(./genid.sh  list=fwallx); do
     a=$(./fitvx.sh $(./genid.sh p=vx.av.id ntime=${n1time} fwallx=${fwallx})  $(./genid.sh p=vx.av.id ntime=${n2time} fwallx=${fwallx}) gp${fwallx})
     echo ${fwallx} ${a}
-done
+done > gamma.dat
+
+gnuplot <<EOF
+set log
+plot "gamma.dat" u 1:(\$2/\$1) w lp
+call "saver.gp" "gamma"
+EOF
 
 
 # function post-solvent() {
