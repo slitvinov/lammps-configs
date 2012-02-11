@@ -6,6 +6,7 @@ echo     both
 variable        pmass index 1.0
 units           si
 atom_modify     map array sort 0.0 0.0
+#region		box block 0 10 0 10 0 10 units box
 region		box prism 0 10 0 10 0 10 0 0 0 units box
 
 create_box	1 box
@@ -28,6 +29,13 @@ variable     N equal 1
 variable     R equal 1.0
 fix	     idfdef all deform ${N} xy erate ${R} remap v
 fix	     1 all nve
+neigh_modify    delay 0 every 1
+
+
+# dump dId     all  custom 10 le.*.dat id type x y vx vy
+# dump_modify	dId pad 5
+
+fix extra all print 1 "${xpos} ${ypos}" file le.coord
 
 dump		1 all image 10 le.*.jpg type type adiam 1.0
 dump_modify	1 pad 5

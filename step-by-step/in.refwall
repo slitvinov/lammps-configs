@@ -17,7 +17,7 @@ create_atoms 1 single 5.0 5.0 5.0 units box
 group        fst id == 1
 variable     v0 equal 1.0
 velocity     fst set ${v0} ${v0} 0.0 units box
-
+neigh_modify    delay 0 every 1
 
 # equation of motion is
 # d^2x/dt^2 = dx/dt, x(0)=0, dx/dt(0)=v0. See refwall.mac
