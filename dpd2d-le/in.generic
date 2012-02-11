@@ -1,0 +1,16 @@
+log            log.lammps.${id}
+echo           both
+units	       si
+variable       ndim  equal 2
+variable       number_density equal 3
+# domain size 
+variable        xsize equal 12
+variable        ysize equal 16
+
+dimension       ${ndim}
+atom_style	bond
+
+# lattice parameter
+variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
+variable        eps equal 1e-6*${ysize}
+lattice sq      ${lsp} origin ${eps} ${eps} 0.0
