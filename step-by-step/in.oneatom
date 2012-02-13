@@ -1,5 +1,5 @@
 # move one atom with a constant acceleration
-include "in.minsetup"
+include in.minsetup
 
 create_atoms 1 single 5 5 5 units box
 variable xpos equal x[1]

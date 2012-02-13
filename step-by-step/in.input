@@ -1,4 +1,4 @@
-include "in.minsetup"
+include in.minsetup
 # default value of the dimension 
 # can be overwritten with -var 
 # <lmp> -var ndim 2 -in in.input 

@@ -1,4 +1,4 @@
-include "in.minsetup"
+include in.minsetup
 variable LoopVar loop 10
 
 label loop

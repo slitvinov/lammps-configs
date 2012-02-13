@@ -1,4 +1,4 @@
-include "in.minsetup"
+include in.minsetup
 variable x equal 10
 variable x equal 20
 print "x = $x"

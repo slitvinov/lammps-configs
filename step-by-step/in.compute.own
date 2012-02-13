@@ -15,7 +15,7 @@
 # "thermo_press", and "thermo_pe", as if these commands had been
 # invoked in the input script:
 
-include "in.minsetup"
+include in.minsetup
 
 #create_atoms 1 box
 create_atoms 1 single 5 5 5 units box
