@@ -1,0 +1,94 @@
+# DPD example (2D version)
+# equilibrium simulations
+# J.Chem.Phys 132, 144103 (2010)
+
+# the simulation produces spatially averages 
+# vy.av (velocity), rho.av (density), sxy.av (shear stress)
+
+echo            both
+units		si
+
+variable        ndim  equal 2
+variable        number_density equal 3  # Table 1
+variable        xsize equal 20   # 50 p. 4
+# use as a small number
+variable        EPSILON equal 1e-2*${xsize}
+variable        ysize equal 20   # 20 p. 4
+variable        kb equal 1.3806488e-23
+variable        T equal 1.0/${kb} # Table 1
+variable        cutoff equal 2.0 # Table 1
+variable        cutoff_cons equal 2.0 # eq. (5)
+variable        sigma equal 3.0  # Table 1
+variable        gamma equal ${sigma}^2/(2*${T}*${kb}) # eq. (6)
+variable        sigma delete
+print           "gamma: ${gamma} (must be 4.5)" # Table 1
+# set file id for output
+variable        fid index solvent
+
+variable        adpd     equal 25 # Table 1
+variable        m_power index  0.25 # Table 1
+variable        pmass    equal 1.0 # TODO:
+
+variable        gy equal 0.025 # from 0.025 to 0.25  (p.6)
+
+# number of timesteps
+variable        ntime equal 3000000
+timestep	0.005 # TODO:
+
+dimension       ${ndim}
+atom_style	atomic
+communicate	single vel yes
+
+# lattice parameter
+variable        lsp    equal 1.0/${number_density}^(1.0/${ndim})
+lattice         sq  ${lsp} origin 0.1 0.1 0.0
+variable        lsp   delete 
+
+variable        Npart equal ${xsize}*${ysize}*${number_density}
+print "Npart = ${Npart}"
+
+region		box block 0 ${xsize} 0 ${ysize} -${EPSILON} ${EPSILON} units box
+create_box	1 box
+create_atoms	1 box
+
+
+
+# TODO: find the way to generate the right number of atoms
+# delete extra atoms
+group extra_atoms id > ${Npart}
+delete_atoms group extra_atoms
+mass		1 ${pmass}
+velocity     all set 1.0 0.0 0.0 units box
+
+pair_style	dpd ${T} ${cutoff} 928948
+pair_coeff	1 1 ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+
+neighbor	0.5  bin
+neigh_modify    delay 0 every 1
+
+fix		1 all nve
+
+# TOD: replace with several files
+variable        Nfreq   equal  ${ntime}
+variable        Nrepeat equal  round(0.1*${ntime})
+
+
+variable        ntemp equal c_thermo_temp*${kb}
+# "profile" corrected temperature
+compute         pTemp all temp/profile 1 0 0 xy 5 5
+variable        proftemp equal c_pTemp*${kb}
+
+
+# "naive" temperature
+#fix             av_ptemp all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 c_thermo_temp file ntemp.${id}av
+
+#dump dDump all custom 1000 nb.${fid}.*.dat x y vx vy
+#dump_modify	dDump pad 10
+
+fix e2d all enforce2d
+
+thermo 10
+fix pF all print 100 "${ntemp} ${proftemp}" file "temp.dat"
+
+run		${ntime}
+

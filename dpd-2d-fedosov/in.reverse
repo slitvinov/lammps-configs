@@ -9,10 +9,10 @@ units		si
 
 variable        ndim  equal 2
 variable        number_density equal 3  # Table 1
-variable        xsize equal 50   # 50 p. 4
+variable        xsize equal 10   # 50 p. 4
 # use as a small number
 variable        EPSILON equal 1e-2*${xsize}
-variable        ysize equal 20   # 20 p. 4
+variable        ysize equal 10   # 20 p. 4
 variable        kb equal 1.3806488e-23 
 variable        T equal 1.0/${kb} # Table 1
 variable        cutoff equal 2.0 # Table 1
@@ -26,11 +26,11 @@ variable        adpd     equal 25 # Table 1
 variable        m_power index  0.25 # Table 1
 variable        pmass    equal 1.0 # TODO:
 
-variable        gy equal 0.025 # from 0.025 to 0.25  (p.6)
+variable        gy equal 0.0 # from 0.025 to 0.25  (p.6)
 
 # number of timesteps
-variable        ntime equal 3000000
-timestep	0.01 # TODO:
+variable        ntime equal 10000
+timestep	0.005 # TODO:
 
 dimension       ${ndim}
 atom_style	atomic
@@ -63,35 +63,51 @@ neigh_modify    delay 0 every 1
 fix		1 all nve
 # TOD: replace with several files
 variable        Nfreq   equal  ${ntime}
-variable        Nrepeat equal  round(0.1*${ntime})
+variable        Nrepeat equal  round(0.9*${ntime})
 
 # "profile" corrected temperature
-compute         pTemp all temp/profile 1 1 0 xy 100 100 
+compute         pTemp all temp/profile 1 1 0 xy 2 2
 variable        proftemp atom c_pTemp*${kb}
-fix             av_ptemp all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_proftemp file proftemp.av
+fix             av_ptemp all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 2.0 v_proftemp file proftemp.av
 
-fix av_vy all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.5 vy file vy.av
+fix av_vy all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 2.0 vy file vy.av
 
 # stresses are in units of pressure*volume must be divided by per-atom
 # volume to have units of stress (pressue); components of the stress
 # are in the following order xx(1), yy(2), zz(3), xy(4), xz(5), yz(6)
 # The {virial} keyword means include all terms except the kinetic energy {ke}.
 compute stress all stress/atom virial
-variable stress_pressure atom (c_stress[4]-c_pTemp[4])
-fix av_xy_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_stress_pressure file sxy.av
+variable stress_pressure atom c_stress[4]-2.0*c_pTemp[4]
+fix av_xy_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 2.0 v_stress_pressure file sxy.av
+
+variable stress_viral atom c_stress[4]
+fix av_xy_viral all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 2.0 v_stress_viral file sxy-viral.av
+
+compute stress_all all stress/atom
+variable vstress_all atom c_stress_all[4]
+fix av_xy_all all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 2.0 v_vstress_all file sxy-all.av
+
+compute stress_kin all stress/atom ke
+variable vstress_kin atom c_stress_kin[4]
+fix av_xy_kin all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 2.0 v_vstress_kin file sxy-kin.av
+
+variable cp atom c_pTemp[1]
+fix av_xy_cp all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 2.0 v_cp file cp.av
+
+variable cv atom c_thermo_temp[1]
+fix av_xy_cv all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 2.0 v_cv file cv.av
 
 variable fy atom mass*${gy}*((x>${xsize}/2.0)-(x<${xsize}/2.0))
 fix reverce_periodic all addforce 0.0 v_fy 0.0 
 
 thermo          100
 #dump myDump all image 1000 nb.*.jpg type type view 0 0
-dump dDump all custom 1000 nb.*.dat x y vx vy
+dump dDump all custom 1000 nb.*.dat xu yu vx vy
 dump_modify	dDump pad 10
-
 
 fix e2d all enforce2d
 
-run		${ntime} every 10000 "velocity all zero linear " &
+run		${ntime} every 100 "velocity all zero linear " &
 "velocity all zero angular"
 
 
