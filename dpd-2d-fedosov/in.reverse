@@ -3,14 +3,16 @@
 # J.Chem.Phys 132, 144103 (2010)
 
 # the simulation produces spatially averages 
-# vy.av (velocity), rho.av (density), simtemp.av (temperature), sxy.av (shear stress)
+# vy.av (velocity), rho.av (density), sxy.av (shear stress)
 echo            both
 units		si
 
 variable        ndim  equal 2
 variable        number_density equal 3  # Table 1
-variable        xsize equal 50   # p. 4
-variable        ysize equal 20
+variable        xsize equal 50   # 50 p. 4
+# use as a small number
+variable        EPSILON equal 1e-2*${xsize}
+variable        ysize equal 20   # 20 p. 4
 variable        kb equal 1.3806488e-23 
 variable        T equal 1.0/${kb} # Table 1
 variable        cutoff equal 2.0 # Table 1
@@ -27,8 +29,8 @@ variable        pmass    equal 1.0 # TODO:
 variable        gy equal 0.025 # from 0.025 to 0.25  (p.6)
 
 # number of timesteps
-variable        ntime equal 50000
-timestep	0.005 # TODO:
+variable        ntime equal 3000000
+timestep	0.01 # TODO:
 
 dimension       ${ndim}
 atom_style	atomic
@@ -42,7 +44,7 @@ variable        lsp   delete
 variable        Npart equal ${xsize}*${ysize}*${number_density}
 print "Npart = ${Npart}"
 
-region		box block 0 ${xsize} 0 ${ysize} -0.01 0.01 units box
+region		box block 0 ${xsize} 0 ${ysize} -${EPSILON} ${EPSILON} units box
 create_box	1 box
 create_atoms	1 box
 
@@ -55,31 +57,41 @@ mass		1 ${pmass}
 pair_style	dpd ${T} ${cutoff} 928948
 pair_coeff	1 1 ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
 
-neighbor	0.5 bin
+neighbor	0.5  bin
 neigh_modify    delay 0 every 1
 
 fix		1 all nve
-
+# TOD: replace with several files
 variable        Nfreq   equal  ${ntime}
-variable        Nrepeat equal  round(0.9*${ntime})
-fix av_vy all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.2 vy file "vy.av"
-fix av_rho all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.5 density/number file "rho.av"
+variable        Nrepeat equal  round(0.1*${ntime})
 
-# simulation temperature (do not use vy, flow goes in this direction)
-variable simtemp atom mass*vx^2
-fix av_temp all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_simtemp file "simtemp.av"
+# "profile" corrected temperature
+compute         pTemp all temp/profile 1 1 0 xy 100 100 
+variable        proftemp atom c_pTemp*${kb}
+fix             av_ptemp all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_proftemp file proftemp.av
+
+fix av_vy all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.5 vy file vy.av
 
 # stresses are in units of pressure*volume must be divided by per-atom
 # volume to have units of stress (pressue); components of the stress
 # are in the following order xx(1), yy(2), zz(3), xy(4), xz(5), yz(6)
-compute stress all stress/atom
-variable stress_pressure atom c_stress[4]*${number_density}
-fix av_xz_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_stress_pressure file "sxy.av"
+# The {virial} keyword means include all terms except the kinetic energy {ke}.
+compute stress all stress/atom virial
+variable stress_pressure atom (c_stress[4]-c_pTemp[4])
+fix av_xy_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_stress_pressure file sxy.av
 
 variable fy atom mass*${gy}*((x>${xsize}/2.0)-(x<${xsize}/2.0))
 fix reverce_periodic all addforce 0.0 v_fy 0.0 
 
 thermo          100
-dump myDump all image 1000 nb.*.ppm type type view 0 0
-run		${ntime} every 1000 "velocity all zero linear " &
+#dump myDump all image 1000 nb.*.jpg type type view 0 0
+dump dDump all custom 1000 nb.*.dat x y vx vy
+dump_modify	dDump pad 10
+
+
+fix e2d all enforce2d
+
+run		${ntime} every 10000 "velocity all zero linear " &
 "velocity all zero angular"
+
+
