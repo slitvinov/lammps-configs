@@ -1,0 +1,9 @@
+# this file is included by in.geninit and in.dpd
+variable     lowerwallpos equal 2.0*${lsp}+${eps}
+variable     upperwallpos equal floor(${ysize}/${lsp}-2.0)*${lsp}-${eps}
+variable     Lp equal ${upperwallpos}-${lowerwallpos}
+print        "Lp: ${Lp}"
+region	     rflow block  0 INF ${lowerwallpos} ${upperwallpos} INF INF units box
+
+region	     rlwall block INF INF INF ${lowerwallpos} INF INF units box
+region	     ruwall block INF INF ${upperwallpos} INF INF INF units box

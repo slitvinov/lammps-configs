@@ -1,0 +1,7 @@
+variable        zoomfactor equal 1.0/${lsp}
+if "${ndim}==2" then &
+"dump idump all image ${savetime} image.*.jpg type type atom yes zoom 1.8  box yes 0.01 zoom ${zoomfactor}" &
+else &
+"dump idump all image ${savetime} image.*.jpg type type atom yes zoom 1.8  box yes 0.01 zoom ${zoomfactor}"
+
+dump_modify idump pad 10

@@ -1,0 +1,22 @@
+#create wall particles
+create_atoms	2 region rlwall
+group	     lower region rlwall
+
+create_atoms	2 region ruwall
+group	     upper region ruwall
+
+group	     wall  union lower upper
+group	     flow subtract all wall
+
+variable     lrw equal  ${lowerwallpos}+0.5*${lsp}
+variable     urw equal  ${upperwallpos}-0.5*${lsp}
+
+fix lrefwall flow wall/reflect ylo ${lrw} yhi ${urw} units box
+
+variable     nfx equal -${fwallx}
+fix	     fupper upper aveforce ${fwallx} NULL NULL
+fix	     flower lower aveforce ${nfx} NULL NULL
+fix	     nupper upper setforce NULL 0 0
+fix	     nlower lower setforce NULL 0 0
+
+
