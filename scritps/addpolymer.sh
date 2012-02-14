@@ -36,8 +36,13 @@ function readinputargs () {
     done
 }
 
-readinputargs $*
+# default values
 restart2data=/scratch/work/lammps-ro/tools/restart2data
+polyidfile=poly.id
+cutoff=3.0
+# read input parameters
+readinputargs $*
+
 aux1file=$(mktemp)
 aux2file=$(mktemp)
 

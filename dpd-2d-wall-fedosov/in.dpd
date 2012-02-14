@@ -22,7 +22,7 @@ variable        sigma delete
 # "Conservative forces are not needed for this study and will be left
 # out" [1]
 variable       adpd    equal 25.0
-variable       ntime   equal 120000
+variable       ntime   equal 360000
 variable       savetime equal 1000
 
 # number of timesteps

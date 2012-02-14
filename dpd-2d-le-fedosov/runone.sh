@@ -17,10 +17,8 @@ ${lmp} ${vars} -in in.geninit
     input=${id}/dpd.restart \
     polyidfile=${id}/poly.id \
     output=${id}/dpd.output \
-    cutoff=3.0 \
     Nbeads=15 \
     Nsolvent=15 \
     Npoly=full
-
 
 ${mpirun} -np 1  ${lmp} ${vars} -in in.dpd

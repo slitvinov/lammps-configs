@@ -12,7 +12,7 @@ variable        ndim  equal 2
 variable        number_density equal 3  # Table 1
 variable        xsize equal 20   # 50 p. 4
 # use as a small number
-variable        EPSILON equal 1e-2*${xsize}
+variable        eps equal 1e-2*${xsize}
 variable        ysize equal 20   # 20 p. 4
 variable        kb equal 1.3806488e-23
 variable        T equal 1.0/${kb} # Table 1
@@ -48,7 +48,7 @@ variable        lsp   delete
 variable        Npart equal ${xsize}*${ysize}*${number_density}
 print "Npart = ${Npart}"
 
-region		box block 0 ${xsize} 0 ${ysize} -${EPSILON} ${EPSILON} units box
+region		box block 0 ${xsize} 0 ${ysize} -${eps} ${eps} units box
 create_box	1 box
 create_atoms	1 box
 
@@ -62,7 +62,7 @@ mass		1 ${pmass}
 velocity     all set 500.0 500.0 0.0 units box
 
 pair_style	dpd ${T} ${cutoff} 928948
-pair_coeff	1 1 ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_coeff	* * ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
 
 neighbor	0.5  bin
 neigh_modify    delay 0 every 1
@@ -87,8 +87,7 @@ compute stress_old all stress/atom
 variable stress_old atom c_stress_old[4]+c_thermo_temp[4]/${Npart}
 fix id_stress_old all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 2.0 v_stress_old file sxy-old.av
 
-fix e2d all enforce2d
-
+if "${ndim}==2" then "fix e2d all enforce2d"
 thermo 10
 run		${ntime}
 

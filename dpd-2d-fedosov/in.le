@@ -10,7 +10,7 @@ include        in.fedosov-def
 
 variable        xsize equal 20   # 50 p. 4
 # use as a small number
-variable        EPSILON equal 1e-2*${xsize}
+variable        eps equal 1e-2*${xsize}
 variable        ysize equal 50   # 20 p. 4
 
 # number of timesteps
@@ -23,7 +23,7 @@ lattice         sq  ${lsp} origin 0.1 0.1 0.0
 variable        Npart equal ${xsize}*${ysize}*${number_density}
 print "Npart = ${Npart}"
 
-region		box prism 0 ${xsize} 0 ${ysize} -${EPSILON} ${EPSILON} 0 0 0 units box
+region		box prism 0 ${xsize} 0 ${ysize} -${eps} ${eps} 0 0 0 units box
 create_box	1 box
 create_atoms	1 box
 
@@ -64,15 +64,15 @@ compute stress all stress/atom virial
 variable stress_pressure atom c_stress[4]-c_pTemp[4]/${Npart}
 fix av_xy_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.05 v_stress_pressure file sxy.av units reduced
 
-variable nsave equal 1000
-dump dDump all custom ${nsave} nb.*.dat xu yu vx vy
+variable savetime equal 1000
+dump dDump all custom ${savetime} nb.*.dat xu yu vx vy
 dump_modify	dDump pad 10
 
 variable        zoomfactor equal 1.0/${lsp}
-dump		dImage all image ${nsave} le.*.jpg type type adiam 1.0 zoom ${zoomfactor}
+dump		dImage all image ${savetime} le.*.jpg type type adiam 1.0 zoom ${zoomfactor}
 dump_modify	dDump pad 10
 
-fix e2d all enforce2d
+if "${ndim}==2" then "fix e2d all enforce2d"
 
 thermo  1000
 run		${ntime}

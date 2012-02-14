@@ -10,7 +10,7 @@ include        in.fedosov-def
 
 variable        xsize equal 50   # 50 p. 4
 # use as a small number
-variable        EPSILON equal 1e-2*${xsize}
+variable        eps equal 1e-2*${xsize}
 variable        ysize equal 20   # 20 p. 4
 variable        gy equal 0.025 # from 0.025 to 0.25  (p.6)
 
@@ -24,7 +24,7 @@ lattice         sq  ${lsp} origin 0.1 0.1 0.0
 variable        Npart equal ${xsize}*${ysize}*${number_density}
 print "Npart = ${Npart}"
 
-region		box block 0 ${xsize} 0 ${ysize} -${EPSILON} ${EPSILON} units box
+region		box block 0 ${xsize} 0 ${ysize} -${eps} ${eps} units box
 create_box	1 box
 create_atoms	1 box
 
@@ -35,7 +35,7 @@ delete_atoms group extra_atoms
 mass		1 ${pmass}
 
 pair_style	dpd ${T} ${cutoff} 928948
-pair_coeff	1 1 ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_coeff	* * ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
 
 neighbor	0.5  bin
 neigh_modify    delay 0 every 1
@@ -65,7 +65,8 @@ fix reverce_periodic all addforce 0.0 v_fy 0.0
 dump dDump all custom 1000 nb.*.dat xu yu vx vy
 dump_modify	dDump pad 10
 
-fix e2d all enforce2d
+if "${ndim}==2" then "fix e2d all enforce2d"
+
 thermo  10000
 run		${ntime}
 
