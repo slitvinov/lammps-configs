@@ -1,0 +1,18 @@
+units		si
+dimension       ${ndim}
+communicate	single vel yes
+
+variable        number_density equal 3  # Table 1
+variable        kb equal 1.3806488e-23 
+variable        T equal 1.0/${kb} # Table 1
+variable        cutoff equal 2.0 # Table 1
+variable        cutoff_cons equal 2.0 # eq. (5)
+variable        sigma equal 3.0  # Table 1
+variable        gamma equal ${sigma}^2/(2*${T}*${kb}) # eq. (6)
+variable        sigma delete
+variable        adpd     equal 25 # Table 1
+variable        m_power index  0.25 # Table 1
+variable        pmass    equal 1.0 # TODO: make sure it is correct in
+				   # si units
+# parameter for the lattice with square unit cell
+variable        lsp    equal 1.0/${number_density}^(1.0/${ndim})
