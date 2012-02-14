@@ -1,0 +1,20 @@
+log            log.lammps.${id}
+echo           both
+units	       si
+variable       ndim  equal 3
+variable       number_density equal 3
+# domain size 
+variable        xsize equal 20
+variable        ysize equal 50
+variable        zsize equal 10
+
+dimension       ${ndim}
+atom_style	bond
+
+# lattice parameter
+variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
+variable        eps equal 1e-6*${ysize}
+
+if "${ndim}==2" then "lattice sq      ${lsp} origin ${eps} ${eps} 0.0" else &
+"lattice sc      ${lsp} origin ${eps} ${eps} ${eps}"
+

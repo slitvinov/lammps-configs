@@ -17,14 +17,14 @@ variable        cutoff equal 2.0
 variable        cutoff_cons equal 2.0
 variable        m_power equal 0.25
 variable        sigma equal 3.0
-# gamma is not given in [1] 
-# we get it using eq. (10) in [2]
 variable        gamma equal ${sigma}^2/(2*${T}*${kb})
 variable        sigma delete
 # "Conservative forces are not needed for this study and will be left
 # out" [1]
-variable       adpd_ff    equal 25.0
-variable       adpd_fw    equal 25.0
+variable       adpd    equal 25.0
+variable       ntime   equal 120000
+variable       savetime equal 1000
+
 
 # number of timesteps
 timestep	0.005
@@ -39,7 +39,7 @@ variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
 
 # create_box	1 box
 # create_atoms	1 box
-read_data       dpd.output.${id}
+read_data       ${id}/dpd.output
 
 bond_style      fene
 special_bonds 	lj 1 1 1
@@ -48,44 +48,45 @@ variable        r0 equal 2.0*${lsp}
 variable        H equal 50*${T}*${kb}/${r0}^2
 bond_coeff	1 ${H} ${r0} 0.0 0.0
 
-
 mass		* 1.0
-#include in.wall
 
 velocity	all set 0 0 0
 
 pair_style	dpd ${T} ${cutoff} 928948
-pair_coeff	1 1 ${adpd_ff} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
-pair_coeff	1 2 ${adpd_fw} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
-pair_coeff	2 2 ${adpd_fw} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_coeff	1 1 ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_coeff	* * ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
 
 neighbor	0.5 bin
 neigh_modify    delay 0 every 1
 fix		idnve all nve
 #      {erate} value = R
 #        R = engineering strain rate (1/time units)
-fix		2 all deform 1 xy erate 0.01 remap v
+fix		2 all deform 1 xy erate ${R} remap v
 
 variable        Nfreq   equal  ${ntime}
 variable        Nrepeat equal  round(0.9*${ntime})
-fix av_vx all ave/spatial 1 ${Nrepeat} ${Nfreq} y center 0.02 vx file vx.av.${id} units reduced
-fix av_rho all ave/spatial 1 ${Nrepeat} ${Nfreq} y center 0.02 density/number file rho.av.${id} units reduced
-# simulation temperature (we do not use vx, flow goes in this direction)
-variable simtemp atom mass*vy^2
 
-fix av_temp all ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.02 v_simtemp file simtemp.av.${id} units reduced
+# "profile" corrected temperature
+compute         pTemp all temp/profile 1 1 0 y 5
+fix av_vx all ave/spatial 1 ${Nrepeat} ${Nfreq} y center 0.05 vx file ${id}/vx.av units reduced
 
 # stresses are in units of pressure*volume must be divided by per-atom
 # volume to have units of stress (pressue); components of the stress
 # are in the following order xx(1), yy(2), zz(3), xy(4), xz(5), yz(6)
-compute stress all stress/atom
-variable stress_pressure atom c_stress[4]*${number_density}
-fix av_xy_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.02 v_stress_pressure file sxy.av.${id} units reduced
+# The {virial} keyword means include all terms except the kinetic energy {ke}.
+compute stress all stress/atom virial
+variable stress_pressure atom c_stress[4]-c_pTemp[4]/count(all)
+fix av_xy_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.05 v_stress_pressure file ${id}/sxy.av units reduced
 
-dump mdump all custom ${savetime} dump.dpd.*.${id} id type xs ys zs vx vy vz
-dump_modify mdump pad 10
+compute stress_bond all stress/atom bond
+variable vstress_bond atom c_stress_bond[4]
+fix av_xy_bond all ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.05 v_vstress_bond file ${id}/sxy-bond.av units reduced
 
-dump idump all image ${savetime} image.*.jpg type type adiam 1.2
+thermo ${savetime}
+dump mdump all custom ${savetime} ${id}/dump.dpd.* xs ys zs vx vy vz type mol
+dump_modify mdump pad 10 sort id
+
+dump idump all image ${savetime} ${id}/image.*.jpg type type atom yes bond atom 0.3 adiam 1.0 view 0 0 zoom 1.4  box yes 0.01
 dump_modify idump pad 10
 
 run		${ntime}

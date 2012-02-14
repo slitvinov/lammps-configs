@@ -1,0 +1,16 @@
+include         in.generic
+
+if "${ndim}==2" then &
+"region	        box prism 0 ${xsize} 0 ${ysize} -${eps} ${eps} 0 0 0 units box" &
+else &
+"region	        box prism 0 ${xsize} 0 ${ysize} 0 ${zsize} 0 0 0 units box"
+
+create_box	1 box
+
+#include         in.wall-def
+
+# create atom bulk atoms
+create_atoms	1 region box
+
+mass		* 1.0
+write_restart ${id}/dpd.restart
