@@ -46,14 +46,15 @@ readinputargs $*
 aux1file=$(mktemp)
 aux2file=$(mktemp)
 
+# TODO: change location of the awk scripts
 ${restart2data} ${input} ${aux1file}
 awk -v cutoff=3.0 -v Nbeads=15 -v Nsolvent=15 -v Npoly=full \
     -v polyidfile=${polyidfile} \
-    -f addpolymer.awk ${aux1file} > ${aux2file}
+    -f ../scritps/addpolymer.awk ${aux1file} > ${aux2file}
 nbound=$(tail -n 1 ${aux2file} | awk '{print $1}')
 sed -i "s/_NUMBER_OF_BOUNDS_/$nbound/1" ${aux2file}
 
-awk -v polymer_type=3 -f addmolnumber.awk \
+awk -v polymer_type=3 -f ../scritps/addmolnumber.awk \
     -v polyidfile=${polyidfile} \
     ${aux2file} > ${aux1file}
 
