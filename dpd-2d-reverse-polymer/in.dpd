@@ -7,8 +7,10 @@
 # vy.av.dim{ndim} (velocity), rho.av.dim{ndim} (density),
 # simtemp.av.dim${ndim} (temperature), sxy.av.dim${ndim} (shear
 # stress)
-log            log.lammps.${id}
-include          in.generic
+log             log.lammps.${id}
+include         in.generic
+# lattice parameter
+variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
 
 # temperature 
 variable        kb equal 1.3806488e-23
@@ -34,8 +36,6 @@ dimension       ${ndim}
 atom_style	bond 1
 communicate	single vel yes
 
-# lattice parameter
-variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
 #region		box block 0 ${xsize} 0 ${ysize} -0.01 0.01 units box
 
 #boundary        p f p
@@ -44,7 +44,7 @@ read_data       ${id}/dpd.output
 bond_style      fene
 special_bonds 	lj 1 1 1
 # FENE parameters
-variable        r0 equal 2.0
+variable        r0 equal 1.0
 variable        H equal 50*${T}*${kb}/${r0}^2
 bond_coeff	1 ${H} ${r0} 0.0 0.0
 
@@ -75,18 +75,18 @@ fix av_vx all ave/spatial 1 ${Nrepeat} ${Nfreq} y center 0.05 v_vx_cm file ${id}
 # are in the following order xx(1), yy(2), zz(3), xy(4), xz(5), yz(6)
 # The {virial} keyword means include all terms except the kinetic energy {ke}.
 compute stress all stress/atom virial
-variable stress_pressure atom c_stress[4]-c_pTemp[4]/count(all)
+variable stress_pressure atom (c_stress[4]-c_pTemp[4]/count(all))*${number_density}
 fix av_xy_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.05 v_stress_pressure file ${id}/sxy.av units reduced
 
 compute stress_bond all stress/atom bond
-variable vstress_bond atom c_stress_bond[4]
+variable vstress_bond atom c_stress_bond[4]*${number_density}
 fix av_xy_bond all ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.05 v_vstress_bond file ${id}/sxy-bond.av units reduced
 
 variable bodyfx atom mass*${gx}*((y>${ysize}/2.0)-(y<${ysize}/2.0))
 fix reverce_periodic all addforce v_bodyfx 0.0 0.0 
 
 thermo ${savetime}
-dump mdump all custom ${savetime} ${id}/dump.dpd.* xs ys zs vx vy vz type
+dump mdump all custom ${savetime} ${id}/dump.dpd.* x y z vx vy vz type
 dump_modify mdump pad 10
 
 include in.image

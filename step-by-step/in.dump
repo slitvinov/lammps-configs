@@ -1,0 +1,14 @@
+# move one atom with a constant acceleration
+include in.minsetup
+
+create_atoms 1 single 5 5 5 units box
+group        fst id == 1
+velocity     fst set 0.0 0.1 0.0 units box
+lattice      sc 2.0
+
+timestep     1.0
+fix	     1 all nve
+
+dump  dump_id all custom 1 indump.*.dat x y vx vy
+
+run 9
