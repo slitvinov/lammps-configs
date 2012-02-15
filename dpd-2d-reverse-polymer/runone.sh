@@ -3,23 +3,22 @@
 set -e
 set -u
 
-sigmaxy=$1
+Nb=$1
 lmp=/scratch/work/lammps-ro/src/lmp_linux
 restart2data=/scratch/work/lammps-ro/tools/restart2data
 mpirun=/scratch/prefix-ppm-mpi/bin/mpirun
 
-id=$(./genid.sh sigmaxy=${sigmaxy})
+id=$(./genid.sh Nb=${Nb})
 mkdir -p ${id}
-vars="-var id ${id} \
-    -var sigmaxy ${sigmaxy}"
+vars="-var id ${id}"
 
 ${lmp} ${vars} -in in.geninit
 ../scritps/addpolymer.sh \
     input=${id}/dpd.restart \
     polyidfile=${id}/poly.id \
     output=${id}/dpd.output \
-    Nbeads=1 \
-    Nsolvent=1 \
+    Nbeads=${Nb} \
+    Nsolvent=0 \
     Npoly=full
 
-${mpirun} -np 1  ${lmp} ${vars} -in in.dpd
+${mpirun} -np 8  ${lmp} ${vars} -in in.dpd

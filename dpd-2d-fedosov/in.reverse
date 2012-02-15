@@ -8,11 +8,11 @@ echo           both
 variable       ndim equal 2
 include        in.fedosov-def
 
-variable        xsize equal 50   # 50 p. 4
+variable        xsize equal 20   # 50 p. 4
 # use as a small number
 variable        eps equal 1e-2*${xsize}
-variable        ysize equal 20   # 20 p. 4
-variable        gy equal 0.025 # from 0.025 to 0.25  (p.6)
+variable        ysize equal 50   # 20 p. 4
+variable        gx equal 0.025 # from 0.025 to 0.25  (p.6)
 
 # number of timesteps
 variable        ntime equal 30000
@@ -46,8 +46,8 @@ variable        Nfreq   equal  ${ntime}
 variable        Nrepeat equal  round(0.9*${ntime})
 
 # "profile" corrected temperature
-compute         pTemp all temp/profile 1 1 0 x 5
-fix av_vy all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 2.0 vy file vy.av
+compute         pTemp all temp/profile 1 1 0 y 5
+fix av_vy all ave/spatial 1 ${Nrepeat} ${Nfreq} y center 2.0 vx file vx.av
 
 # stresses are in units of pressure*volume must be divided by per-atom
 # volume to have units of stress (pressue); components of the stress
@@ -57,8 +57,8 @@ compute stress all stress/atom virial
 variable stress_pressure atom c_stress[4]-c_pTemp[4]/${Npart}
 fix av_xy_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 2.0 v_stress_pressure file sxy.av
 
-variable fy atom mass*${gy}*((x>${xsize}/2.0)-(x<${xsize}/2.0))
-fix reverce_periodic all addforce 0.0 v_fy 0.0 
+variable bodyfx atom mass*${gx}*((y>${ysize}/2.0)-(y<${ysize}/2.0))
+fix reverce_periodic all addforce v_bodyfx 0.0 0.0
 
 #thermo          100
 #dump myDump all image 1000 nb.*.jpg type type view 0 0
@@ -67,6 +67,5 @@ dump_modify	dDump pad 10
 
 if "${ndim}==2" then "fix e2d all enforce2d"
 
-thermo  10000
-run		${ntime}
-
+run   ${ntime} every 1000 "velocity all zero linear"
+run		${ntime} 

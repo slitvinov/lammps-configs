@@ -22,7 +22,7 @@ variable        sigma delete
 # "Conservative forces are not needed for this study and will be left
 # out" [1]
 variable       adpd    equal 25.0
-variable       ntime   equal 360000
+variable       ntime   equal 120000
 variable       savetime equal 1000
 
 # number of timesteps
@@ -51,9 +51,7 @@ mass		* 1.0
 velocity	all set 0 0 0
 
 pair_style	dpd ${T} ${cutoff} 928948
-pair_coeff	1 1 ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
-pair_coeff	1 2 ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
-pair_coeff	2 2 ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_coeff	* * ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
 
 neighbor	0.5 bin
 neigh_modify    delay 0 every 1
@@ -82,7 +80,7 @@ variable vstress_bond atom c_stress_bond[4]
 fix av_xy_bond all ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.05 v_vstress_bond file ${id}/sxy-bond.av units reduced
 
 thermo ${savetime}
-dump mdump all custom ${savetime} ${id}/dump.dpd.* id type xs ys zs vx vy vz
+dump mdump all custom ${savetime} ${id}/dump.dpd.* xs ys zs vx vy vz type
 dump_modify mdump pad 10
 
 include in.image

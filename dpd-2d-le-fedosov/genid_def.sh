@@ -23,6 +23,6 @@ NS="~"
 FS="~"
 
 CHECK_VALID_VAL=0
-prefix="ntime36"
+prefix="ntime12"
 suffix=""
 

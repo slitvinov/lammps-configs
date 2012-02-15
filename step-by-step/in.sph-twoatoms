@@ -43,7 +43,7 @@ timestep           1e-5
 variable           force_sdpd_fx equal fx[1]
 variable           force_sdpd_fy equal fy[1]
 compute            rho_peratom all meso_rho/atom
-dump               dump_id all custom 1 dump*.dat id type x y vx vy c_rho_peratom
+dump               dump_id all custom 1 dump*.dat x y vx vy c_rho_peratom
 
 
 run                1

@@ -120,4 +120,8 @@ END {
       prev=jp    
     }
   }
+  # add a last bead
+  if (isbound(iatom-1)) {
+      print iatom, ipoly >> polyidfile
+  }
 }

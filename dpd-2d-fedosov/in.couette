@@ -66,7 +66,6 @@ fix av_xy_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.05 v_stress_pre
 variable savetime equal 1000
 dump dDump all custom ${savetime} nb.*.dat xu yu vx vy type
 dump_modify	dDump pad 10
-
 include         in.image
 
 if "${ndim}==2" then "fix e2d all enforce2d"
