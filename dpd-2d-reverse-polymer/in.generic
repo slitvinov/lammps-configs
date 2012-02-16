@@ -1,11 +1,15 @@
+variable        simulationtype string "wall-poiseuille"
+#variable        simulationtype string "reverse-poiseuille"
 echo           both
 units	       si
-variable       ndim  equal 2
+# can be overwriten by -var
+variable       ndim  index 2
 variable       number_density equal 3
 # domain size 
 variable        xsize equal 20
 # for reverce poiseuille
 variable        ysize equal 50
+variable        zsize equal 10
 
 dimension       ${ndim}
 atom_style	bond
@@ -17,4 +21,9 @@ else &
 "variable Npart  equal ${number_density}*${xsize}*${ysize}*${zsize}"
 
 variable        eps equal 1e-6*${ysize}
-lattice sq      ${lsp} origin ${eps} ${eps} 0.0
+
+if "${ndim}==2" then &
+"lattice sq      ${lsp} origin ${eps} ${eps} 0.0" &
+else &
+"lattice sc      ${lsp} origin ${eps} ${eps} 0.0"
+

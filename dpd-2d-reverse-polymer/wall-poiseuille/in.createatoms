@@ -1,0 +1,8 @@
+create_box	3 box
+include wall-poiseuille/in.wall-def
+create_atoms	1 region rflow
+
+# TODO: Delite atoms in wall cale
+#group extra_atoms id > ${Npart}
+#delete_atoms group extra_atoms
+

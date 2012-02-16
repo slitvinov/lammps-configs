@@ -6,14 +6,7 @@ if "${ndim}==2" then &
 else &
 "region	        box block 0 ${xsize} 0 ${ysize} 0 ${zsize} units box"
 
-# create_box	1 box
-create_box	3 box
-# create atom bulk atoms
-create_atoms	1 box
-# TODO: find the way to generate the right number of atoms
-# delete extra atoms
-group extra_atoms id > ${Npart}
-delete_atoms group extra_atoms
+include ${simulationtype}/in.createatoms
 
 mass		* 1.0
 write_restart ${id}/dpd.restart

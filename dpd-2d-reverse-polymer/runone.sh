@@ -10,7 +10,7 @@ mpirun=/scratch/prefix-ppm-mpi/bin/mpirun
 
 id=$(./genid.sh Nb=${Nb})
 mkdir -p ${id}
-vars="-var id ${id}"
+vars="-var id ${id} -var ndim 3"
 
 ${lmp} ${vars} -in in.geninit
 ../scritps/addpolymer.sh \
@@ -21,4 +21,4 @@ ${lmp} ${vars} -in in.geninit
     Nsolvent=0 \
     Npoly=full
 
-${mpirun} -np 8  ${lmp} ${vars} -in in.dpd
+${mpirun} -np 4  ${lmp} ${vars} -in in.main

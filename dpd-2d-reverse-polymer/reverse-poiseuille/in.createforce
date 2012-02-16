@@ -1,0 +1,2 @@
+variable bodyfx atom mass*${gx}*((y>${ysize}/2.0)-(y<${ysize}/2.0))
+fix reverce_periodic all addforce v_bodyfx 0.0 0.0 

@@ -7,6 +7,8 @@
 # vy.av.dim{ndim} (velocity), rho.av.dim{ndim} (density),
 # simtemp.av.dim${ndim} (temperature), sxy.av.dim${ndim} (shear
 # stress)
+
+# set simulation type 
 log             log.lammps.${id}
 include         in.generic
 # lattice parameter
@@ -26,20 +28,17 @@ variable        sigma delete
 # out" [1]
 variable       adpd    equal 25.0
 variable       ntime    equal 30000
-variable       savetime equal 10000
+variable       savetime equal 1000
 variable       gx equal 0.25 # from 0.025 to 0.25  (p.6)
 
 # number of timesteps
 timestep	0.005
 
 dimension       ${ndim}
-atom_style	bond 1
 communicate	single vel yes
 
 #region		box block 0 ${xsize} 0 ${ysize} -0.01 0.01 units box
-
-#boundary        p f p
-read_data       ${id}/dpd.output
+include ${simulationtype}/in.readatmos
 
 bond_style      fene
 special_bonds 	lj 1 0 0
@@ -85,8 +84,7 @@ fix av_xy_bond all ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.01 v_vstress_bond
 group polymer type 3
 fix av_nd polymer ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.01 density/number  file ${id}/polymer.ndensyty units reduced
 
-variable bodyfx atom mass*${gx}*((y>${ysize}/2.0)-(y<${ysize}/2.0))
-fix reverce_periodic all addforce v_bodyfx 0.0 0.0 
+include ${simulationtype}/in.createforce
 
 thermo ${savetime}
 dump mdump all custom ${savetime} ${id}/dump.dpd.* x y z vx vy vz type
