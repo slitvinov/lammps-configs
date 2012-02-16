@@ -1,12 +1,12 @@
 #! /bin/bash
 
 varlist="Nb"
-Nb_list="5"
+Nb_list="25"
 
 NS="~"
 FS="~"
 
 CHECK_VALID_VAL=0
-prefix="3Dlong"
+prefix="2DwithMomCancel"
 suffix=""
 

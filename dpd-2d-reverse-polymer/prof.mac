@@ -7,7 +7,7 @@ eq: vmax = v(H/2);
 sigma_max: eta*gamma_dot(0);
 
 eta_num: rhs(solve(eq, eta)[1]);
-env: [f=0.25, vmax=2.2, H=25, rho=3];
+env: [f=0.25, vmax=1.36657, H=25, rho=3];
 
 ev(eta_num, env);
 ev(sigma_max, env);

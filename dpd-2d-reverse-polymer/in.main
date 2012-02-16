@@ -24,10 +24,8 @@ variable        m_power equal 0.25
 variable        sigma equal 3.0
 variable        gamma equal ${sigma}^2/(2*${T}*${kb})
 variable        sigma delete
-# "Conservative forces are not needed for this study and will be left
-# out" [1]
 variable       adpd    equal 25.0
-variable       ntime    equal 300000
+variable       ntime    equal 30000
 variable       savetime equal 10000
 variable       gx equal 0.25 # from 0.025 to 0.25  (p.6)
 
@@ -44,7 +42,7 @@ bond_style      fene
 special_bonds 	lj 1 1 1
 # FENE parameters
 variable        r0 equal 1.0
-variable        H equal 50*${T}*${kb}/${r0}^2
+variable        H equal 50
 bond_coeff	1 ${H} ${r0} 0.0 0.0
 
 mass		* 1.0
@@ -87,11 +85,11 @@ fix av_nd polymer ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.01 density/number 
 include ${simulationtype}/in.createforce
 
 thermo ${savetime}
-dump mdump all custom ${savetime} ${id}/dump.dpd.* x y z vx vy vz type
+dump mdump all custom ${savetime} ${id}/dump.dpd.* x y z vx vy vz type mol
 dump_modify mdump pad 10
 
 include in.image
 
-run ${ntime}
-# run   ${ntime} every 100 "velocity all zero linear" & 
-# "velocity all zero angular"
+#run ${ntime}
+run   ${ntime} every 1000 "velocity all zero linear" & 
+"velocity all zero angular"

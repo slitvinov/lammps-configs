@@ -9,7 +9,8 @@ variable       number_density equal 3
 variable        xsize equal 20
 # for reverce poiseuille
 variable        ysize equal 50
-variable        zsize equal 10
+if "${ndim}==3" then &
+"variable        zsize equal 10"
 
 dimension       ${ndim}
 atom_style	bond

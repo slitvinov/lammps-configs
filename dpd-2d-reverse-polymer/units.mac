@@ -6,7 +6,7 @@ eq[3]: kT = M*L^2/T^2;
 sol: solve([eq[1], eq[2], eq[3]], [L, M, T])[1];
 
 /* dimensionless form */
-eta_fed: eta/ (M^2/T);
+eta_fed: eta/ (L^2/T);
 /* sound speed */
 c_fed: c/ (L/T);
 /* body force */
@@ -17,7 +17,6 @@ num_env: [dx=2.5e-5, kT=1.38e-14,
           rho=1e3, m=rho*dx^3];
 
 /* here what you get in Fedosov units */
-ev(eta_fed, sol, num_env, eval, eval);
-ev(c_fed, sol, num_env, eval, eval);
-
-solve(f_fed=0.25, f);
+float(ev(eta_fed, sol, num_env, eta=1e-4, eval, eval));
+float(ev(c_fed, sol, num_env, c=1e-4, eval, eval));
+float(ev(f_fed, sol, num_env, f=5.0, eval, eval));
