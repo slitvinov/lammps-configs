@@ -53,3 +53,5 @@ compute examples
 [[file:in.compute.own]]
 [[file:in.compute.userdef]]
 
+OOP in lammps
+[[file:in.oop]]
