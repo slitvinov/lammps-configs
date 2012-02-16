@@ -48,7 +48,7 @@ aux2file=$(mktemp)
 
 # TODO: change location of the awk scripts
 ${restart2data} ${input} ${aux1file}
-awk -v cutoff=${cutoff} -v Nbeads=${Nbeads} -v Nsolvent=${Nsolvent} -v Npoly=full \
+awk -v cutoff=${cutoff} -v Nbeads=${Nbeads} -v Nsolvent=${Nsolvent} -v Npoly=${Npoly} \
     -v polyidfile=${polyidfile} \
     -f ../scritps/addpolymer.awk ${aux1file} > ${aux2file}
 nbound=$(tail -n 1 ${aux2file} | awk '{print $1}')
