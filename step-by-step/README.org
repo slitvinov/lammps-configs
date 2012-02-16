@@ -48,7 +48,7 @@ Two dump with SPH
 LE style boundary conditions
 [[file:in.le]]
 
-compute tests
+compute examples
 [[file:in.compute.global]]
 [[file:in.compute.own]]
 [[file:in.compute.userdef]]
