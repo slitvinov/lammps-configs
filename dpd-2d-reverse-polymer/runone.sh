@@ -21,4 +21,4 @@ ${lmp} ${vars} -in in.geninit
     Nsolvent=0 \
     Npoly=full
 
-${mpirun} -np 4  ${lmp} ${vars} -in in.main
+${mpirun} -np 8  ${lmp} ${vars} -in in.main

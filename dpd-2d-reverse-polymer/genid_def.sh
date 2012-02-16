@@ -7,6 +7,6 @@ NS="~"
 FS="~"
 
 CHECK_VALID_VAL=0
-prefix="test100"
+prefix="3Dlong"
 suffix=""
 

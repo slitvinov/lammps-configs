@@ -1,5 +1,5 @@
-variable        simulationtype string "wall-poiseuille"
-#variable        simulationtype string "reverse-poiseuille"
+#variable        simulationtype string "wall-poiseuille"
+variable        simulationtype string "reverse-poiseuille"
 echo           both
 units	       si
 # can be overwriten by -var

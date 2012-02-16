@@ -42,7 +42,7 @@ communicate	single vel yes
 read_data       ${id}/dpd.output
 
 bond_style      fene
-special_bonds 	lj 1 0 0
+special_bonds 	lj 1 1 1
 # FENE parameters
 variable        r0 equal 1.0
 variable        H equal 50*${T}*${kb}/${r0}^2
