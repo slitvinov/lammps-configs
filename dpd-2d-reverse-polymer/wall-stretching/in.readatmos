@@ -1,0 +1,5 @@
+# need "f" in Y direction to have reflective walls
+boundary     p f p
+
+read_data       ${id}/dpd.output
+include wall-poiseuille/in.wall
