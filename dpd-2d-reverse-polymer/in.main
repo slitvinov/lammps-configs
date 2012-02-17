@@ -26,7 +26,7 @@ variable        gamma equal ${sigma}^2/(2*${T}*${kb})
 variable        sigma delete
 variable       adpd    equal 25.0
 variable       ntime    equal 900000
-variable       savetime equal 1000
+variable       savetime equal 100
 variable       gx equal 0.25 # from 0.025 to 0.25  (p.6)
 
 # number of timesteps

@@ -1,4 +1,5 @@
-variable        simulationtype string "wall-poiseuille"
+#variable        simulationtype string "wall-poiseuille"
+variable        simulationtype string "deform-shear"
 #variable        simulationtype string "reverse-poiseuille"
 #variable        simulationtype string "free-polymers"
 echo           both
