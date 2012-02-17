@@ -18,8 +18,8 @@ ${lmp} ${vars} -in in.geninit
     polyidfile=${id}/poly.id \
     output=${id}/dpd.output \
     Nbeads=${Nb} \
-    Nsolvent=0 \
-    Npoly=1 \
-    addangle=1
+    Nsolvent=${Nb} \
+    Npoly=full \
+    addangle=0
 
 ${mpirun} -np 4  ${lmp} ${vars} -in in.main
