@@ -1,0 +1,8 @@
+read_data       ${id}/dpd.output
+
+#    K (energy/radian^2)
+#    theta0 (degrees) 
+variable    K equal  50
+variable    theta0 equal 180
+angle_style harmonic
+angle_coeff 1 ${K} ${theta0}

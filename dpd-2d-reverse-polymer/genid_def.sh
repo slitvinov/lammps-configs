@@ -1,12 +1,12 @@
 #! /bin/bash
 
 varlist="Nb"
-Nb_list="5 25"
+Nb_list="800"
 
 NS="~"
 FS="~"
 
 CHECK_VALID_VAL=0
-prefix="3DpolymersVert"
+prefix="freepolymer"
 suffix=""
 

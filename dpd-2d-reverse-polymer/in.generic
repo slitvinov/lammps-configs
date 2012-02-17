@@ -1,19 +1,13 @@
 #variable        simulationtype string "wall-poiseuille"
-variable        simulationtype string "reverse-poiseuille"
+#variable        simulationtype string "reverse-poiseuille"
+variable        simulationtype string "free-polymers"
 echo           both
 units	       si
 # can be overwriten by -var
 variable       ndim  index 2
 variable       number_density equal 3
-# domain size 
-variable        xsize equal 20
-# for reverce poiseuille
-variable        ysize equal 50
-if "${ndim}==3" then &
-"variable        zsize equal 10"
 
-dimension       ${ndim}
-atom_style	bond
+include ${simulationtype}/in.setdomainsize
 
 # lattice parameter
 variable lsp    equal 1.0/${number_density}^(1.0/${ndim})

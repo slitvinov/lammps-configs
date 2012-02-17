@@ -46,6 +46,9 @@ BEGIN {
 /atom types/{
   print
   print "1 bond types"
+  if (addangle) {
+      print "1 angle types"
+  }
   next
 }
 
@@ -53,6 +56,9 @@ BEGIN {
   natoms=$1
   print
   printf("%s bonds\n", "_NUMBER_OF_BOUNDS_")
+  if (addangle) {
+      printf("%s angles\n", "_NUMBER_OF_ANGLES_")
+  }
   next
 }
 
@@ -111,17 +117,33 @@ END {
       bondtype=1
       print ibond, bondtype, ip, jp
       if (ip != prev) {
-	  if (prev>0) {
-	      print prev, ipoly >> polyidfile
-	  }
 	  ipoly++
       }
       print ip, ipoly >> polyidfile
+      poly_hash[ip]=1
+      if (!(jp in poly_hash)) { 
+	  print jp, ipoly >> polyidfile
+	  poly_hash[jp]=1
+      }
       prev=jp    
     }
   }
-  # add a last bead
-  if (isbound(iatom-1)) {
-      print iatom, ipoly >> polyidfile
+
+
+ # Angle section
+ if (addangle>0) {
+  angletype=1
+  printf("\nAngles\n\n")
+  iangle = 0
+  for (q=1; q<iatom; q++) {
+      if (isbound(q+1)&&isbound(q)) {
+	  iangle++
+	  ia = q
+	  ja = q+1
+	  ka = q+2
+	  # number of angle, type of angle, three atoms to form an angle
+	  print iangle, angletype, ia, ja, ka
+      }
   }
+ }
 }

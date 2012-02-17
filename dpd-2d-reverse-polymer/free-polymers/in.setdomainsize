@@ -1,0 +1,8 @@
+variable        xsize equal 40
+# for reverce poiseuille
+variable        ysize equal 40
+if "${ndim}==3" then &
+"variable        zsize equal 20"
+
+dimension       ${ndim}
+atom_style	angle
