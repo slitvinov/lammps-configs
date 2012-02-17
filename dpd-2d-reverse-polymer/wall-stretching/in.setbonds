@@ -4,7 +4,8 @@ special_bonds 	lj 1 1 1
 variable        r0 equal 1.0
 variable        H equal 50
 variable        INF         equal 2.0*${xsize}
-variable        fx         equal 100.0
+variable        fx         equal 50.0
 variable        fy         equal 0.0
 variable        fz         equal 0.0
-bond_coeff 1 ${H} ${r0} ${fx} ${fy} ${fz} 3.0 30 -${INF} ${INF} -${INF} ${INF}
+variable        xst        equal 0.5*${xsize}
+bond_coeff 1 ${H} ${r0} ${fx} ${fy} ${fz} 3.0 ${xst} -${INF} ${INF} -${INF} ${INF}

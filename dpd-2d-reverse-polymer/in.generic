@@ -2,9 +2,9 @@
 #variable         simulationtype string "wall-shear-force"
 #variable          simulationtype string "wall-shear-velocity"
 #variable        simulationtype string "deform-shear"
-#variable        simulationtype string "reverse-poiseuille"
+variable        simulationtype string "reverse-poiseuille"
 #variable        simulationtype string "free-polymers"
-variable         simulationtype string "wall-stretching"
+#variable         simulationtype string "wall-stretching"
 echo           both
 units	       si
 # can be overwriten by -var

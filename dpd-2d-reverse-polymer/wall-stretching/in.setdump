@@ -9,3 +9,28 @@ else &
 "dump idump all image ${savetime} ${id}/image.*.jpg type type atom yes bond atom 0.3 adiam 1.0 zoom 1.8  box yes 0.01 zoom ${zoomfactor}"
 dump_modify idump pad 10
 
+fix av_vx_hist flow ave/spatial 1 ${Nrepeat} ${Nfreq} &
+               x center 0.1 &
+               y center 0.01 vx file ${id}/vx.av.hist units reduced
+
+group polymer type 3
+fix av_nd_hist polymer ave/spatial 1 ${Nrepeat} ${Nfreq} &
+               x center 0.1 &
+               y lower 0.01 density/number file ${id}/polymer.ndensyty.hist units reduced
+
+# variable maxi equal 10
+# label		loopa
+# variable i loop ${maxi}
+#          # average velocity
+#          variable x0_rgn equal ${i}*${xsize}/${maxi}
+#          variable x1_rgn equal (${i}+1)*${xsize}/${maxi}
+#          region rgn_${i}  block ${x0_rgn} ${x1_rgn} INF INF INF INF
+#          fix av_vx_${i} flow ave/spatial 1 ${Nrepeat} ${Nfreq} &
+#              y center 0.01 vx file ${id}/vx.av.${i} units box region rgn_${i}
+# 	 if $i==${maxi} then "jump SELF break"
+# next i
+# jump SELF loopa
+# label break
+
+
+
