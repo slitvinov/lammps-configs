@@ -1,11 +1,14 @@
 #variable        simulationtype string "wall-poiseuille"
-variable        simulationtype string "deform-shear"
+#variable         simulationtype string "wall-shear-force"
+#variable          simulationtype string "wall-shear-velocity"
+#variable        simulationtype string "deform-shear"
 #variable        simulationtype string "reverse-poiseuille"
-#variable        simulationtype string "free-polymers"
+variable        simulationtype string "free-polymers"
 echo           both
 units	       si
 # can be overwriten by -var
 variable       ndim  index 2
+dimension      ${ndim}
 variable       number_density equal 3
 
 include ${simulationtype}/in.setdomainsize
