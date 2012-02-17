@@ -1,7 +1,7 @@
 #! /bin/bash
 
 varlist="Nb"
-Nb_list="25"
+Nb_list="5"
 
 NS="~"
 FS="~"

@@ -20,6 +20,6 @@ ${lmp} ${vars} -in in.geninit
     Nbeads=${Nb} \
     Nsolvent=${Nb} \
     Npoly=full \
-    addangle=1
+    addangle=0
 
 ${mpirun} -np 4  ${lmp} ${vars} -in in.main
