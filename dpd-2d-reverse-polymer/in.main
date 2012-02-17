@@ -25,8 +25,8 @@ variable        sigma equal 3.0
 variable        gamma equal ${sigma}^2/(2*${T}*${kb})
 variable        sigma delete
 variable       adpd    equal 25.0
-variable       ntime    equal 30000
-variable       savetime equal 10000
+variable       ntime    equal 900000
+variable       savetime equal 1000
 variable       gx equal 0.25 # from 0.025 to 0.25  (p.6)
 
 # number of timesteps
@@ -56,9 +56,10 @@ neighbor	0.5 bin
 neigh_modify    delay 0 every 1
 fix		idnve all nve
 
+include ${simulationtype}/in.createforce
+
 variable        Nfreq   equal  ${ntime}
 variable        Nrepeat equal  round(0.9*${ntime})
-
 # "profile" corrected temperature
 compute         pTemp all temp/profile 1 1 0 y 5
 
@@ -82,14 +83,12 @@ fix av_xy_bond all ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.01 v_vstress_bond
 group polymer type 3
 fix av_nd polymer ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.01 density/number  file ${id}/polymer.ndensyty units reduced
 
-include ${simulationtype}/in.createforce
-
 thermo ${savetime}
 dump mdump all custom ${savetime} ${id}/dump.dpd.* x y z vx vy vz type mol
 dump_modify mdump pad 10
 
 include in.image
 
-#run ${ntime}
-run   ${ntime} every 1000 "velocity all zero linear" & 
-"velocity all zero angular"
+run ${ntime}
+# run   ${ntime} every 1000 "velocity all zero linear" & 
+# "velocity all zero angular"
