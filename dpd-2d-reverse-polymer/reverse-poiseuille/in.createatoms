@@ -1,4 +1,8 @@
-# create_box	1 box
+if "${ndim}==2" then &
+"region	        box block 0 ${xsize} 0 ${ysize} -0.1 0.1 units box" &
+else &
+"region	        box block 0 ${xsize} 0 ${ysize} 0 ${zsize} units box"
+
 create_box	3 box
 # create atom bulk atoms
 create_atoms	1 box

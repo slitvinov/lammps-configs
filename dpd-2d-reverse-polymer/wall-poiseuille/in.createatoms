@@ -1,3 +1,8 @@
+if "${ndim}==2" then &
+"region	        box block 0 ${xsize} 0 ${ysize} -0.1 0.1 units box" &
+else &
+"region	        box block 0 ${xsize} 0 ${ysize} 0 ${zsize} units box"
+
 create_box	3 box
 include wall-poiseuille/in.wall-def
 create_atoms	1 region rflow
