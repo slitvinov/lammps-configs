@@ -36,8 +36,14 @@ function readinputargs () {
     done
 }
 
-# default values
-restart2data=/scratch/work/lammps-ro/tools/restart2data
+if [ -f ".lammps-configs" ]; then
+    # try local configuration first
+    source .lammps-configs
+elif [ -f "${HOME}/.lammps-configs" ]; then
+    # one for the host
+    source ${HOME}/.lammps-configs
+fi
+
 polyidfile=poly.id
 cutoff=3.0
 addangle=0
@@ -51,7 +57,7 @@ aux2file=$(mktemp)
 ${restart2data} ${input} ${aux1file}
 awk -v cutoff=${cutoff} -v Nbeads=${Nbeads} -v Nsolvent=${Nsolvent} -v Npoly=${Npoly} \
     -v polyidfile=${polyidfile} -v addangle=${addangle} \
-    -f ../scritps/addpolymer.awk ${aux1file} > ${aux2file}
+    -f ${lmpdir}/lammps-configs/scritps/addpolymer.awk ${aux1file} > ${aux2file}
 
 nangles=$(tail -n 1 ${aux2file} | awk '{print $1}')
 nbounds=$(awk '/Angles/{exit} NF' ${aux2file} | tail -n 1  | awk '{print $1}')
@@ -61,7 +67,7 @@ nbounds=$(awk '/Angles/{exit} NF' ${aux2file} | tail -n 1  | awk '{print $1}')
      -e "s/_NUMBER_OF_BOUNDS_/$nbounds/1" \
      ${aux2file}
 
-awk -v polymer_type=3 -f ../scritps/addmolnumber.awk \
+awk -v polymer_type=3 -f ${lmpdir}/lammps-configs/scritps/addmolnumber.awk \
     -v polyidfile=${polyidfile} \
     ${aux2file} > ${aux1file}
 
