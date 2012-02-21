@@ -4,19 +4,19 @@ dump_modify mdump pad 10
 
 variable        zoomfactor equal 1.0/${lsp}
 if "${ndim}==2" then &
-"dump idump all image ${savetime} ${id}/image.*.jpg type type atom yes bond atom 0.5 adiam 0.5 zoom 1.8  box yes 0.01 zoom ${zoomfactor}" &
+"dump idump all image ${savetime} ${id}/image.*.jpg type type atom yes bond atom 0.5 adiam 0.5 zoom 1.8  box yes 0.01 zoom ${zoomfactor} size 1512 1512" &
 else &
-"dump idump all image ${savetime} ${id}/image.*.jpg type type atom yes bond atom 0.3 adiam 1.0 zoom 1.8  box yes 0.01 zoom ${zoomfactor}"
+"dump idump all image ${savetime} ${id}/image.*.jpg type type atom yes bond atom 0.3 adiam 1.0 zoom 1.8  box yes 0.01 zoom ${zoomfactor} size 1512 1512"
 dump_modify idump pad 10
 
-fix av_vx_hist flow ave/spatial 1 ${Nrepeat} ${Nfreq} &
-               x center 0.1 &
-               y center 0.01 vx file ${id}/vx.av.hist units reduced
+fix av_vx_hist flow ave/spatial 1 10000 10000 &
+               x center 0.01 &
+               y center 0.01 vx file ${id}/vx.av.hist units reduced ave running
 
 group polymer type 3
-fix av_nd_hist polymer ave/spatial 1 ${Nrepeat} ${Nfreq} &
-               x center 0.1 &
-               y lower 0.01 density/number file ${id}/polymer.ndensyty.hist units reduced
+fix av_nd_hist polymer ave/spatial 1 10000 10000 &
+               x center 0.01 &
+               y lower 0.01 density/number file ${id}/polymer.ndensyty.hist units reduced ave running
 
 # variable maxi equal 10
 # label		loopa

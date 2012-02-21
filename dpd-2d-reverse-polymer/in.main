@@ -27,9 +27,11 @@ variable        sigma delete
 variable       adpd_ss    equal 25.0
 variable       adpd_sp    equal 25.0
 variable       adpd_pp    equal 25.0
-variable       ntime    equal 20000
-variable       savetime equal 100
-variable       gx equal 0.25 # from 0.025 to 0.25  (p.6)
+variable       adpd_sw    equal 25.0
+variable       adpd_pw    equal 25.0
+variable       ntime    equal 360000
+variable       savetime equal 10000
+#variable       gx equal 0.75 # from 0.025 to 0.25  (p.6)
 
 # number of timesteps
 timestep	0.005
@@ -39,9 +41,7 @@ include ${simulationtype}/in.readatmos
 include ${simulationtype}/in.setbonds
 
 mass		* 1.0
-
 velocity	all set 0 0 0
-
 pair_style	dpd ${T} ${cutoff} 928948
 
 # s, p, w: solvent polymer wall
@@ -49,22 +49,21 @@ variable        s equal 1
 variable        w equal 2
 variable        p equal 3
 pair_coeff	  *    *  ${adpd_ss} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
-pair_coeff	${p} ${p} ${adpd_pp} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_coeff	${s} ${w} ${adpd_sw} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_coeff	${w} ${p} ${adpd_pw} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
 
 neighbor	0.5 bin
 neigh_modify    delay 0 every 1
 
 include ${simulationtype}/in.createforce
 
-variable        Nfreq   equal  ${ntime}
-variable        Nrepeat equal  round(0.9*${ntime})
 # "profile" corrected temperature
 compute         pTemp all temp/profile 1 1 0 y 5
 
 # average velocity
 compute vxav all reduce ave vx
 variable  vx_cm atom vx-c_vxav
-fix av_vx all ave/spatial 1 ${Nrepeat} ${Nfreq} y center 0.01 v_vx_cm file ${id}/vx.av units reduced
+fix av_vx all ave/spatial 1 ${savetime} ${savetime} y center 0.01 v_vx_cm file ${id}/vx.av units reduced ave running
 
 # stresses are in units of pressure*volume must be divided by per-atom
 # volume to have units of stress (pressue); components of the stress
@@ -72,17 +71,15 @@ fix av_vx all ave/spatial 1 ${Nrepeat} ${Nfreq} y center 0.01 v_vx_cm file ${id}
 # The {virial} keyword means include all terms except the kinetic energy {ke}.
 compute stress all stress/atom virial
 variable stress_pressure atom (c_stress[4]-c_pTemp[4]/count(all))*${number_density}
-fix av_xy_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.01 v_stress_pressure file ${id}/sxy.av units reduced
+fix av_xy_stress all ave/spatial 1 ${savetime} ${savetime} y lower 0.01 v_stress_pressure file ${id}/sxy.av units reduced ave running
 
 compute stress_bond all stress/atom bond
 variable vstress_bond atom c_stress_bond[4]*${number_density}
-fix av_xy_bond all ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.01 v_vstress_bond file ${id}/sxy-bond.av units reduced
+fix av_xy_bond all ave/spatial 1 ${savetime} ${savetime} y lower 0.01 v_vstress_bond file ${id}/sxy-bond.av units reduced ave running
 
 group polymer type 3
-fix av_nd polymer ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.01 density/number  file ${id}/polymer.ndensyty units reduced
+fix av_nd polymer ave/spatial 1 ${savetime} ${savetime} y lower 0.01 density/number  file ${id}/polymer.ndensyty units reduced ave running
 
 include ${simulationtype}/in.setdump
 
-run ${ntime}
-# run   ${ntime} every 1000 "velocity all zero linear" & 
-# "velocity all zero angular"
+include ${simulationtype}/in.run

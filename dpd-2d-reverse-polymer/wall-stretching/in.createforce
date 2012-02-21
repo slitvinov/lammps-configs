@@ -1,4 +1,4 @@
 fix		idnve all nve
 
-variable bodyfx atom mass*${gx}
+variable bodyfx atom mass*${gx}*(x>0.75*${xsize})
 fix body_force flow addforce v_bodyfx 0.0 0.0 

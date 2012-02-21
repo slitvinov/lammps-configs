@@ -1,10 +1,6 @@
 thermo ${savetime}
-dump mdump all custom ${savetime} ${id}/dump.dpd.* xu yu zu vx vy vz type mol
+dump mdump all custom ${savetime} ${id}/dump.dpd.* x y z vx vy vz type mol
 dump_modify mdump pad 10
-
-thermo ${savetime}
-dump dcd polymer dcd ${savetime} ${id}/data.dcd
-dump_modify dcd pad 10 unwrap yes
 
 variable        zoomfactor equal 1.0/${lsp}
 if "${ndim}==2" then &
