@@ -6,9 +6,15 @@ set -u
 R=$1
 stfx=$2
 Nb=15
-lmp=/scratch/work/lammps-ro/src/lmp_linux
-restart2data=/scratch/work/lammps-ro/tools/restart2data
-mpirun=/scratch/prefix-ppm-mpi/bin/mpirun
+
+if [ -f ".lammps-configs" ]; then
+    # try local configuration first
+    source .lammps-configs
+elif [ -f "${HOME}/.lammps-configs" ]; then
+    # one for the host
+    source ${HOME}/.lammps-configs
+fi
+
 
 id=$(./genid.sh R=${R} stfx=${stfx})
 
