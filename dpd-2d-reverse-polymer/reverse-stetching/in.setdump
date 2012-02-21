@@ -1,0 +1,12 @@
+thermo ${savetime}
+dump mdump all custom ${savetime} ${id}/dump.dpd.* x y z vx vy vz type mol
+dump_modify mdump pad 10
+
+variable        zoomfactor equal 1.0/${lsp}
+if "${ndim}==2" then &
+"dump idump all image ${savetime} ${id}/image.*.jpg type type atom yes bond atom 0.5 adiam 0.5 zoom 1.8  box yes 0.01 zoom ${zoomfactor} size 1512 1512" &
+else &
+"dump idump all image ${savetime} ${id}/image.*.jpg type type atom yes bond atom 0.3 adiam 1.0 zoom 1.8  box yes 0.01 zoom ${zoomfactor} size 1512 1512"
+dump_modify idump pad 10
+
+

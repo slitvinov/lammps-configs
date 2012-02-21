@@ -1,0 +1,9 @@
+# domain size 
+variable        xsize equal 50
+# domain must be doubled
+variable        ysize equal 25*2
+if "${ndim}==3" then &
+"variable        zsize equal 10"
+
+atom_style	bond
+
