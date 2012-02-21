@@ -42,7 +42,7 @@ include ${simulationtype}/in.setbonds
 
 mass		* 1.0
 velocity	all set 0 0 0
-pair_style	dpd ${T} ${cutoff} 928948
+pair_style	dpd ${T} ${cutoff} ${dpdrandom}
 
 # s, p, w: solvent polymer wall
 variable        s equal 1
