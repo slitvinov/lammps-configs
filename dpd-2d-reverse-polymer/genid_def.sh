@@ -17,13 +17,13 @@ R_list="0.010000
    0.541170 \
    0.735642 \
    1.000000"
-stfx_list="200 150 100 50 10 0"
+stfx_list="10 20"
 
 
 NS="~"
 FS="~"
 
 CHECK_VALID_VAL=0
-prefix="Rfx150"
+prefix="relax"
 suffix=""
 
