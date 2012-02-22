@@ -30,8 +30,6 @@ ${lmp} ${vars} -in in.geninit
     Npoly=full \
     addangle=0
 
-<<<<<<< HEAD
+
 ${mpirun} -np 1  nice -n 19 ${lmp} ${vars} -in in.main
-=======
-${mpirun} -np 8  ${lmp} ${vars} -in in.main
->>>>>>> 9c16eb91efcd5e89d663494843af111f586d3610
+
