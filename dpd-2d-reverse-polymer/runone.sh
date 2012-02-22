@@ -3,8 +3,7 @@
 set -e
 set -u
 
-R=$1
-stfx=$2
+gx=$1
 Nb=15
 
 if [ -f ".lammps-configs" ]; then
@@ -16,10 +15,10 @@ elif [ -f "${HOME}/.lammps-configs" ]; then
 fi
 
 
-id=$(./genid.sh R=${R} stfx=${stfx})
+id=$(./genid.sh gx=${gx})
 
 mkdir -p ${id}
-vars="-var id ${id} -var ndim 2 -var R ${R} -var stfx ${stfx} -var dpdrandom ${RANDOM}"
+vars="-var id ${id} -var ndim 2 -var gx ${gx} -var dpdrandom ${RANDOM}"
 
 ${lmp} ${vars} -in in.geninit
 ../scritps/addpolymer.sh \
@@ -31,4 +30,8 @@ ${lmp} ${vars} -in in.geninit
     Npoly=full \
     addangle=0
 
+<<<<<<< HEAD
 ${mpirun} -np 1  nice -n 19 ${lmp} ${vars} -in in.main
+=======
+${mpirun} -np 8  ${lmp} ${vars} -in in.main
+>>>>>>> 9c16eb91efcd5e89d663494843af111f586d3610

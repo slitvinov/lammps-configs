@@ -1,5 +1,6 @@
 #! /bin/bash
 
+<<<<<<< HEAD
 varlist="R stfx"
 R_list="0.010000
    0.013594 \
@@ -18,12 +19,20 @@ R_list="0.010000
    0.735642 \
    1.000000"
 stfx_list="10 20"
+=======
+varlist="gx"
+gx_list=0.25
+>>>>>>> 9c16eb91efcd5e89d663494843af111f586d3610
 
 
 NS="~"
 FS="~"
 
 CHECK_VALID_VAL=0
+<<<<<<< HEAD
 prefix="relax"
+=======
+prefix="long"
+>>>>>>> 9c16eb91efcd5e89d663494843af111f586d3610
 suffix=""
 
