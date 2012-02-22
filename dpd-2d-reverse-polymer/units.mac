@@ -5,29 +5,36 @@ eq[2]: m = M;
 eq[3]: kT = M*L^2/T^2;
 sol: solve([eq[1], eq[2], eq[3]], [L, M, T])[1];
 
-/* dimensionless form */
-eta_fed: eta/ ( M/(L*T) );
-/* sound speed */
-c_fed: c/ (L/T);
-/* body force */
-f_fed: f/ (L/T^2);
-
-/* domain size */
-Lx_fed: Lx / L;
-v_fed: v / (L/T);
-
 /* set numerical values */
 num_env: [dx=2.5e-5, kT=1.38e-14,
           rho=1e3, m=rho*dx^3];
 
-/* here what you get in Fedosov units */
-float(ev(eta_fed, sol, num_env, eta=1.50e-2, eval, eval));
-float(ev(c_fed, sol, num_env, c=3e-1, eval, eval));
-float(ev(f_fed, sol, num_env, f=6.12, eval, eval));
-float(ev(Lx_fed, sol, num_env, Lx=1.803e-3, eval, eval));
-float(ev(v_fed, sol, num_env, v=0.041, eval, eval));
+fed_to_sdpd(units, val):= block([var, aux],
+  eqlocal: aux=var/units,
+  float(ev(rhs(solve(eqlocal, var)[1]), sol, num_env, aux=val, eval, eval))
+  );
 
-vmax(f, eta, rho, H):= f/(2*eta/rho) * H/2 * H/2;
+sdpd_to_fed(units, val):= block([var, aux],
+  eqlocal: aux=var*units,
+  float(ev(rhs(solve(eqlocal, var)[1]), sol, num_env, aux=val, eval, eval))
+  );
 
-/* Fedosov */
-vmax(0.25, 42, 3, 25);
+/* sound speed */
+fed_to_sdpd(L/T, 10.0);
+/* force */
+fed_to_sdpd(L/T^2, 0.25);
+/* velocities */
+fed_to_sdpd(L/T, 1.3);
+/* domain size */
+fed_to_sdpd(L, 50);
+/* dynamic viscosity */
+fed_to_sdpd(M/(L*T), 42);
+/* ks */
+fed_to_sdpd(L^2/T^2*M / L^2, 50);
+
+/* rmax */
+fed_to_sdpd(L, 1.0);
+
+
+sdpd_to_fed(L, 0.00180281196288426);
+sdpd_to_fed(L/T, 0.04);

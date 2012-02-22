@@ -1,7 +1,7 @@
 #! /bin/bash
 
 varlist="gx"
-gx_list=0.25
+gx_list=0.125
 
 
 NS="~"
