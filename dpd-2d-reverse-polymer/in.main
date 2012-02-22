@@ -8,7 +8,7 @@
 # simtemp.av.dim${ndim} (temperature), sxy.av.dim${ndim} (shear
 # stress)
 
-# set simulation type 
+# set simulation type
 log             log.lammps.${id}
 include         in.generic
 # lattice parameter
@@ -31,7 +31,9 @@ variable       adpd_sw    equal 25.0
 variable       adpd_pw    equal 25.0
 variable       ntime    equal 36000000
 variable       savetime equal 10000
-#variable       gx equal 0.75 # from 0.025 to 0.25  (p.6)
+# FENE parameters
+variable        r0 equal 1.0
+variable        H equal 50
 
 # number of timesteps
 timestep	0.005

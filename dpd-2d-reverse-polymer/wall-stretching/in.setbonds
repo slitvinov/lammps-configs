@@ -1,8 +1,6 @@
 bond_style stretching
 special_bonds 	lj 1 1 1
 # FENE parameters
-variable        r0 equal 1.0
-variable        H equal 100
 variable        INF        equal 10.0*${xsize}
 variable        stfx         equal 20
 variable        stfy         equal 0.0
