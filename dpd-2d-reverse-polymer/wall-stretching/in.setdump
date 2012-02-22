@@ -18,19 +18,6 @@ fix av_nd_hist polymer ave/spatial 1 10000 10000 &
                x center 0.01 &
                y lower 0.01 density/number file ${id}/polymer.ndensyty.hist units reduced ave running
 
-# variable maxi equal 10
-# label		loopa
-# variable i loop ${maxi}
-#          # average velocity
-#          variable x0_rgn equal ${i}*${xsize}/${maxi}
-#          variable x1_rgn equal (${i}+1)*${xsize}/${maxi}
-#          region rgn_${i}  block ${x0_rgn} ${x1_rgn} INF INF INF INF
-#          fix av_vx_${i} flow ave/spatial 1 ${Nrepeat} ${Nfreq} &
-#              y center 0.01 vx file ${id}/vx.av.${i} units box region rgn_${i}
-# 	 if $i==${maxi} then "jump SELF break"
-# next i
-# jump SELF loopa
-# label break
-
-
-
+fix av_sx_bond_hist flow ave/spatial 1 10000 10000 &
+               x center 0.01 &
+               y center 0.01 v_vstress_bond file ${id}/sxy-bond.hist units reduced ave running

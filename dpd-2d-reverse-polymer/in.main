@@ -29,7 +29,7 @@ variable       adpd_sp    equal 25.0
 variable       adpd_pp    equal 25.0
 variable       adpd_sw    equal 25.0
 variable       adpd_pw    equal 25.0
-variable       ntime    equal 360000
+variable       ntime    equal 36000000
 variable       savetime equal 10000
 #variable       gx equal 0.75 # from 0.025 to 0.25  (p.6)
 

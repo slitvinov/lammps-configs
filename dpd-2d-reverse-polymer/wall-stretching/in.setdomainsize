@@ -1,5 +1,5 @@
 # domain size 
-variable        xsize equal 100
+variable        xsize equal 600
 # for wall add to 6 extra layers
 variable        ysize equal 25+6
 if "${ndim}==3" then &

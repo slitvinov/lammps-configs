@@ -13,6 +13,7 @@ for x in $(seq 0.005 0.01 1.0); do
     echo ${x} ${m} ${vmax}
 
     ../scritps/lasvav.sh ${dname}/polymer.ndensyty.hist | awk -v c=${x} '$2==c{print $3, $5}' > ${dname}/polymer.x${x}
+    ../scritps/lasvav.sh ${dname}/sxy-bond.hist | awk -v c=${x} '$2==c{print $3, $5}' > ${dname}/bond.x${x}
 done > ${dname}/m.dat
 
 echo $* | xargs -n1 ./shift.sh
