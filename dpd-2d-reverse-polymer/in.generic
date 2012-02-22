@@ -6,9 +6,9 @@
 #variable        simulationtype string "free-polymers"
 #variable         simulationtype string "wall-stretching"
 #variable         simulationtype string "deform-stretching"
-variable        simulationtype string "deform-relaxation"
+#variable        simulationtype string "deform-relaxation"
 #variable         simulationtype string "wall-stretching"
-#variable         simulationtype string "deform-stretching"
+variable         simulationtype string "deform-stretching"
 #variable        simulationtype string "deform-relaxation"
 #variable        simulationtype string "wall-stretching"
 echo           both
