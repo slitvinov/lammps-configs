@@ -1,5 +1,5 @@
 set term push
-set term postscript enhanced color
+set term postscript eps enhanced color
 set output sprintf("%s.eps", "$0")
 replot
 
