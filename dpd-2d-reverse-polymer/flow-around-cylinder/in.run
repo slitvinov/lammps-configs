@@ -1,3 +1,40 @@
-run ${ntime}
-# run   ${ntime} every 1000 "velocity all zero linear" & 
-# "velocity all zero angular"
+# drive particles from the cylinder
+variable xcyl equal 0.5*${xsize}
+variable ycyl equal 0.5*${ysize}
+
+variable fmod equal 10
+
+variable X0 equal ${xcyl}-${rcyl}
+variable X1 equal ${xcyl}+${rcyl}
+
+variable Y0 equal ${ycyl}-${rcyl}
+variable Y1 equal ${ycyl}+${rcyl}
+
+variable mask  atom (x>${X0})*(x<${X1})*(y>${Y0})*(y<${Y1})
+variable geomx atom (x>${xcyl})*(x<${X1})-(x<${xcyl})*(x>${X0})
+variable geomy atom (y>${ycyl})*(y<${X1})-(y<${xcyl})*(y>${X0})
+variable dfx atom ${fmod}*v_geomx*v_mask
+variable dfy atom ${fmod}*v_geomy*v_mask
+
+fix drforce all addforce v_dfx v_dfy 0
+
+# switching off conservative force
+pair_coeff	  *    *  0.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_coeff	${s} ${w} 0.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_coeff	${w} ${p} 0.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+group        flow type ${s} ${p}
+run 3000
+
+region rvoid cylinder z ${xcyl} ${ycyl} ${rcyl} EDGE EDGE units box
+create_atoms	${w} region rvoid
+group        gvoid type ${w}
+fix	     nvoid gvoid setforce 0 0 0
+
+pair_coeff	  *    *  ${adpd_ss} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_coeff	${s} ${w} 30.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_coeff	${w} ${p} 30.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+
+variable bodyfx atom mass*${gx}
+fix body_force flow addforce v_bodyfx 0.0 0.0 
+
+run 10000

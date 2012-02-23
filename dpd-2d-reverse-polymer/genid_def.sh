@@ -8,6 +8,6 @@ NS="~"
 FS="~"
 
 CHECK_VALID_VAL=0
-prefix="3Dlong"
+prefix="cylinder"
 suffix=""
 

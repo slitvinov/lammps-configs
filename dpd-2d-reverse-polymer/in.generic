@@ -10,7 +10,8 @@
 #variable         simulationtype string "wall-stretching"
 #variable         simulationtype string "deform-stretching"
 #variable        simulationtype string "deform-relaxation"
-variable        simulationtype string "wall-stretching"
+#variable        simulationtype string "wall-stretching"
+variable        simulationtype string "flow-around-cylinder"
 echo           both
 units	       si
 # can be overwriten by -var
