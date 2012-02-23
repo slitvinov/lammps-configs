@@ -30,8 +30,14 @@ velocity     scd set 0.0 0.0 0.0 units box
 # We set rho_0 = 1000 kg/m^3, c = 0.1 m/s, h = 6.5e-5 m.
 # The dynamic viscosity is set to 1.0e-3 Pa s, corresponding to a kinematic viscosity of 1.0e-6 m^2/s
 #The temperature is set to 1e5C.
-pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
-pair_coeff * *     sph/taitwater/morris 1000 0.1 1.0e-3 ${h}
+pair_style         hybrid/overlay sph/rhosum 1 sdpd
+
+variable           sdpd_temp equal 0.0
+variable           sdpd_rho  equal 1e3
+variable           sdpd_c    equal 0.1
+variable           sdpd_eta  equal 1e-3
+pair_coeff         * *    sdpd ${sdpd_rho} ${sdpd_c} ${sdpd_eta} ${h}  ${sdpd_temp}
+
 pair_coeff * *     sph/rhosum ${h}
 
 # do full time integration
@@ -47,9 +53,7 @@ dump               dump_id all custom 1 dump*.dat x y vx vy c_rho_peratom
 
 variable      xone equal x[1]
 variable      xtwo equal x[2]
-variable      vone equal vx[1]
-variable      vtwo equal vx[2]
-fix extra all print 1 "${xone} ${xtwo} ${vone} ${vtwo}" file pos.dat
-run                100
+fix extra all print 1 "${xone} ${xtwo}" file pos.dat
 
+run                2
 print              "f: ${force_sdpd_fx} ${force_sdpd_fy}"
