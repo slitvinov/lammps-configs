@@ -1,0 +1,11 @@
+assume(rho>0);
+assume(rho0>0);
+assume(gamma>0);
+
+P(rho):= c0^2 * rho0 / gamma * ( (rho/rho0)^gamma - 1 );
+
+diff(P(rho), rho);
+
+
+Pmor(rho):= c0^2 / (rho^(gamma-1)*gamma) * ( rho^gamma - rho0^gamma ) ;
+subst(rho=rho0, ''diff(Pmor(rho), rho));

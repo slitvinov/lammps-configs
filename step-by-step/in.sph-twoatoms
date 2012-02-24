@@ -1,8 +1,9 @@
 echo               both
 dimension          2
 units              si
-atom_modify map array sort 0.0 0.0
+atom_modify        map array sort 0.0 0.0
 atom_style         meso
+communicate	   single vel yes
 #2D box
 # domain size
 variable          Lx equal 1.000e-3
@@ -30,8 +31,10 @@ velocity     scd set 0.0 0.0 0.0 units box
 # We set rho_0 = 1000 kg/m^3, c = 0.1 m/s, h = 6.5e-5 m.
 # The dynamic viscosity is set to 1.0e-3 Pa s, corresponding to a kinematic viscosity of 1.0e-6 m^2/s
 #The temperature is set to 1e5C.
-pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
-pair_coeff * *     sph/taitwater/morris 1000 0.1 1.0e-3 ${h}
+#pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
+pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater
+#pair_coeff * *     sph/taitwater/morris 1000 0.1 1.0e-3 ${h}
+pair_coeff * *     sph/taitwater 1000 0.1 1.0 ${h}
 pair_coeff * *     sph/rhosum ${h}
 
 # do full time integration
