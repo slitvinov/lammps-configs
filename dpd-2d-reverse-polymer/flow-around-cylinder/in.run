@@ -25,6 +25,8 @@ pair_coeff	${w} ${p} 0.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
 group        flow type ${s} ${p}
 run 3000
 
+unfix drforce
+
 region rvoid cylinder z ${xcyl} ${ycyl} ${rcyl} EDGE EDGE units box
 create_atoms	${w} region rvoid
 group        gvoid type ${w}
@@ -36,5 +38,6 @@ pair_coeff	${w} ${p} 30.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
 
 variable bodyfx atom mass*${gx}
 fix body_force flow addforce v_bodyfx 0.0 0.0 
+
 
 run 10000

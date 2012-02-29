@@ -31,4 +31,4 @@ ${lmp} ${vars} -in in.geninit
     addangle=0
 
 
-${mpirun} -np 4  nice -n 19 ${lmp} ${vars} -in in.main
+${mpirun} -np 8  nice -n 19 ${lmp} ${vars} -in in.main

@@ -1,0 +1,10 @@
+# get SPH time step based on eq. (25), (27)
+
+variable dt_csound equal 0.25*${dh}/${csound}*0.2
+variable dt_mu equal 0.125*${dh}^2/${mu}
+
+if "${dt_csound}<${dt_mu}" then "variable dt_sph equal ${dt_csound}" &
+    else "variable dt_sph equal ${dt_mu}"
+
+variable dt_csound delete 
+variable dt_mu delete 

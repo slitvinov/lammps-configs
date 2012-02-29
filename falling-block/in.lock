@@ -1,0 +1,66 @@
+# SPH example
+echo            both
+units		si
+variable       ndim  index 2
+boundary       f f p
+# domain size 
+variable        Npx  equal 20
+variable        xsize equal 0.3
+variable        ysize equal 0.1
+variable        cx equal 0.5*${xsize}
+if "${ndim}==3" then "variable        zsize equal 0.05"
+
+if "${ndim}==3" then "variable Npart equal round(${Npx}^3*${ysize}/${xsize}*${zsize}/${xsize})" &
+    else "variable Npart equal round(${Npx}*${ysize}/${xsize}*${Npx})" 
+
+# interaction parameters
+variable        dh equal ${xsize}/${Npx}
+variable        lsp equal ${dh}
+variable        eps equal 0.1*${dh}
+variable        cutoff equal 3.0*${dh}
+
+variable        rho_sph equal 1e3
+variable        rho_HR  equal 5e2
+variable        rho_HL  equal 1e3
+variable        nu equal 1e-3
+variable        mu equal ${nu}/${rho_sph}
+variable        csound equal 5.77e-3
+
+variable        rho0 equal 0.1*${rho_sph}
+
+# number of timesteps
+variable ntime equal 50000
+
+include         in.timestep
+timestep	${dt_sph}
+
+dimension       ${ndim}
+atom_style      meso
+communicate	single vel yes
+
+
+include         in.createatoms
+ 
+variable        m equal ${rho_sph}*${dh}^${ndim}
+mass		* ${m}
+print           "mass: ${m}"
+
+pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
+pair_coeff * *     sph/taitwater/morris ${rho0} ${csound} ${nu} ${cutoff}
+pair_coeff ${type_fluid} ${type_fluid}     sph/rhosum ${cutoff}
+
+neighbor	${eps} bin
+neigh_modify    delay 0 every 1
+
+
+compute         rho_peratom all meso_rho/atom
+include         in.dump
+
+fix             integrate_fix_full all meso
+
+
+# variable     gx equal 3e-7
+# variable bodyfx atom mass*${gx}*c_rho_peratom
+# fix reverce_periodic group_fluid addforce 0.0 v_bodyfx 0.0 
+
+run	     ${ntime}
