@@ -130,7 +130,6 @@ function readinputargs () {
     done
 }
 
-
 specialval="null all"
 source genid_def.sh
 

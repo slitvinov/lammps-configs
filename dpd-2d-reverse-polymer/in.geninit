@@ -1,4 +1,4 @@
-log            log.lammps.${id}-geninit
+log            ${id}/log.gen.lammps
 include         in.generic
 
 include ${simulationtype}/in.createatoms

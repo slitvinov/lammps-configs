@@ -1,0 +1,5 @@
+lmpconfigdir=${HOME}/lammps-configs/
+lmpdir=/data/work/lammps-ro/
+lmp=${lmpdir}/src/lmp_linux
+restart2data=${lmpdir}/tools/restart2data
+mpirun=mpirun

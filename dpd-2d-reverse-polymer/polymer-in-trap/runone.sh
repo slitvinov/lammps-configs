@@ -3,8 +3,8 @@
 set -e
 set -u
 
-gx=$1
-Nb=15
+kst=$1
+Nb=30
 
 if [ -f ".lammps-configs" ]; then
     # try local configuration first
@@ -14,20 +14,18 @@ elif [ -f "${HOME}/.lammps-configs" ]; then
     source ${HOME}/.lammps-configs
 fi
 
-
-id=$(./genid.sh gx=${gx})
-
+id=trap/kst${kst}
 mkdir -p ${id}
-vars="-var id ${id} -var ndim 3 -var gx ${gx} -var dpdrandom ${RANDOM} -var Nb ${Nb}"
+vars="-var id ${id} -var ndim 2  -var dpdrandom ${RANDOM} -var Nb ${Nb} -var kst ${kst}"
 
 ${lmp} ${vars} -in in.geninit
-../scritps/addpolymer.sh \
+${lmpconfigdir}/scritps/addpolymer.sh \
     input=${id}/dpd.restart \
     polyidfile=${id}/poly.id \
     output=${id}/dpd.output \
     Nbeads=${Nb} \
-    Nsolvent=$((2*Nb)) \
-    Npoly=full \
+    Nsolvent=1 \
+    Npoly=1 \
     addangle=0
 
 ${mpirun} -np 1  nice -n 19 ${lmp} ${vars} -in in.main
