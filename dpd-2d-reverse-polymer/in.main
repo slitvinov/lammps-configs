@@ -30,7 +30,7 @@ variable       adpd_pp    equal 25.0
 variable       adpd_sw    equal 25.0
 variable       adpd_pw    equal 25.0
 variable       ntime    equal 36000000
-variable       savetime equal 10000
+variable       savetime equal 1000
 # FENE parameters
 variable        r0 equal 1.0
 variable        H equal 50

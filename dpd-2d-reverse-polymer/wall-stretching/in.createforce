@@ -1,4 +1,4 @@
 fix		idnve all nve
 
 variable bodyfx atom mass*${gx}
-fix body_force flow addforce v_bodyfx 0.0 0.0 
+fix body_force flow addforce v_bodyfx 0.0 0.0

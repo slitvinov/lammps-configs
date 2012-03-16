@@ -1,0 +1,27 @@
+# do stratch and relax the first polymer
+# ID of the head  is 1 
+# ID of the tail in ${Nb}
+
+group head id == 1
+group tail id == ${Nb}
+
+if "${ndim}==2" then &
+"variable        stfx         equal 20" &
+else &
+"variable        stfx         equal 50"
+
+variable pfxm atom mass*${stfx}
+variable nfxm atom -mass*${stfx}
+
+fix str_hone head addforce v_pfxm 0.0 0.0
+fix str_tone tail addforce v_nfxm 0.0 0.0
+
+run 30000
+unfix str_tone
+unfix str_hone
+
+group polyA id <> 1 ${Nb}
+dump dcd polyA dcd 100  ${id}/data.dcd
+dump_modify dcd unwrap yes
+
+run 10000
