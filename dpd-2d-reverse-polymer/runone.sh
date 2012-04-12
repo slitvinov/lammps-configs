@@ -18,7 +18,7 @@ fi
 id=$(./genid.sh gx=${gx})
 
 mkdir -p ${id}
-vars="-var id ${id} -var ndim 2 -var gx ${gx} -var dpdrandom ${RANDOM}"
+vars="-var id ${id} -var ndim 3 -var gx ${gx} -var dpdrandom ${RANDOM} -var Nb ${Nb}"
 
 ${lmp} ${vars} -in in.geninit
 ../scritps/addpolymer.sh \
@@ -30,4 +30,5 @@ ${lmp} ${vars} -in in.geninit
     Npoly=full \
     addangle=0
 
-${mpirun} -np 8  ${lmp} ${vars} -in in.main
+
+${mpirun} -np 8  nice -n 19 ${lmp} ${vars} -in in.main
