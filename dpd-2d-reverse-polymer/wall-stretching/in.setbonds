@@ -4,9 +4,9 @@ special_bonds 	lj 1 1 1
 variable        INF        equal 10.0*${xsize}
 
 if "${ndim}==2" then &
-"variable        stfx         equal 5" &
+"variable        stfx         equal ${sx}" &
 else &
-"variable        stfx         equal 10"
+"variable        stfx         equal ${sx}"
 
 variable        stfy         equal 0.0
 variable        stfz         equal 0.0

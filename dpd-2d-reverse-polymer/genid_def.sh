@@ -1,7 +1,8 @@
 #! /bin/bash
 
-varlist="gx"
-gx_list=0.125
+varlist="gx sx"
+gx_list="0.125 0.25 0.5"
+sx_list="5 10 20"
 
 
 NS="~"

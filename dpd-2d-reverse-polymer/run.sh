@@ -4,5 +4,8 @@ set -e
 set -u
 
 for gx in $(./genid.sh  list=gx); do
+    for sx in $(./genid.sh  list=sx); do
 	echo ${gx}
-done | parallel -N1 --verbose ./runone.sh {1}
+	echo ${sx}
+    done 
+done| parallel -j 1 -N2 --verbose ./runone.sh {1} {2}
