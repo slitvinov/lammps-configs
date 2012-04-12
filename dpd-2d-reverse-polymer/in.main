@@ -9,7 +9,7 @@
 # stress)
 
 # set simulation type
-log             log.lammps.${id}
+log             ${id}/log.lammps
 include         in.generic
 # lattice parameter
 variable lsp    equal 1.0/${number_density}^(1.0/${ndim})

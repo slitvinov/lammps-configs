@@ -1,4 +1,5 @@
 lmpdir=/scratch/work/lammps-ro/
+lmpconfigdir=${lmpdir}/lammps-configs/
 lmp=${lmpdir}/src/lmp_linux
 restart2data=${lmpdir}/tools/restart2data
 mpirun=/scratch/prefix-mpich/bin/mpiexec
