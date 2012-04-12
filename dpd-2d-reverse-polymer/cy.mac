@@ -1,0 +1,43 @@
+assume(m<0, n>0, alpha>0, eta0>0);
+
+/* viscosity vs gamma_dot */
+eta: (eta0 - etainf) * (1 + (alpha*x)**n )**(m/n) + etainf;
+env_num: [m=-0.40745297553551, n=10.4797428047832, */
+          alpha=86.0910874643814, eta0= 44.0, etainf=25.3037918349903]; */
+
+
+eta_num: subst(env_num, eta);
+plot2d(eta_num, [x, 6e-3, 3]);
+
+/* stress vs gamma_dot */
+plot2d(eta_num*x, [x, 6e-3, 3]);
+rev_f(sigma):=find_root(eta_num*x-sigma, x, 0, 10.0);
+
+/* body force */
+f: 1.0;
+x_list: makelist(0.1*x, x, 0, 160);
+sigma_list: maplist(lambda([x], f*x), x_list);
+gamma_dot: maplist(rev_f, sigma_list);
+
+n: length(sigma_list);
+v: makelist(0, i, 1, n);
+eta_list: makelist(0, i, 1, n);
+eta_list[1]: sigma_list[1]/gamma_dot[1];
+for i:2 thru n do
+(
+  v[i]: v[i-1] + gamma_dot[i],
+  eta_list[i]: sigma_list[i]/gamma_dot[i]
+  );
+
+q: float(matrix(gamma_dot, sigma_list));
+write_data(transpose(q), "gammadot-sigma.dat");
+
+q: float(matrix(x_list, eta_list));
+write_data(transpose(q), "x-eta.dat");
+
+q: float(matrix(x_list, eta_list));
+write_data(transpose(q), "gammadot-sigma.dat");
+
+
+q: float(matrix(x_list, v));
+write_data(transpose(q), "vel.dat");
