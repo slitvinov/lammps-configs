@@ -30,4 +30,4 @@ ${lmp} ${vars} -in in.geninit
     Npoly=full \
     addangle=0
 
-${mpirun} -np 1  nice -n 19 ${lmp} ${vars} -in in.main
+${mpirun} -np 8  nice -n 19 ${lmp} ${vars} -in in.main
