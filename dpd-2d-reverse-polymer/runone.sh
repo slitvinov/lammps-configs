@@ -19,7 +19,7 @@ fi
 id=$(./genid.sh gx=${gx} sx=${sx})
 
 mkdir -p ${id}
-vars="-var id ${id} -var ndim 3 -var gx ${gx} -var sx ${sx} -var dpdrandom ${RANDOM} -var Nb ${Nb}"
+vars="-var id ${id} -var ndim 2 -var gx ${gx} -var sx ${sx} -var dpdrandom ${RANDOM} -var Nb ${Nb}"
 
 ${lmp} ${vars} -in in.geninit
 ../scritps/addpolymer.sh \
