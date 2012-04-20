@@ -1,0 +1,2 @@
+octave --no-window-system -qf /home/litvinov/google-svn/octave/matdcd-scripts/post-lammps.m  st-relax~gx~1~sx~20/data.dcd
+

@@ -1,14 +1,12 @@
 #! /bin/bash
 
-varlist="gx sx"
-gx_list="0.125 0.25 0.5"
-sx_list="5 10 20"
-
+varlist="g"
+g_list="1 2 3 4 5 6 7 8 9 10"
 
 NS="~"
 FS="~"
 
 CHECK_VALID_VAL=0
-prefix="3Dlong"
+prefix="st-relax-nb80-sx106"
 suffix=""
 

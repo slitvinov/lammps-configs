@@ -1,6 +1,6 @@
 thermo ${savetime}
 dump mdump all custom ${savetime} ${id}/dump.dpd.* x y z vx vy vz type mol
-dump_modify mdump pad 10
+dump_modify mdump pad 10 sort id
 
 variable        zoomfactor equal 1.0/${lsp}
 if "${ndim}==2" then &
