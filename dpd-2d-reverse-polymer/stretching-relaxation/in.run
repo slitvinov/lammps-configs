@@ -16,7 +16,7 @@ variable nfxm atom -mass*${stfx}
 fix str_hone head addforce v_pfxm 0.0 0.0
 fix str_tone tail addforce v_nfxm 0.0 0.0
 
-run 50000
+run 500000
 unfix str_tone
 unfix str_hone
 
@@ -24,4 +24,4 @@ group polyA id <> 1 ${Nb}
 dump dcd polyA dcd 100  ${id}/data.dcd
 dump_modify dcd unwrap yes
 
-run 50000
+run 500000
