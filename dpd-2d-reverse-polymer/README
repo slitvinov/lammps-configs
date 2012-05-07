@@ -1,2 +1,13 @@
 octave --no-window-system -qf /home/litvinov/google-svn/octave/matdcd-scripts/post-lammps.m  st-relax~gx~1~sx~20/data.dcd
 
+relaxation time for Nb=40:
+tau=2742.38 (in physical units)
+
+In saving times: 137.0
+
+Nb=80
+In cutoff=1.0 case
+tau=610.95696455932 (in physical units)
+In saving times: 30.55
+
+

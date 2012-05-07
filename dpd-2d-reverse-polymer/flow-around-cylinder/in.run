@@ -1,12 +1,13 @@
-# drive particles from the cylinder
+# center of the cylinder
 variable xcyl equal 0.5*${xsize}
 variable ycyl equal 0.5*${ysize}
 
+# driving force
 variable fmod equal 10
 
+# coordinates of the rectangle
 variable X0 equal ${xcyl}-${rcyl}
 variable X1 equal ${xcyl}+${rcyl}
-
 variable Y0 equal ${ycyl}-${rcyl}
 variable Y1 equal ${ycyl}+${rcyl}
 
@@ -16,6 +17,7 @@ variable geomy atom (y>${ycyl})*(y<${X1})-(y<${xcyl})*(y>${X0})
 variable dfx atom ${fmod}*v_geomx*v_mask
 variable dfy atom ${fmod}*v_geomy*v_mask
 
+# a force to drive particles from the rectangul
 fix drforce all addforce v_dfx v_dfy 0
 
 # switching off conservative force
@@ -23,21 +25,26 @@ pair_coeff	  *    *  0.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
 pair_coeff	${s} ${w} 0.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
 pair_coeff	${w} ${p} 0.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
 group        flow type ${s} ${p}
+
+# drive particles away from the rectangle
 run 3000
 
+# remove force
 unfix drforce
 
+# create cylinder
 region rvoid cylinder z ${xcyl} ${ycyl} ${rcyl} EDGE EDGE units box
 create_atoms	${w} region rvoid
 group        gvoid type ${w}
 fix	     nvoid gvoid setforce 0 0 0
 
+# switch on conservative force
 pair_coeff	  *    *  ${adpd_ss} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
 pair_coeff	${s} ${w} 30.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
 pair_coeff	${w} ${p} 30.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
 
+# add body force
 variable bodyfx atom mass*${gx}
 fix body_force flow addforce v_bodyfx 0.0 0.0 
-
 
 run 10000

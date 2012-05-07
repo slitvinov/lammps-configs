@@ -18,8 +18,8 @@ variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
 variable        kb equal 1.3806488e-23
 variable        T equal 1.0/${kb}
 # interaction parameters
-variable        cutoff equal 2.0
-variable        cutoff_cons equal 2.0
+variable        cutoff equal 1.0
+variable        cutoff_cons equal 1.0
 variable        m_power equal 0.25
 variable        sigma equal 3.0
 variable        gamma equal ${sigma}^2/(2*${T}*${kb})
@@ -65,7 +65,8 @@ compute         pTemp all temp/profile 1 1 0 y 5
 # average velocity
 compute vxav all reduce ave vx
 variable  vx_cm atom vx-c_vxav
-fix av_vx all ave/spatial 1 ${savetime} ${savetime} y center 0.01 v_vx_cm file ${id}/vx.av units reduced ave running
+fix av_vx_running all ave/spatial 1 ${savetime} ${savetime} y center 0.01 v_vx_cm file ${id}/vx.av.running units reduced ave running
+fix av_vx_one     all ave/spatial 1 ${savetime} ${savetime} y center 0.01 v_vx_cm file ${id}/vx.av.one units reduced ave one
 
 # stresses are in units of pressure*volume must be divided by per-atom
 # volume to have units of stress (pressue); components of the stress

@@ -1,12 +1,12 @@
 #! /bin/bash
 
-varlist="g"
-g_list="1 2 3 4 5 6 7 8 9 10"
+varlist="gx"
+gx_list="1e-2 1e-3"
 
 NS="~"
 FS="~"
 
 CHECK_VALID_VAL=0
-prefix="st-relax-nb80-sx106"
+prefix="ave-re-po"
 suffix=""
 

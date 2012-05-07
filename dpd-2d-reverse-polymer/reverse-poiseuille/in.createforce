@@ -1,4 +1,4 @@
 fix		idnve all nve
 
 variable bodyfx atom mass*${gx}*((y>${ysize}/2.0)-(y<${ysize}/2.0))
-
+fix body_force all addforce v_bodyfx 0.0 0.0 

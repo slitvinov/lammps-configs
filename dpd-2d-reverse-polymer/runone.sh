@@ -3,7 +3,7 @@
 set -e
 set -u
 
-g=$1
+gx=$1
 Nb=80
 
 if [ -f ".lammps-configs" ]; then
@@ -15,10 +15,10 @@ elif [ -f "${HOME}/.lammps-configs" ]; then
 fi
 
 
-id=$(./genid.sh g=${g})
+id=$(./genid.sh gx=${gx})
 
 mkdir -p ${id}
-vars="-var id ${id} -var ndim 3 -var g ${g} -var dpdrandom ${RANDOM} -var Nb ${Nb}"
+vars="-var id ${id} -var ndim 3 -var gx ${gx} -var dpdrandom ${RANDOM} -var Nb ${Nb}"
 
 ${lmp} ${vars} -in in.geninit
 ../scritps/addpolymer.sh \
@@ -26,7 +26,7 @@ ${lmp} ${vars} -in in.geninit
     polyidfile=${id}/poly.id \
     output=${id}/dpd.output \
     Nbeads=${Nb} \
-    Nsolvent=$((2*Nb)) \
+    Nsolvent=$((3*Nb)) \
     Npoly=full \
     addangle=0
 
