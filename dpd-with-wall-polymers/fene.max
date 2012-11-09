@@ -1,9 +1,0 @@
-assume(rho>0, K>0, R_0>0);
-ndim: 2;
-E: -0.5*K*R_0^2*log((1-(r/R_0)^2));
-F: diff(E, r);
-Npart: rho*V;
-dx: (V/Npart)^(1/ndim);
-
-
-ev(E, [r=0.5*R_0]);

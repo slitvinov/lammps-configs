@@ -1,7 +1,0 @@
-log            ${id}/log.gen.lammps
-include         in.generic
-
-include ${simulationtype}/in.createatoms
-
-mass		* 1.0
-write_restart ${id}/dpd.restart

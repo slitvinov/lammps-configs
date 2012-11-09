@@ -1,6 +1,0 @@
-if "${ndim}==2" then &
-"dump idump all image ${savetime} ${id}/image.*.jpg type type atom no bond atom 0.3 adiam 1.0 zoom 1.4  box yes 0.01" &
-else &
-"dump idump all image ${savetime} ${id}/image.*.jpg type type atom no bond atom 0.3 adiam 1.0 zoom 1.8  box yes 0.01"
-
-dump_modify idump pad 10

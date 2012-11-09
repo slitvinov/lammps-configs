@@ -1,3 +1,0 @@
-dump mdump all custom 1 dump.dpd.* x y z vx vy vz type c_rho_peratom
-dump_modify mdump sort id
-dump_modify mdump  pad 10

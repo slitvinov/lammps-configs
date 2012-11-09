@@ -1,4 +1,0 @@
-dpd-2d-fedosov: 2D solvent in equilibrium, LE, and reverse flow
-dpd-2d-le-fedosov: 2D polymer in LE
-dpd-3d-le-fedosov: 3D polymer in LE
-dpd-2d-wall-fedosov: 2D polymer with moving walls

@@ -1,8 +1,0 @@
-# domain size 
-variable        xsize equal 50
-# for reverce poiseuille
-variable        ysize equal 50
-if "${ndim}==3" then &
-"variable        zsize equal 10"
-
-atom_style	bond

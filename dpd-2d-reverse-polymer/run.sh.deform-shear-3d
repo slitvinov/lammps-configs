@@ -1,8 +1,0 @@
-#! /bin/bash
-
-set -e
-set -u
-
-for R in $(./genid.sh  list=R); do
-	echo ${R}
-done| parallel -j 1 -N1 --verbose ./runone.sh {1}

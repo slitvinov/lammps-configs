@@ -1,5 +1,0 @@
-# body force (units of acceleration)
-variable gy equal 0.055
-variable fy atom mass*${gy}*((x>${xsize}/2.0)-(x<${xsize}/2.0))
-fix reverce_periodic all addforce 0.0 v_fy 0.0 
-fix av_vy all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.2 vy file vy.av.dim${ndim}

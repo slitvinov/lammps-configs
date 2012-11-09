@@ -1,3 +1,0 @@
-read_data       ${id}/dpd.output
-
-# do nothing for reverce periodic

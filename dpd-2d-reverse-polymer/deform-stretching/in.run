@@ -1,3 +1,0 @@
-run ${ntime}
-# run   ${ntime} every 1000 "velocity all zero linear" & 
-# "velocity all zero angular"
