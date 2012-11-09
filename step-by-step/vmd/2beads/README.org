@@ -1,0 +1,12 @@
+Two beads polymer example
+
+#+BEGIN_SRC sh
+bash polymer.sh
+#+END_SRC
+
+Should generate =polymer.dcd=, =polymer.lammpstrj= and =polymer.psf=
+
+To visualize run
+#+BEGIN_EXAMPLE sh
+vmd -psf polymer.psf -dcd polymer.dcd
+#+END_EXAMPLE

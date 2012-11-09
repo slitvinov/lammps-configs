@@ -1,0 +1,34 @@
+PSF
+
+       1 !NTITLE
+ REMARKS VMD-generated NAMD/X-Plor PSF structure file
+
+       2 !NATOM
+       1      1         1    1      5.000000        1.0000           0
+       2      1         1    1      5.500000        1.0000           0
+
+       1 !NBOND: bonds
+       1       2
+
+       0 !NTHETA: angles
+
+
+       0 !NPHI: dihedrals
+
+
+       0 !NIMPHI: impropers
+
+
+       0 !NDON: donors
+
+
+       0 !NACC: acceptors
+
+
+       0 !NNB
+
+       0       0
+
+       1       0 !NGRP
+       0       0       0
+
