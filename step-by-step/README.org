@@ -14,6 +14,7 @@ Loop example
 
 One atom example
 [[file:in.oneatom]]
+Analytical solution for one atom problem
 [[file:oneatom.mac]]
 
 Redefine "equal" variable
@@ -21,6 +22,8 @@ Redefine "equal" variable
 
 Move two atoms with DPD equation of motion
 [[file:in.twoatoms]]
+Analytical solution for two atom in DPD
+[[file:twoatoms.mac]]
 
 Move one atoms with DPD equation of motion
 [[file:in.two-one-fix]]
@@ -30,6 +33,7 @@ Use variables
 
 Use dump_image
 [[file:in.dump_image]]
+Output in dump.*.jpg
 
 Read atoms configuration from the input file
 [[file:in.readinput]]
@@ -55,3 +59,4 @@ compute examples
 
 OOP in lammps
 [[file:in.oop]]
+(see methods definitions in  file:oop)
