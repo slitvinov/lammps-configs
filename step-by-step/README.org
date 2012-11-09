@@ -35,9 +35,16 @@ Use dump_image
 [[file:in.dump_image]]
 Output in dump.*.jpg
 
+dump_image for bonds
+file:in.poly-dump
+
 Read atoms configuration from the input file
 [[file:in.readinput]]
 [[file:generator.input]]
+
+Kinetic energy tensor
+file:in.temp
+file:temp.mac
 
 Create 2 beads polymer from input file
 [[file:in.polymer]]
@@ -52,10 +59,16 @@ Two dump with SPH
 LE style boundary conditions
 [[file:in.le]]
 
-compute examples
+Compute examples
 [[file:in.compute.global]]
 [[file:in.compute.own]]
 [[file:in.compute.userdef]]
+Ouptut compute to the file:
+file:in.compute.fixprint
+
+Calculate radious of gyration
+file:rg.mac
+
 
 OOP in lammps
 [[file:in.oop]]
