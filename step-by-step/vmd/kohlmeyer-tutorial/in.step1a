@@ -1,0 +1,33 @@
+# input script for topotools tutorial step 1a
+units lj
+boundary p p p
+atom_style angle
+
+read_data data.step1a
+
+# interaction styles
+pair_style lj/cut 2.5
+bond_style harmonic
+angle_style harmonic
+
+# don't compute non-bonded interactions
+# where we have bonded potentials
+special_bonds lj/coul 0.0 0.0 1.0
+
+# force field parameters
+pair_coeff   * *   1.0 1.0   # A
+bond_coeff   1     5.0 1.0   # A-A
+angle_coeff  1    10.0 120.0 # A-A-A
+
+# run a few steps of MD to break symmetries.
+velocity all create 0.5 5324324 dist gaussian mom no rot no
+fix 1 all nve
+run 100
+
+# and get the gas-phase minimum structure
+minimize 1.0e-4 1.0e-6 100 1000
+
+# write out restart for starting a new calculation
+# or to convert it back into a data file.
+write_restart step1a-min.restart
+
