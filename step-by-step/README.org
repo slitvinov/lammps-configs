@@ -1,3 +1,4 @@
+* lammps examples
 A collection of minimal LAMPS scripts
 
 Minimal setup 10x10x10 box, no atoms
@@ -48,7 +49,7 @@ file:temp.mac
 
 Create 2 beads polymer from input file
 [[file:in.polymer]]
-[[file:polymer.input]]
+[[file:polymer.data]]
 
 Two atoms with SPH
 [[file:in.sph-twoatoms]]
@@ -73,3 +74,13 @@ file:rg.mac
 OOP in lammps
 [[file:in.oop]]
 (see methods definitions in  file:oop)
+
+* moltemplate examples
+[[http://www.moltemplate.org]]
+
+Add to [[~/.bashrc]]
+#+BEGIN_SRC 
+export PATH="$PATH:$HOME/moltemplate/src"
+export MOLTEMPLATE_PATH="$HOME/moltemplate/common"
+#+END_SRC
+
