@@ -6,7 +6,7 @@ units       si
 atom_style  bond
 atom_modify map array sort 0.0 0.0
 
-read_data       polymer.input
+read_data       polymer.data
 
 bond_style      fene
 special_bonds 	lj 1 1 1
