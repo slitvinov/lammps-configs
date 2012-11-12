@@ -13,7 +13,6 @@ variable        adpd equal 1.0
 pair_style	dpd ${T} ${cutoff} 928948
 pair_coeff	* * ${adpd} ${gamma} 1.0
 
-group           fst id  == 1
 compute         imsd all msd
 variable        vmsd_x equal c_imsd[1]
 variable        vmsd_t equal c_imsd[4]
