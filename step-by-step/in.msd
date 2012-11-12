@@ -13,6 +13,7 @@ variable        adpd equal 1.0
 pair_style	dpd ${T} ${cutoff} 928948
 pair_coeff	* * ${adpd} ${gamma} 1.0
 
+group           fst id  == 1
 compute         imsd all msd
 variable        vmsd_x equal c_imsd[1]
 variable        vmsd_t equal c_imsd[4]
@@ -21,8 +22,8 @@ fix             pmsd all   print 1 "${vmsd_t} ${vmsd_x}" file "msd.dat" screen n
 fix	        1 all nve
 neighbor	5.0 bin
 neigh_modify    delay 0 every 1
-timestep        0.0001
+timestep        1e-3
 
-run 10000
+run 1000
 variable dxpos equal x[2]-x[1]
 print "dx(t=1) = ${dxpos}"

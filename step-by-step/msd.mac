@@ -1,4 +1,5 @@
 /* solve equation of motion for two DPD atoms */
+kill(all);
 rc: 1.0;
 A: 1.0;
 m: 1.0;
@@ -12,7 +13,14 @@ eq3: A*w(xj-xi) * uvec(xj, xi) - gamma*uvec(xi, xj)*abs(xi-xj)*(vi-vj)*w(xj-xi)^
 eq4: A*w(xi-xj) * uvec(xi, xj) - gamma*uvec(xi, xj)*abs(xj-xi)*(vj-vi)*w(xj-xi)^2;
 vars: [xi, xj, vi, vj];
 
-sol: rk([eq1, eq2, eq3, eq4], vars, [0.0, 0.5, 0, 0], [t, 0, 1.0, 1.0e-2])$
+sol: rk([eq1, eq2, eq3, eq4], vars, [0.0, 0.5, 0, 0], [t, 0, 1.0, 1.0e-3])$
 last(sol)[3] - last(sol)[2];
 
-x: map(lambda([x], x[2]), sol);
+xi0: first(sol)[2]$
+xj0: first(sol)[3]$
+msd: map(lambda([x], 1/2 * ((x[2]-xi0)^2 + (x[3]-xj0)^2)), sol)$
+
+with_stdout("msd.maxima.dat", for x in msd do (?princ(x), ?terpri()));
+
+
+
