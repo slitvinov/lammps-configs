@@ -1,8 +1,8 @@
 #! /bin/bash
 
 # write lammps data file data.step1a
-vmd -dispdev text -e twotypesxyztodata.tcl
+vmd -dispdev text -e simplexyztodata.tcl
 
 # visualize 
-vmd -e viz.tcl
+#vmd -e viz.tcl
 
