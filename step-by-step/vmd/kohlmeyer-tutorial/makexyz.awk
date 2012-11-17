@@ -1,4 +1,11 @@
+#! /usr/bin/awk -f
+
+
 BEGIN {
+    if (N<=1) {
+	printf("(makexyz.awk) N must be given. Run with 'awk -v N=10'\n") > "/dev/stderr"
+	exit(-1)
+    }
     print N
     print " linear chain of atoms"
     for (i=1; i<=N; i++) {
