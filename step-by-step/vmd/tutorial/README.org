@@ -1,0 +1,65 @@
+* Basic vmd usage
+vmd needs a file with molecular topology (see [[file:data.psf]]).
+data.psf describes a 10 beads linear molecuar with bonds (0-1, 1-2,
+2-3 and so on). All atoms are named "A".
+
+Another file [[file:data.dcd]] contains trajectory of the molecuar. To
+load files in vmd run
+#+BEGIN_SRC sh
+vmd -psf data.psf -dcd data.dcd
+#+END_SRC
+to get vmd shell as emacs tcl shell execute.
+#+BEGIN_SRC emacs-lisp
+;; FIXME: cannot make it without a file
+(inferior-tcl "./r.sh")
+#+END_SRC
+
+
+
+* Summary of vmd commands
+| First Word      | Description                                                                    |
+|-----------------+--------------------------------------------------------------------------------|
+| animate         | Play/Pause/Rewind a molecular trajectory.                                      |
+| atomselect      | Create atom selection objects for analysis.                                    |
+| axes            | Position a set of XYZ axes on the screen.                                      |
+| color           | Change the color assigned to molecules, or edit the colormap.                  |
+| colorinfo       | (Tcl) Obtain color properties for various objects                              |
+| display         | Change various aspects of the graphical display window.                        |
+| exit, quit      | Quit VMD.                                                                      |
+| gettimestep     | Retrieve a timestep as a binary Tcl array (use for plugins)                    |
+| help            | Display an on-line help file with an HTML viewer.                              |
+| imd             | Control the connection to a remote simulation.                                 |
+| label           | Turn on/off labels for atoms, bonds, angles, dihedral angles, or springs.      |
+| light           | Control the light sources used to illuminate graphical objects.                |
+| logfile         | Turn on/off logging a VMD session to a file or the console.                    |
+| material        | Create new material definitions and modify their settings.                     |
+| measure         | Measure properties of moleculear structures.                                   |
+| menu            | Control or query the on-screen GUI windows.                                    |
+| molecule or mol | Load, modify, or delete a molecule.                                            |
+| molinfo         | Get information about a molecule or loaded file.                               |
+| mouse           | Change the current state (mode) of the mouse.                                  |
+| play            | Start executing text commands from a specified file.                           |
+| render          | Output the currently displayed image (scene) to a file.                        |
+| rock            | Rotate the current scene continually at a specified rate.                      |
+| rotate          | Rotate the current scene around a given axis by a certain angle.               |
+| scale           | Scale the current scene up or down.                                            |
+| stage           | Position a checkerboard stage on the screen.                                   |
+| tool            | Initialize and control external spatial tracking devices.                      |
+| translate       | Translate the objects in the current scene.                                    |
+| user            | Add new keyboard commands.                                                     |
+| vmdinfo         | (Tcl) Get information about this version of VMD                                |
+| volmap          | Create volumetric data based on molecular information                          |
+| wait            | Wait a number of seconds before reading another command. Animation continues.  |
+| sleep           | Sleep a number of seconds before reading another command. Animation is frozen. |
+
+
+
+
+* vmd commands
+** animate
+*These commands control the animation of a molecular trajectory and
+are used to read and write animation frames to/from a file or
+Play/Pause/Rewind a molecular trajectory.*
+
+
+
