@@ -16,4 +16,4 @@ animate delete all
 animate read psf data.psf
 
 # cannot read only part of the frames
-animate read dcd data.dcd 0
+animate read dcd data.dcd

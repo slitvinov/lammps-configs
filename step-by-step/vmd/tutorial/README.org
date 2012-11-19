@@ -1,6 +1,6 @@
 * Basic vmd usage
 vmd needs a file with molecular topology (see [[file:data.psf]]).
-data.psf describes a 10 beads linear molecuar with bonds (0-1, 1-2,
+data.psf describes a 10 beads linear molecular with bonds (0-1, 1-2,
 2-3 and so on). All atoms are named "A".
 
 Another file [[file:data.dcd]] contains trajectory of the molecuar. To
@@ -15,12 +15,23 @@ to get vmd shell as emacs tcl shell execute.
 #+END_SRC
 
 
+* psf file format
+http://www.ks.uiuc.edu/Training/Tutorials/namd/namd-tutorial-unix-html/node21.html
+The fields in the atom section are atom ID, segment name, residue ID,
+residue name, atom name, atom type, charge, mass, and an unused 0. PSF
+files may be in either CHARMM or X-PLOR format, with the CHARMM format
+using an integer rather than a name for the atom type. NAMD requires
+the X-PLOR format, which is also more flexible since it is not tied to
+the specific order of atom types in a single parameter file. NAMD and
+VMD require that the order of atoms in any PDB, DCD, or other atomic
+data file exactly matches the order found in the PSF file.
 
 * Summary of vmd commands
+Table from the User Guide
 | First Word      | Description                                                                    |
 |-----------------+--------------------------------------------------------------------------------|
 | animate         | Play/Pause/Rewind a molecular trajectory.                                      |
-| atomselect      | Create atom selection objects for analysis.                                    |
+| atomselect [fn:2]     | Create atom selection objects for analysis.                                    |
 | axes            | Position a set of XYZ axes on the screen.                                      |
 | color           | Change the color assigned to molecules, or edit the colormap.                  |
 | colorinfo       | (Tcl) Obtain color properties for various objects                              |
@@ -52,14 +63,138 @@ to get vmd shell as emacs tcl shell execute.
 | wait            | Wait a number of seconds before reading another command. Animation continues.  |
 | sleep           | Sleep a number of seconds before reading another command. Animation is frozen. |
 
-
-
+More commands
+| vmdcon [fn:1]| print data to the VMD console or change console behavior |
 
 * vmd commands
+[[*org-mode][org-mode]]
 ** animate
-*These commands control the animation of a molecular trajectory and
-are used to read and write animation frames to/from a file or
-Play/Pause/Rewind a molecular trajectory.*
+"These commands control the animation of a molecular trajectory and
+are used to *read and write* animation frames to/from a file or
+Play/Pause/Rewind a molecular trajectory."
 
+#+NAME: sel
+#+BEGIN_SRC tcl
+animate read psf data.psf
+animate read dcd data.dcd
+set sel [atomselect top all]
+#+END_SRC
+
+#+RESULTS:
+: 10
+
+** atomselect
+"Atom selection is the primary method to access information about the
+atoms in a molecule. It works in two steps. The first step is to
+create a selection given the selection text, molecule id, and optional
+frame number. This is done by a function called atomselect, which
+returns the name of the new atom selection. the second step is to use
+the created selection to access the information about the atoms in the
+selections"
+
+Number of atoms
+#+BEGIN_SRC tcl :noweb yes
+<<sel>>
+return [$sel num]
+#+END_SRC
+
+#+RESULTS:
+: 10
+
+List of indices
+#+BEGIN_SRC tcl :noweb yes
+<<sel>>
+return [$sel list]
+#+END_SRC
+
+#+RESULTS:
+: 0 1 2 3 4 5 6 7 8 9
+
+Return text to create a selection
+#+BEGIN_SRC tcl :noweb yes
+<<sel>>
+return [$sel text]
+#+END_SRC
+
+#+RESULTS:
+: all
+
+Set the frame for selection
+#+BEGIN_SRC tcl :noweb yes
+<<sel>>
+$sel frame 4
+return [$sel frame]
+#+END_SRC
+
+#+RESULTS:
+: 4
+
+get/set attribute
+#+BEGIN_SRC tcl :noweb yes
+<<sel>>
+return [$sel get name]
+#+END_SRC
+
+#+RESULTS:
+: A A A A A A A A A A
+
+get list of bonds
+#+BEGIN_SRC tcl :noweb yes
+<<sel>>
+return [$sel getbonds]
+#+END_SRC
+
+* org-mode
+TCL support for org-mode is currently in git version of org-mode.
+#+BEGIN_SRC emacs-lisp
+(setq org-babel-tcl-command "vmd -dispdev none")
+;;(setq org-babel-tcl-command "tclsh")
+(add-to-list 'load-path "~/org-mode/contrib/babel/langs")
+(require 'ob-tcl)
+#+END_SRC
+
+#+RESULTS:
+: ob-tcl
+
+* Footnotes
+
+[fn:1] Print vmdcon help message: =vmdcon -help=
+
+[fn:2] select has more command than listed in the manual
+#+BEGIN_SRC tcl
+set sel [atomselect top all]
+set hlp [$sel help]
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+usage: <atomselection> <command> [args...]
+
+Commands for manipulating atomselection metadata:
+  frame [new frame value]      -- get/set frame
+  molid|molindex               -- get selection's molecule id
+  text                         -- get selection's text
+  delete                       -- delete atomselection (to free memory)
+  global                       -- move atomselection to global scope
+  update                       -- recalculate selection
+
+Commands for getting/setting attributes:
+  num                          -- number of atoms
+  list                         -- get atom indices
+  get <list of attributes>     -- for attributes use 'atomselect keywords'
+  set <list of attributes> <nested list of values>
+  getbonds                     -- get list of bonded atoms
+  setbonds <bondlists>
+  getbondorders                -- get list of bond orders
+  setbondorders <bondlists>
+  getbondtypes                 -- get list of bond types
+  setbondtypes  <bondlists>
+  moveto|moveby <3 vector>     -- change atomic coordinates
+  lmoveto|lmoveby <x> <y> <z>
+  move <4x4 transforamtion matrix>
+
+Commands for writing to a file:
+  writepdb <filename>          -- write sel to PDB file
+  writeXXX <filename>          -- write sel to XXX file (if XXX is a known format)
+#+END_EXAMPLE
 
 
