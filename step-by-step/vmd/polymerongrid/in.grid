@@ -1,5 +1,5 @@
 include in.minsetup
-lattice            sc 1.0
+lattice            sc 0.5
 create_atoms       1 region box
 
 print              "write grid.restart"

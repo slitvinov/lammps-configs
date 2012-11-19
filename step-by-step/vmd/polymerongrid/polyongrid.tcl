@@ -4,9 +4,10 @@ animate write psf grid.psf
 
 set blist {}
 set natoms [molinfo top get numatoms]
+set Nb 5
 for {set a 0; set b 1} {$b < $natoms} {incr a; incr b} {
     # each bond list entry is: <idx> <idx> [<type>] [<order>]
-    if { [expr {$a % 5}] != 0 } {
+    if { [expr {$a % ${Nb}}] != 0 } {
 	lappend blist [list $a $b A-A 1]
 	set sel [atomselect top "index $a"]
 	$sel set type 2
@@ -27,4 +28,5 @@ vmdcon -info "assigned [topo numangletypes] angle types to [topo numangles] angl
 vmdcon -info "angletypes: [topo angletypenames]"
 
 topo writelammpsdata poly.data angle
+animate write psf poly.psf
 exit
