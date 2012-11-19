@@ -22,40 +22,41 @@ data file exactly matches the order found in the PSF file.
 
 * Summary of vmd commands
 Table from the User Guide
-| First Word      | Description                                                                    |
-|-----------------+--------------------------------------------------------------------------------|
-| animate         | Play/Pause/Rewind a molecular trajectory.                                      |
-| atomselect [fn:2]     | Create atom selection objects for analysis.                                    |
-| axes            | Position a set of XYZ axes on the screen.                                      |
-| color           | Change the color assigned to molecules, or edit the colormap.                  |
-| colorinfo       | (Tcl) Obtain color properties for various objects                              |
-| display         | Change various aspects of the graphical display window.                        |
-| exit, quit      | Quit VMD.                                                                      |
-| gettimestep     | Retrieve a timestep as a binary Tcl array (use for plugins)                    |
-| help            | Display an on-line help file with an HTML viewer.                              |
-| imd             | Control the connection to a remote simulation.                                 |
-| label           | Turn on/off labels for atoms, bonds, angles, dihedral angles, or springs.      |
-| light           | Control the light sources used to illuminate graphical objects.                |
-| logfile         | Turn on/off logging a VMD session to a file or the console.                    |
-| material        | Create new material definitions and modify their settings.                     |
-| measure         | Measure properties of moleculear structures.                                   |
-| menu            | Control or query the on-screen GUI windows.                                    |
-| molecule or mol | Load, modify, or delete a molecule.                                            |
-| molinfo         | Get information about a molecule or loaded file.                               |
-| mouse           | Change the current state (mode) of the mouse.                                  |
-| play            | Start executing text commands from a specified file.                           |
-| render          | Output the currently displayed image (scene) to a file.                        |
-| rock            | Rotate the current scene continually at a specified rate.                      |
-| rotate          | Rotate the current scene around a given axis by a certain angle.               |
-| scale           | Scale the current scene up or down.                                            |
-| stage           | Position a checkerboard stage on the screen.                                   |
-| tool            | Initialize and control external spatial tracking devices.                      |
-| translate       | Translate the objects in the current scene.                                    |
-| user            | Add new keyboard commands.                                                     |
-| vmdinfo         | (Tcl) Get information about this version of VMD                                |
-| volmap          | Create volumetric data based on molecular information                          |
-| wait            | Wait a number of seconds before reading another command. Animation continues.  |
-| sleep           | Sleep a number of seconds before reading another command. Animation is frozen. |
+#+TBLNAME: Table 9.1: Summary of core text commands in VMD.
+| First Word        | Description                                                                    |
+|-------------------+--------------------------------------------------------------------------------|
+| animate           | Play/Pause/Rewind a molecular trajectory.                                      |
+| atomselect [fn:2] | Create atom selection objects for analysis.                                    |
+| axes              | Position a set of XYZ axes on the screen.                                      |
+| color             | Change the color assigned to molecules, or edit the colormap.                  |
+| colorinfo         | (Tcl) Obtain color properties for various objects                              |
+| display           | Change various aspects of the graphical display window.                        |
+| exit, quit        | Quit VMD.                                                                      |
+| gettimestep       | Retrieve a timestep as a binary Tcl array (use for plugins)                    |
+| help              | Display an on-line help file with an HTML viewer.                              |
+| imd               | Control the connection to a remote simulation.                                 |
+| label             | Turn on/off labels for atoms, bonds, angles, dihedral angles, or springs.      |
+| light             | Control the light sources used to illuminate graphical objects.                |
+| logfile           | Turn on/off logging a VMD session to a file or the console.                    |
+| material          | Create new material definitions and modify their settings.                     |
+| measure           | Measure properties of moleculear structures.                                   |
+| menu              | Control or query the on-screen GUI windows.                                    |
+| molecule or mol   | Load, modify, or delete a molecule.                                            |
+| molinfo           | Get information about a molecule or loaded file.                               |
+| mouse             | Change the current state (mode) of the mouse.                                  |
+| play              | Start executing text commands from a specified file.                           |
+| render            | Output the currently displayed image (scene) to a file.                        |
+| rock              | Rotate the current scene continually at a specified rate.                      |
+| rotate            | Rotate the current scene around a given axis by a certain angle.               |
+| scale             | Scale the current scene up or down.                                            |
+| stage             | Position a checkerboard stage on the screen.                                   |
+| tool              | Initialize and control external spatial tracking devices.                      |
+| translate         | Translate the objects in the current scene.                                    |
+| user              | Add new keyboard commands.                                                     |
+| vmdinfo           | (Tcl) Get information about this version of VMD                                |
+| volmap            | Create volumetric data based on molecular information                          |
+| wait              | Wait a number of seconds before reading another command. Animation continues.  |
+| sleep             | Sleep a number of seconds before reading another command. Animation is frozen. |
 
 More commands
 | vmdcon [fn:1]| print data to the VMD console or change console behavior |
@@ -157,8 +158,7 @@ $sel writexyz data.xyz.${nf}
 
 ** axes
 #+NAME: showpolymer
-#+BEGIN_SRC tcl :results silent :noweb yes
-  <<sel>>
+#+BEGIN_SRC tcl :noweb yes
   pbc box
   color Display Background white
   scale to 0.09
@@ -172,19 +172,190 @@ $sel writexyz data.xyz.${nf}
 
 
 #+BEGIN_SRC tcl :noweb yes :results silent
+<<sel>>
 <<showpolymer>>
 renderpng axdef
 #+END_SRC
 [[file:axdef.png]]
 
 #+BEGIN_SRC tcl :noweb yes :results silent
+<<sel>>
 <<showpolymer>>
 animate pause
 renderpng axdoff
 #+END_SRC
 [[file:axoff.png]]
 
-** color
+** color/colorinfo
+#+TBLNAME: Table 6.2: Color categories used in VMD
+| Category  | Contents                                                               |
+|-----------+------------------------------------------------------------------------|
+| Display   | The background color                                                   |
+| Axes      | The components of the axes                                             |
+| Stage     | The colors for the checkboard stage                                    |
+| Name      | The available atom names (color by Name)                               |
+| Type      | The available atom types (color by Type)                               |
+| Resname   | The residue names (color by ResName)                                   |
+| Chain     | The one-character chain identifier.                                    |
+| Segname   | The segment names (color by SegName)                                   |
+| Molecule  | The names assigned to each molecule (color by Molecule)                |
+| Highlight | The protein, nucleic, and non-backbone colors                          |
+| Restype   | The residue types (color by ResType)                                   |
+| Structure | The secondary structure type (helix, sheet, coil) (color by Structure) |
+| Surface   | The surface types                                                      |
+| Labels    | The different labels (atoms, bonds, etc.)                              |
+#+TBLNAME: Table 6.3: Molecular coloring methods
+| Method    | Description                                                             |
+| Name      | Atom name, using the Name category                                      |
+| Type      | Atom type, using the Type category                                      |
+| ResName   | Residue name, using the Resname category                                |
+| ResType   | Residue type, using the Restype category                                |
+| ResID     | Residue identifier, using the resid mod 16 for the color                |
+| Chain     | The one-character chain identifier, using the Chain category            |
+| SegName   | Segment name, using the Segname category                                |
+| Molecule  | Molecule all one color, using the Molecule category                     |
+| Structure | Helix, sheet, and coils are colored difierently                         |
+| ColorID   | Use a user-specified color index (from 0 to 15)                         |
+| Beta      | Color scale based on beta value of the PDB file                         |
+| Occupancy | Color scale based on the occupancy field of the PDB file                |
+| Mass      | Color scale based on the atomic mass                                    |
+| Charge    | Color scale based on the atomic charge                                  |
+| Pos       | Color scale based on the distance ...                                   |
+| User      | Provides a single data value for each atom for each timestep            |
+| Index     | Color scale is based on the atom index...                               |
+| Backbone  | Backbone atoms green, everything else is blue                           |
+| Throb     | Animates colors through the active color scale based on wall clock time |
+| Timestep  | Color scale based on the current trajectory timestep frame              |
+
+- =color category name color=: Set the color of the object specified by category
+and name to color.
+- =color category name=: Get the color of the object specified by category and
+  name.
+- =colorinfo categories=: returns a list of available categories
+- =colorinfo category category=: returns a list of names for the given category
+- =color add item category name colorname=: adds colors for the named
+  color category
+
+*** A list of categories
+#+BEGIN_SRC tcl :noweb yes
+return [colorinfo categories]
+#+END_SRC
+
+#+RESULTS:
+: Display Axes Name Type Element Resname Restype Chain Segname Conformation Molecule Highlight Structure Surface Labels Stage
+
+*** A list of names for a given category (Display)
+#+BEGIN_SRC tcl :noweb yes
+return [colorinfo category Display]
+#+END_SRC
+
+#+RESULTS:
+: Background BackgroundTop BackgroundBot Foreground FPS
+
+*** A list of names for a given category (Name)
+#+BEGIN_SRC tcl :noweb yes
+return [colorinfo category Name]
+#+END_SRC
+
+#+RESULTS:
+: H O N C S P Z LPA LPB
+
+*** Get all categories and corresponding names
+#+BEGIN_SRC tcl :noweb yes
+  set clst [colorinfo categories]
+  set otp ""
+  foreach cname ${clst} {
+      append otp "${cname}: [colorinfo category ${cname}] \n"
+  }
+  return ${otp}
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+Display: Background BackgroundTop BackgroundBot Foreground FPS 
+Axes: X Y Z Origin Labels 
+Name: H O N C S P Z LPA LPB 
+Type: H O N C S P Z LP DRUD 
+Element: X Ac Ag Al Am Ar As At Au B Ba Be Bh Bi Bk Br C Ca Cd Ce Cf Cl Cm Co Cr Cs Cu Db Ds Dy Er Es Eu F Fe Fm Fr Ga Gd Ge H He Hf Hg Ho Hs I In Ir K Kr La Li Lr Lu Md Mg Mn Mo Mt N Na Nb Nd Ne Ni No Np O Os P Pa Pb Pd Pm Po Pr Pt Pu Ra Rb Re Rf Rg Rh Rn Ru S Sb Sc Se Sg Si Sm Sn Sr Ta Tb Tc Te Th Ti Tl Tm U V W Xe Y Yb Zn Zr 
+Resname: ALA ARG ASN ASP CYS GLY GLU GLN HIS ILE LEU LYS MET PHE PRO SER THR TRP TYR VAL ADE CYT GUA THY URA TIP TIP3 WAT SOL H2O LYR ZN NA CL HSE HSD HSP CYX 
+Restype: Unassigned Solvent Nucleic_Acid Basic Acidic Polar Nonpolar Ion 
+Chain:  
+Segname:  
+Conformation:  
+Molecule:  
+Highlight: Proback Nucback Nonback 
+Structure: {Alpha Helix} 3_10_Helix Pi_Helix Extended_Beta Bridge_Beta Turn Coil 
+Surface: Grasp 
+Labels: Atoms Bonds Angles Dihedrals Springs 
+Stage: Even Odd 
+#+end_example
+
+*** Color atoms
+Color atoms. In [[file:data.psf]] atoms are named "A". Create a name for
+"A" and set color.
+
+#+BEGIN_SRC tcl :noweb yes :results silent
+color add item Name A green
+<<sel>>
+<<showpolymer>>
+renderpng colorpolymer
+#+END_SRC
+
+[[file:colorpolymer.png]]
+
+*** Rename and color a half of the atoms
+
+#+BEGIN_SRC tcl :noweb yes :results silent
+color add item Name A green
+color add item Name B red
+<<sel>>
+set bs [atomselect top "index<5"]
+$bs set name B
+
+<<showpolymer>>
+renderpng halfpolymer
+#+END_SRC
+
+file:halfpolymer.png
+** display
+** draw
+display user-defined objects built from graphics primitives such as
+points, lines, cylinders, cones, spheres, triangles, and text.
+** graphics
+draws low-level graphics primitives
+** gettimestep
+#+BEGIN_SRC tcl :noweb yes
+<<sel>>
+return [colorinfo categories]
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+Info) VMD for LINUXAMD64, version 1.9.1 (February 1, 2012)
+Info) http://www.ks.uiuc.edu/Research/vmd/                         
+Info) Email questions and bug reports to vmd@ks.uiuc.edu           
+Info) Please include this reference in published work using VMD:   
+Info)    Humphrey, W., Dalke, A. and Schulten, K., `VMD - Visual   
+Info)    Molecular Dynamics', J. Molec. Graphics 1996, 14.1, 33-38.
+Info) -------------------------------------------------------------
+Info) Multithreading available, 8 CPUs detected.
+Info) Free system memory: 12832MB (79%)
+Warning) Detected a mismatch between CUDA runtime and GPU driver
+Warning) Check to make sure that GPU drivers are up to date.
+Info) No CUDA accelerator devices available.
+Warning) Detected X11 'Composite' extension: if incorrect display occurs
+Warning) try disabling this optional X server feature.
+Info) OpenGL renderer: Quadro NVS 290/PCIe/SSE2
+Info)   Features: STENCIL MSAA(16) MDE MTX NPOT PP PS GLSL(OVFG) 
+Info)   Full GLSL rendering mode is available.
+Info)   Textures: 2-D (8192x8192), 3-D (2048x2048x2048), Multitexture (4)
+Info) Dynamically loaded 2 plugins in directory:
+Info) /scratch/netbsd/lib/vmd/plugins/LINUXAMD64/molfile
+invalid command name "<<sel>>"
+Display Axes Name Type Element Resname Restype Chain Segname Conformation Molecule Highlight Structure Surface Labels Stage
+Info) VMD for LINUXAMD64, version 1.9.1 (February 1, 2012)
+Info) Exiting normally.
+#+end_example
 
 * org-mode							      :emacs:
 TCL support for org-mode is currently in git version of org-mode.
