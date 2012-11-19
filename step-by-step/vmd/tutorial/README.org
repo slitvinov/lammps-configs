@@ -8,12 +8,6 @@ load files in vmd run
 #+BEGIN_SRC sh
 vmd -psf data.psf -dcd data.dcd
 #+END_SRC
-to get vmd shell as emacs tcl shell execute.
-#+BEGIN_SRC emacs-lisp
-;; FIXME: cannot make it without a file
-(inferior-tcl "./r.sh")
-#+END_SRC
-
 
 * psf file format
 http://www.ks.uiuc.edu/Training/Tutorials/namd/namd-tutorial-unix-html/node21.html
@@ -67,7 +61,7 @@ More commands
 | vmdcon [fn:1]| print data to the VMD console or change console behavior |
 
 * vmd commands
-[[*org-mode][org-mode]]
+#+CALL: setvmd
 ** animate
 "These commands control the animation of a molecular trajectory and
 are used to *read and write* animation frames to/from a file or
@@ -80,17 +74,19 @@ animate read dcd data.dcd
 set sel [atomselect top all]
 #+END_SRC
 
+#+RESULTS: sel
+
 #+RESULTS:
 : 10
 
-** atomselect
+** atomselect 
 "Atom selection is the primary method to access information about the
 atoms in a molecule. It works in two steps. The first step is to
 create a selection given the selection text, molecule id, and optional
 frame number. This is done by a function called atomselect, which
 returns the name of the new atom selection. the second step is to use
 the created selection to access the information about the atoms in the
-selections"
+selections". See [fn:1].
 
 Number of atoms
 #+BEGIN_SRC tcl :noweb yes
@@ -138,23 +134,83 @@ return [$sel get name]
 #+RESULTS:
 : A A A A A A A A A A
 
+
 get list of bonds
 #+BEGIN_SRC tcl :noweb yes
 <<sel>>
 return [$sel getbonds]
 #+END_SRC
 
-* org-mode
+#+RESULTS:
+: 1 {0 2} {1 3} {2 4} {3 5} {4 6} {5 7} {6 8} {7 9} 8
+
+write selected atom to a file
+#+BEGIN_SRC tcl :noweb yes :results silent
+<<sel>>
+set nf 1
+$sel frame ${nf}
+$sel writexyz data.xyz.${nf}
+set nf 2
+$sel frame ${nf}
+$sel writexyz data.xyz.${nf}
+#+END_SRC
+
+** axes
+#+NAME: showpolymer
+#+BEGIN_SRC tcl :results silent :noweb yes
+  <<sel>>
+  pbc box
+  color Display Background white
+  scale to 0.09
+  rotate x to -90
+  mol modstyle 0 0 Lines 3.0
+  proc renderpng {basefilename} {
+      set ccmd "convert ${basefilename}.tga -resize 30% ${basefilename}.png"
+      render TachyonInternal ${basefilename}.tga ${ccmd}
+  }
+#+END_SRC
+
+
+#+BEGIN_SRC tcl :noweb yes :results silent
+<<showpolymer>>
+renderpng axdef
+#+END_SRC
+[[file:axdef.png]]
+
+#+BEGIN_SRC tcl :noweb yes :results silent
+<<showpolymer>>
+animate pause
+renderpng axdoff
+#+END_SRC
+[[file:axoff.png]]
+
+** color
+
+* org-mode							      :emacs:
 TCL support for org-mode is currently in git version of org-mode.
-#+BEGIN_SRC emacs-lisp
+#+NAME: vmdgra
+#+BEGIN_SRC emacs-lisp :results silent
+(setq org-babel-tcl-command "vmd")
+#+END_SRC
+
+
+#+NAME: vmdtxt
+#+BEGIN_SRC emacs-lisp :results silent
 (setq org-babel-tcl-command "vmd -dispdev none")
 ;;(setq org-babel-tcl-command "tclsh")
 (add-to-list 'load-path "~/org-mode/contrib/babel/langs")
 (require 'ob-tcl)
 #+END_SRC
 
-#+RESULTS:
-: ob-tcl
+Run vmd as emacs tcl shell:
+#+NAME: runvmd
+#+BEGIN_SRC emacs-lisp :results output
+;; FIXME: cannot make it without a file
+(inferior-tcl "./r.sh")
+#+END_SRC
+
+#+RESULTS: runvmd
+
 
 * Footnotes
 
@@ -196,5 +252,3 @@ Commands for writing to a file:
   writepdb <filename>          -- write sel to PDB file
   writeXXX <filename>          -- write sel to XXX file (if XXX is a known format)
 #+END_EXAMPLE
-
-
