@@ -10,7 +10,8 @@ vmd -psf data.psf -dcd data.dcd
 #+END_SRC
 
 * psf file format
-http://www.ks.uiuc.edu/Training/Tutorials/namd/namd-tutorial-unix-html/node21.html
+[[http://www.ks.uiuc.edu/Training/Tutorials/namd/namd-tutorial-unix-html/node21.html][psf]]
+
 The fields in the atom section are atom ID, segment name, residue ID,
 residue name, atom name, atom type, charge, mass, and an unused 0. PSF
 files may be in either CHARMM or X-PLOR format, with the CHARMM format
@@ -58,27 +59,21 @@ Table from the User Guide
 | wait              | Wait a number of seconds before reading another command. Animation continues.  |
 | sleep             | Sleep a number of seconds before reading another command. Animation is frozen. |
 
-More commands
-| vmdcon [fn:1]| print data to the VMD console or change console behavior |
+#+TBLNAME: More tcl commands
+| vmdcon [fn:1] | print data to the VMD console or change console behavior |
 
 * vmd commands
-#+CALL: setvmd
 ** animate
 "These commands control the animation of a molecular trajectory and
 are used to *read and write* animation frames to/from a file or
 Play/Pause/Rewind a molecular trajectory."
 
 #+NAME: sel
-#+BEGIN_SRC tcl
+#+BEGIN_SRC tcl :results silent
 animate read psf data.psf
 animate read dcd data.dcd
 set sel [atomselect top all]
 #+END_SRC
-
-#+RESULTS: sel
-
-#+RESULTS:
-: 10
 
 ** atomselect 
 "Atom selection is the primary method to access information about the
@@ -161,9 +156,9 @@ $sel writexyz data.xyz.${nf}
 #+BEGIN_SRC tcl :noweb yes
   pbc box
   color Display Background white
-  scale to 0.09
+  scale to 0.20
   rotate x to -90
-  mol modstyle 0 0 Lines 3.0
+  mol modstyle 0 0 Lines 5.0
   proc renderpng {basefilename} {
       set ccmd "convert ${basefilename}.tga -resize 30% ${basefilename}.png"
       render TachyonInternal ${basefilename}.tga ${ccmd}
@@ -182,7 +177,8 @@ renderpng axdef
 <<sel>>
 <<showpolymer>>
 animate pause
-renderpng axdoff
+axes off
+renderpng axoff
 #+END_SRC
 [[file:axoff.png]]
 
@@ -323,51 +319,99 @@ display user-defined objects built from graphics primitives such as
 points, lines, cylinders, cones, spheres, triangles, and text.
 ** graphics
 draws low-level graphics primitives
-** gettimestep
+** TODO gettimestep
+=gettimestep= returns garbage
 #+BEGIN_SRC tcl :noweb yes
 <<sel>>
-return [colorinfo categories]
+set ts [gettimestep top 0]
+return $ts
 #+END_SRC
 
 #+RESULTS:
-#+begin_example
-Info) VMD for LINUXAMD64, version 1.9.1 (February 1, 2012)
-Info) http://www.ks.uiuc.edu/Research/vmd/                         
-Info) Email questions and bug reports to vmd@ks.uiuc.edu           
-Info) Please include this reference in published work using VMD:   
-Info)    Humphrey, W., Dalke, A. and Schulten, K., `VMD - Visual   
-Info)    Molecular Dynamics', J. Molec. Graphics 1996, 14.1, 33-38.
-Info) -------------------------------------------------------------
-Info) Multithreading available, 8 CPUs detected.
-Info) Free system memory: 12832MB (79%)
-Warning) Detected a mismatch between CUDA runtime and GPU driver
-Warning) Check to make sure that GPU drivers are up to date.
-Info) No CUDA accelerator devices available.
-Warning) Detected X11 'Composite' extension: if incorrect display occurs
-Warning) try disabling this optional X server feature.
-Info) OpenGL renderer: Quadro NVS 290/PCIe/SSE2
-Info)   Features: STENCIL MSAA(16) MDE MTX NPOT PP PS GLSL(OVFG) 
-Info)   Full GLSL rendering mode is available.
-Info)   Textures: 2-D (8192x8192), 3-D (2048x2048x2048), Multitexture (4)
-Info) Dynamically loaded 2 plugins in directory:
-Info) /scratch/netbsd/lib/vmd/plugins/LINUXAMD64/molfile
-invalid command name "<<sel>>"
-Display Axes Name Type Element Resname Restype Chain Segname Conformation Molecule Highlight Structure Surface Labels Stage
-Info) VMD for LINUXAMD64, version 1.9.1 (February 1, 2012)
-Info) Exiting normally.
-#+end_example
 
-* org-mode							      :emacs:
-TCL support for org-mode is currently in git version of org-mode.
-#+NAME: vmdgra
-#+BEGIN_SRC emacs-lisp :results silent
-(setq org-babel-tcl-command "vmd")
+** label
+Return list of the label categories
+#+BEGIN_SRC tcl :noweb yes
+return [label list]
+#+END_SRC
+
+#+RESULTS:
+: Atoms Bonds Angles Dihedrals Springs
+
+Return all labels in every category
+#+BEGIN_SRC tcl :noweb yes
+set clst [label list]
+set otp ""
+foreach cname ${clst} {
+    append otp "${cname}: [label list ${cname}] \n"
+}
+return ${otp}
+#+END_SRC
+
+#+RESULTS:
+: Atoms:  
+: Bonds:  
+: Angles:  
+: Dihedrals:  
+: Springs:  
+: 
+
+Add and show label on atom
+#+BEGIN_SRC tcl :noweb yes :results silent
+<<sel>>
+label add Atoms 0/4
+#label textformat Atoms 4 Center
+<<showpolymer>>
+renderpng withlabel
 #+END_SRC
 
 
+[[file:withlabel.png]]
+** molinfo
+List of molecule IDs
+#+BEGIN_SRC tcl :noweb yes
+<<sel>>
+return [molinfo list]
+#+END_SRC
+
+#+RESULTS:
+: 0
+
+Number of atoms
+#+BEGIN_SRC tcl :noweb yes
+<<sel>>
+return [molinfo top get numatoms]
+#+END_SRC
+
+#+RESULTS:
+: 10
+
+Get 
+#+BEGIN_SRC tcl :noweb yes
+<<sel>>
+set out ""
+append  out [molinfo top get {filename filetype center}] "\n"
+append  out "numframes: " [molinfo top get numframes] "\n"
+append  out "timesteps: " [molinfo top get timesteps]
+return $out
+#+END_SRC
+
+#+RESULTS:
+: {data.psf data.dcd} {psf dcd} {10.141185 10.121674 14.460485}
+: numframes: 1
+: timesteps: 0
+
+* org-mode							      :emacs:
+TCL support for org-mode is currently in git version of
+org-mode. =-nt= to switch spash-screen off.
+#+NAME: vmdgra
+#+BEGIN_SRC emacs-lisp :results silent
+(setq org-babel-tcl-command "vmd -nt")
+#+END_SRC
+
 #+NAME: vmdtxt
 #+BEGIN_SRC emacs-lisp :results silent
-(setq org-babel-tcl-command "vmd -dispdev none")
+(setq org-babel-tcl-command "vmd -dispdev none -nt")
 ;;(setq org-babel-tcl-command "tclsh")
 (add-to-list 'load-path "~/org-mode/contrib/babel/langs")
 (require 'ob-tcl)
@@ -375,13 +419,10 @@ TCL support for org-mode is currently in git version of org-mode.
 
 Run vmd as emacs tcl shell:
 #+NAME: runvmd
-#+BEGIN_SRC emacs-lisp :results output
+#+BEGIN_SRC emacs-lisp :results silent
 ;; FIXME: cannot make it without a file
 (inferior-tcl "./r.sh")
 #+END_SRC
-
-#+RESULTS: runvmd
-
 
 * Footnotes
 
