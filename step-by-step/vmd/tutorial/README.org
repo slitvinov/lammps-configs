@@ -330,32 +330,7 @@ return [colorinfo categories]
 #+END_SRC
 
 #+RESULTS:
-#+begin_example
-Info) VMD for LINUXAMD64, version 1.9.1 (February 1, 2012)
-Info) http://www.ks.uiuc.edu/Research/vmd/                         
-Info) Email questions and bug reports to vmd@ks.uiuc.edu           
-Info) Please include this reference in published work using VMD:   
-Info)    Humphrey, W., Dalke, A. and Schulten, K., `VMD - Visual   
-Info)    Molecular Dynamics', J. Molec. Graphics 1996, 14.1, 33-38.
-Info) -------------------------------------------------------------
-Info) Multithreading available, 8 CPUs detected.
-Info) Free system memory: 12832MB (79%)
-Warning) Detected a mismatch between CUDA runtime and GPU driver
-Warning) Check to make sure that GPU drivers are up to date.
-Info) No CUDA accelerator devices available.
-Warning) Detected X11 'Composite' extension: if incorrect display occurs
-Warning) try disabling this optional X server feature.
-Info) OpenGL renderer: Quadro NVS 290/PCIe/SSE2
-Info)   Features: STENCIL MSAA(16) MDE MTX NPOT PP PS GLSL(OVFG) 
-Info)   Full GLSL rendering mode is available.
-Info)   Textures: 2-D (8192x8192), 3-D (2048x2048x2048), Multitexture (4)
-Info) Dynamically loaded 2 plugins in directory:
-Info) /scratch/netbsd/lib/vmd/plugins/LINUXAMD64/molfile
-invalid command name "<<sel>>"
-Display Axes Name Type Element Resname Restype Chain Segname Conformation Molecule Highlight Structure Surface Labels Stage
-Info) VMD for LINUXAMD64, version 1.9.1 (February 1, 2012)
-Info) Exiting normally.
-#+end_example
+: Display Axes Name Type Element Resname Restype Chain Segname Conformation Molecule Highlight Structure Surface Labels Stage
 
 * org-mode							      :emacs:
 TCL support for org-mode is currently in git version of org-mode.
