@@ -15,6 +15,7 @@ $sel_polymer set name polymer
 set sel_wall [atomselect top "resname 4"]
 $sel_wall set name wall
 
+
 # boundary conditions
 pbc box
 
@@ -46,3 +47,12 @@ set sstring "x>${xmin} and x<${xmax} and y>${ymin} and y<${ymax} and z>${zmin} a
 user add key n {animate next; makeS $sstring}
 user add key p {animate prev; makeS $sstring}
 
+mol modselect 0 0 name S
+source position2.tcl
+
+# set blist [$sel_polymer getbonds]; @
+# interp recursionlimit {} 100000
+# set bstructure [::PBCTools::get_connected $blist]; @
+
+color Display Background white
+color Name S blue
