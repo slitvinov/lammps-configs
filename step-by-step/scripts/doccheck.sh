@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# check if file is mentionned in the README.org
+# check if a file is mentioned in the README.org
 flist=$(ls -1 *.*)
 
 printf "not found in documentation:\n"
