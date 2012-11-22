@@ -7,7 +7,7 @@ proc @ {} {
 }
 
 set sel_solvent [atomselect top "resname 1"]
-$sel_solvent set name solvent
+$sel_solvent set name sol
 
 set sel_polymer [atomselect top "resname 2"]
 $sel_polymer set name polymer
