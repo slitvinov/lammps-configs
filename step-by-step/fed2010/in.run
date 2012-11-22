@@ -21,6 +21,9 @@ special_bonds   lj 1 1 1
 bond_style fene
 bond_coeff 1 ${H} ${r0} 0 0
 
+angle_style harmonic
+angle_coeff 1 ${K} 180
+
 fix 1 all nve
 
 # TOD: replace with several files

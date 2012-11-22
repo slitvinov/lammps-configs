@@ -13,7 +13,7 @@ input=polymer.data
 output=polymer.psf
 vmd -dispdev text -eofexit <<EOF
 package require topotools
-topo readlammpsdata  ${input} bond
+topo readlammpsdata  ${input} angle
 animate write psf ${output}
 EOF
 

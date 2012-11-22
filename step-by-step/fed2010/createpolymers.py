@@ -34,17 +34,21 @@ if args.Np == "full":
     Np = Natoms
 else:
     Np = int(float(args.Np))
+print "Np: ", Np
 
 def isbond(iatom):
-    period = Ns + Np
+    period = Ns + Nb
     rem = (iatom-1)%(period) # from 0 to period-1
     current_npoly = int(iatom/period) + 1
     return (rem<Nb-1) and (iatom<Natoms) and (current_npoly<=Np)
 
 # create bond section
 bnd = []
+ang = []
 ibond = 0
+iang = 0
 bondtype = 1
+angtype = 1
 ichain = 1
 R = numpy.zeros([Natoms, 3])
 rlo = numpy.array(d.maxbox()[:3])
@@ -71,6 +75,9 @@ for iatom in range(1, Natoms+1):
             if abs(R[iatom, dim] - R[iatom-1, dim]) > 0.5*box[dim]:
                 cimage[dim] = cimage[dim] + 1
         image[iatom, :] = cimage
+        if isbond(iatom-1):
+            iang = iang + 1
+            ang.append("%i %i %i %i %i\n" % (iang, angtype, iatom-1, iatom, iatom+1))
     elif in_polymer_flag:
         ichain = ichain + 1
         in_polymer_flag = False
@@ -80,10 +87,13 @@ print ( "created: %i chains\n"  % ichain)
 d.sections["Bonds"] = []
 # add a new bond
 d.sections["Bonds"] = bnd
+d.sections["Angles"] = ang
 
 d.headers["bonds"] = len(bnd)
+d.headers["angles"] = len(ang)
 d.headers["bond types"] = 1
 d.headers["atom types"] = 2
+d.headers["angle types"] = 1
 molididx=2
 d.replace("Atoms", molididx, molid)
 typeid=3

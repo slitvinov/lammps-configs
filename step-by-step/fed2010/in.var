@@ -1,7 +1,7 @@
 units si
-variable ndim equal 3
+variable ndim equal 2
 dimension ${ndim}
-atom_style bond
+atom_style angle
 
 variable number_density equal 3 # Table 1
 variable xsize equal 20 # 50 p. 4
@@ -30,11 +30,16 @@ variable pmass equal 1.0 # TODO:
 variable gy equal 0.025 # from 0.025 to 0.25 (p.6)
 
 # number of timesteps
-variable ntime equal 1000
+variable ntime equal 10000
 
-# TOD: replace with several files
+# TODO: replace with several files
 variable Nfreq equal ${ntime}
 variable Nrepeat equal round(0.1*${ntime})
+
+# FENE settings
 special_bonds   lj 1 1 1
 variable        r0 equal 1.0
 variable        H equal 100
+
+# angle settings
+variable        K equal 1e2
