@@ -46,6 +46,18 @@ bnd = []
 ibond = 0
 bondtype = 1
 ichain = 1
+R = numpy.zeros([Natoms, 3])
+rlo = numpy.array(d.maxbox()[:3])
+rhi = numpy.array(d.maxbox()[3:])
+box = rhi - rlo
+
+R[:, 0] = d.get("Atoms", 4)
+R[:, 1] = d.get("Atoms", 5)
+R[:, 2] = d.get("Atoms", 6)
+
+image = numpy.zeros([Natoms, 3], dtype=int)
+cimage = numpy.zeros(3)
+
 for iatom in range(1, Natoms+1):
     if isbond(iatom):
         atomtype[iatom-1] = 2
@@ -54,11 +66,16 @@ for iatom in range(1, Natoms+1):
         molid[iatom] = ichain
         ibond = ibond + 1
         bnd.append( "%i %i %i %i\n" % (ibond, bondtype, iatom, iatom+1) )
-        print iatom, iatom+1
         in_polymer_flag = True
+        for dim in [0, 1, 2]:
+            if abs(R[iatom, dim] - R[iatom-1, dim]) > 0.5*box[dim]:
+                cimage[dim] = cimage[dim] + 1
+        image[iatom, :] = cimage
     elif in_polymer_flag:
         ichain = ichain + 1
         in_polymer_flag = False
+        cimage = numpy.zeros(3)
+print ( "created: %i chains\n"  % ichain)
 
 d.sections["Bonds"] = []
 # add a new bond
@@ -70,6 +87,10 @@ d.headers["atom types"] = 2
 molididx=2
 d.replace("Atoms", molididx, molid)
 typeid=3
+d.replace("Atoms", 7, image[:, 0])
+d.replace("Atoms", 8, image[:, 1])
+d.replace("Atoms", 9, image[:, 2])
+
 d.replace("Atoms", typeid, atomtype)
 d.delete("Masses")
 
