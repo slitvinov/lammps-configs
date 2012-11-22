@@ -10,6 +10,5 @@ for file in ${flist}; do
     if [ ! $? -eq 0 ]; then
 	printf "%s\n" ${file}
     fi
-    
 done
 

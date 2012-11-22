@@ -5,7 +5,7 @@ variable    pmass index 1.0
 units       si
 atom_style  bond
 atom_modify map array sort 0.0 0.0
-# initial data
+
 read_data       polymer.data
 
 bond_style      fene
@@ -19,6 +19,9 @@ neighbor	5.0 bin
 neigh_modify    delay 0 every 1
 timestep        0.0001
 
-run 10000
-variable dxpos equal x[2]-x[1]
-print "dx(t=1) = ${dxpos}"
+compute		bnd all property/local btype batom1 batom2
+dump            dump_lo all local 10 bdump.dat index c_bnd[1] c_bnd[2] c_bnd[3]
+
+dump            dump_id all custom 10 pdump*.dat id type x y z vx vy vz ix iy iz
+
+run 100

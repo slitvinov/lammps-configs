@@ -32,7 +32,6 @@ Analytical solution for two atom in DPD
 [[file:msd.mac]]
 Writes results to msd.dat and msd.maxima.dat
 
-
 Move one atoms with DPD equation of motion
 [[file:in.two-one-fix]]
 

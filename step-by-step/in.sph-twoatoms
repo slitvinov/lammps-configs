@@ -46,13 +46,13 @@ timestep           1e-5
 variable           force_sdpd_fx equal fx[1]
 variable           force_sdpd_fy equal fy[1]
 compute            rho_peratom all meso_rho/atom
-dump               dump_id all custom 1 dump*.dat x y vx vy c_rho_peratom
+dump               dump_id all custom 10 dump*.dat id x y vx vy c_rho_peratom
 
 variable      xone equal x[1]
 variable      xtwo equal x[2]
 variable      vone equal vx[1]
 variable      vtwo equal vx[2]
-fix extra all print 1 "${xone} ${xtwo} ${vone} ${vtwo}" file pos.dat
+fix extra all print 1 "${xone} ${xtwo} ${vone} ${vtwo}" file pos.dat screen no
 run                1000
 
 print              "f: ${force_sdpd_fx} ${force_sdpd_fy}"
