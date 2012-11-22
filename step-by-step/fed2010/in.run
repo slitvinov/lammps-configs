@@ -27,8 +27,8 @@ fix 1 all nve
 variable Nfreq equal ${ntime}
 variable Nrepeat equal round(0.1*${ntime})
 
-dump     dump_dcd all dcd 10 data.dcd
-dump_modify     dump_dcd sort id
+dump     dump_dcd all dcd 100 data.dcd
+dump_modify     dump_dcd sort id unwrap yes
 
 variable ntemp atom c_thermo_temp*${kb}
 # "profile" corrected temperature

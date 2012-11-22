@@ -1,5 +1,5 @@
 units si
-variable ndim equal 2
+variable ndim equal 3
 dimension ${ndim}
 atom_style bond
 
@@ -8,6 +8,11 @@ variable xsize equal 20 # 50 p. 4
 # use as a small number
 variable eps equal 1e-2*${xsize}
 variable ysize equal 20 # 20 p. 4
+
+if "${ndim}!=2" &
+then &
+"variable zsize equal 20"
+
 variable kb equal 1.3806488e-23
 variable T equal 1.0/${kb} # Table 1
 variable cutoff equal 2.0 # Table 1

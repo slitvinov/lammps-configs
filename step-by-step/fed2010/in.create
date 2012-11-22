@@ -10,13 +10,22 @@ variable id index "solvent"
 
 # lattice parameter
 variable lsp equal 1.0/${number_density}^(1.0/${ndim})
-lattice sq ${lsp} origin 0.1 0.1 0.0
+if "${ndim}==2" &
+then &
+"lattice sq ${lsp} origin 0.1 0.1 0.0" &
+else &
+"lattice sc ${lsp} origin 0.1 0.1 0.1"
+
 variable lsp delete
 
-variable Npart equal ${xsize}*${ysize}*${number_density}
-print "Npart = ${Npart}"
+if "${ndim}==2" &
+then &
+"variable Npart equal ${xsize}*${ysize}*${number_density}" &
+"region box block 0 ${xsize} 0 ${ysize} -${eps} ${eps} units box" &
+else &
+"variable Npart equal ${xsize}*${ysize}*${zsize}*${number_density}" &
+"region box block 0 ${xsize} 0 ${ysize} -${zsize} ${zsize} units box"
 
-region box block 0 ${xsize} 0 ${ysize} -${eps} ${eps} units box
 create_box 1 box
 create_atoms 1 box
 
@@ -27,4 +36,3 @@ delete_atoms group extra_atoms
 mass 1 ${pmass}
 
 write_restart data.restart
-
