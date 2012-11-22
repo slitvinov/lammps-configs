@@ -1,0 +1,30 @@
+# DPD example (2D version)
+# equilibrium simulations
+# J.Chem.Phys 132, 144103 (2010)
+
+# the simulation produces spatially averages
+# vy.av (velocity), rho.av (density), sxy.av (shear stress)
+echo both
+include in.var
+variable id index "solvent"
+
+# lattice parameter
+variable lsp equal 1.0/${number_density}^(1.0/${ndim})
+lattice sq ${lsp} origin 0.1 0.1 0.0
+variable lsp delete
+
+variable Npart equal ${xsize}*${ysize}*${number_density}
+print "Npart = ${Npart}"
+
+region box block 0 ${xsize} 0 ${ysize} -${eps} ${eps} units box
+create_box 1 box
+create_atoms 1 box
+
+# TODO: find the way to generate the right number of atoms
+# delete extra atoms
+group extra_atoms id > ${Npart}
+delete_atoms group extra_atoms
+mass 1 ${pmass}
+
+write_restart data.restart
+

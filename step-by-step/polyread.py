@@ -1,6 +1,4 @@
 # work with data file
-
-
 import data
 
 # export a data file
