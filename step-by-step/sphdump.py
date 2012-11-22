@@ -1,9 +1,9 @@
 # generate data with
 # ../../src/lmp_linux -in in.polydump
 # run with
-# PYTHONPATH=/home/vital303/work/Pizza.py/src python2.7 sphdump.py
+# PYTHONPATH=$HOME/work/Pizza.py/src python2.7 sphdump.py
 # For emacs set
-# (setenv "PYTHONPATH" "/home/vital303/work/Pizza.py/src")
+# (setenv "PYTHONPATH" "/scratch/work/Pizza.py/src/")
 
 import dump
 import bdump
@@ -20,3 +20,7 @@ d.extra(b)
 time,box,atoms,bonds,tris,lines = d.viz(1)
 
 d.viz(1)
+
+# select one snapshot
+d.tselect.one(0)
+d.write("out.dat")
