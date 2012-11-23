@@ -1,0 +1,16 @@
+variable adpd_ss equal ${adpd}
+# type 2 does not like solvent
+variable adpd_sp2 equal ${adpd}*1.5
+# type 3 likes solvent
+variable adpd_sp3 equal ${adpd}/3
+variable adpd_p2p2 equal ${adpd}
+variable adpd_p2p3 equal ${adpd}
+variable adpd_p3p3 equal ${adpd}
+
+pair_coeff 1 1 ${adpd_ss} ${gamma} ${cutoff}
+pair_coeff 1 2 ${adpd_sp2} ${gamma} ${cutoff}
+pair_coeff 1 3 ${adpd_sp3} ${gamma} ${cutoff}
+pair_coeff 2 2 ${adpd_p2p2} ${gamma} ${cutoff}
+pair_coeff 2 3 ${adpd_p2p3} ${gamma} ${cutoff}
+pair_coeff 2 3 ${adpd_p2p3} ${gamma} ${cutoff}
+pair_coeff 3 3 ${adpd_p3p3} ${gamma} ${cutoff}

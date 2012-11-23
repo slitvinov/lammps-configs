@@ -43,4 +43,4 @@ variable        r0 equal 1.0
 variable        H equal 100
 
 # angle settings
-variable        K equal 20.0
+variable        K equal 0.2

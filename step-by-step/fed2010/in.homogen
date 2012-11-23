@@ -1,0 +1,2 @@
+# all atoms are the same
+pair_coeff * * ${adpd} ${gamma} ${cutoff}

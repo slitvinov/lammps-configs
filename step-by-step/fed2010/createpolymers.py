@@ -42,6 +42,14 @@ def isbond(iatom):
     current_npoly = int(iatom/period) + 1
     return (rem<Nb-1) and (iatom<Natoms) and (current_npoly<=Np)
 
+def getatomtype(iatom):
+    if isbond(iatom-1) and isbond(iatom):
+        return 2
+    else:
+        # head or tail
+        return 3
+
+
 # create bond section
 bnd = []
 ang = []
@@ -65,8 +73,8 @@ cimage = numpy.zeros(3)
 in_polymer_flag = False
 for iatom in range(1, Natoms+1):
     if isbond(iatom):
-        atomtype[iatom-1] = 2
-        atomtype[iatom] = 2
+        atomtype[iatom-1] = getatomtype(iatom)
+        atomtype[iatom] = getatomtype(iatom+1)
         molid[iatom-1] = ichain
         molid[iatom] = ichain
         ibond = ibond + 1
@@ -93,7 +101,7 @@ d.sections["Angles"] = ang
 d.headers["bonds"] = len(bnd)
 d.headers["angles"] = len(ang)
 d.headers["bond types"] = 1
-d.headers["atom types"] = 2
+d.headers["atom types"] = 3
 d.headers["angle types"] = 1
 molididx=2
 d.replace("Atoms", molididx, molid)
