@@ -1,5 +1,5 @@
 units si
-variable ndim equal 2
+variable ndim equal 3
 dimension ${ndim}
 atom_style angle
 
@@ -31,6 +31,7 @@ variable gy equal 0.025 # from 0.025 to 0.25 (p.6)
 
 # number of timesteps
 variable ntime equal 10000
+variable dstep equal 0.005
 
 # TODO: replace with several files
 variable Nfreq equal ${ntime}

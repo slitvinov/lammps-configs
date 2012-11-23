@@ -1,0 +1,16 @@
+variable xc equal 0.5*${xsize}
+variable yc equal 0.5*${ysize}
+
+variable r0 equal 0.0
+# indentar size
+variable re equal 0.2*${xsize}
+# the number of step to grow indentar
+variable nrelax equal 500
+# indenter growth rate
+variable rate equal (${re}-${r0})/(${nrelax}*${dstep})
+variable r equal "v_r0 + step*dt*v_rate" 
+
+fix incy all indent 1e3 cylinder z ${xc} ${yc} v_r units box
+run ${nrelax}
+unfix incy
+fix incy all indent 1e3 cylinder z ${xc} ${yc} ${re} units box
