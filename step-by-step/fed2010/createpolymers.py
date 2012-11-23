@@ -62,6 +62,7 @@ R[:, 2] = d.get("Atoms", 6)
 image = numpy.zeros([Natoms, 3], dtype=int)
 cimage = numpy.zeros(3)
 
+in_polymer_flag = False
 for iatom in range(1, Natoms+1):
     if isbond(iatom):
         atomtype[iatom-1] = 2
