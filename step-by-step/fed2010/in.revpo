@@ -1,0 +1,4 @@
+# reverce periodic force
+variable g_revpo equal 100
+variable bodyfx atom mass*${g_revpo}*((y>${ysize}/2)-(y<${ysize}/2))
+fix reverce_periodic all addforce v_bodyfx 0.0 0.0

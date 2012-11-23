@@ -48,4 +48,6 @@ fix id_stress_old all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 2.0 v_stress_old
 
 if "${ndim}==2" then "fix e2d all enforce2d"
 thermo 10
+#include in.roller
+include in.revpo
 run ${ntime}

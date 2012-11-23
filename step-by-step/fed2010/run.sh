@@ -7,7 +7,7 @@ set -e
 ../../../tools/restart2data data.restart  solvent.data
  
 PYTHONPATH=${HOME}/work/Pizza.py/src python2.7 createpolymers.py \
-    --input solvent.data --output polymer.data --Nb 20 --Ns 20 --Np 1000
+    --input solvent.data --output polymer.data --Nb 1 --Ns 0 --Np full
 
 input=polymer.data
 output=polymer.psf
