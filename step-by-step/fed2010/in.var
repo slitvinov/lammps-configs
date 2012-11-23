@@ -1,5 +1,5 @@
 units si
-variable ndim equal 3
+variable ndim equal 2
 dimension ${ndim}
 atom_style angle
 
@@ -44,3 +44,11 @@ variable        H equal 100
 
 # angle settings
 variable        K equal 0.2
+
+# lattice parameter
+variable lsp equal 1.0/${number_density}^(1.0/${ndim})
+if "${ndim}==2" &
+then &
+"lattice sq ${lsp} origin 0.1 0.1 0.0" &
+else &
+"lattice sc ${lsp} origin 0.1 0.1 0.1"

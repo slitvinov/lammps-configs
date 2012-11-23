@@ -1,16 +1,22 @@
 variable xc equal 0.5*${xsize}
 variable yc equal 0.5*${ysize}
 
-variable r0 equal 0.0
 # indentar size
 variable re equal 0.2*${xsize}
-# the number of step to grow indentar
+variable re_skin equal 1.2*${re}
+# the number of time steps to drive chains away
 variable nrelax equal 500
-# indenter growth rate
-variable rate equal (${re}-${r0})/(${nrelax}*${dstep})
-variable r equal "v_r0 + step*dt*v_rate" 
 
-fix incy all indent 1e3 cylinder z ${xc} ${yc} v_r units box
+group chains type 2
+fix incy chains indent 1e2 cylinder z ${xc} ${yc} ${re_skin} units box
 run ${nrelax}
 unfix incy
-fix incy all indent 1e3 cylinder z ${xc} ${yc} ${re} units box
+
+region  incy_region cylinder z ${xc} ${yc} ${re} INF INF units box
+group   incy_group region incy_region
+fix  freeze  incy_group setforce 0 0 0
+velocity incy_group set 0 0 0
+set group incy_group type 3
+
+group flow subtract all incy_group
+fix incy flow indent 1e2 cylinder z ${xc} ${yc} ${re} units box

@@ -10,8 +10,8 @@ read_data polymer.data
 
 mass * ${pmass}
 pair_style dpd ${T} ${cutoff} 928948
-#include in.homogen
-include in.hetero
+include in.homogen
+#include in.hetero
 
 neighbor 0.5 bin
 neigh_modify delay 0 every 1
@@ -31,9 +31,6 @@ fix 1 all nve
 variable Nfreq equal ${ntime}
 variable Nrepeat equal round(0.1*${ntime})
 
-dump     dump_dcd all dcd 100 data.dcd
-dump_modify     dump_dcd sort id unwrap yes
-
 variable ntemp atom c_thermo_temp*${kb}
 # "profile" corrected temperature
 compute pTemp all temp/profile 1 1 0 xy 5 5
@@ -51,5 +48,9 @@ if "${ndim}==2" then "fix e2d all enforce2d"
 thermo 10
 #include in.roller
 #include in.revpo
-#include in.cylinder
+include in.cylinder
+
+dump     dump_dcd all dcd 100 data.dcd
+dump_modify     dump_dcd sort id unwrap yes
+
 run ${ntime}
