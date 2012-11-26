@@ -1,18 +1,13 @@
 units si
 variable ndim equal 2
 dimension ${ndim}
-atom_style angle
+atom_style bond
 
 variable number_density equal 3 # Table 1
 variable xsize equal 20 # 50 p. 4
 # use as a small number
 variable eps equal 1e-2*${xsize}
 variable ysize equal 20 # 20 p. 4
-
-if "${ndim}!=2" &
-then &
-"variable zsize equal 20"
-
 variable kb equal 1.3806488e-23
 variable T equal 1.0/${kb} # Table 1
 variable cutoff equal 2.0 # Table 1
@@ -30,25 +25,11 @@ variable pmass equal 1.0 # TODO:
 variable gy equal 0.025 # from 0.025 to 0.25 (p.6)
 
 # number of timesteps
-variable ntime equal 10000
-variable dstep equal 0.005
+variable ntime equal 1000
 
-# TODO: replace with several files
+# TOD: replace with several files
 variable Nfreq equal ${ntime}
 variable Nrepeat equal round(0.1*${ntime})
 
-# FENE settings
-special_bonds   lj 1 1 1
 variable        r0 equal 1.0
 variable        H equal 100
-
-# angle settings
-variable        K equal 0.2
-
-# lattice parameter
-variable lsp equal 1.0/${number_density}^(1.0/${ndim})
-if "${ndim}==2" &
-then &
-"lattice sq ${lsp} origin 0.1 0.1 0.0" &
-else &
-"lattice sc ${lsp} origin 0.1 0.1 0.1"
