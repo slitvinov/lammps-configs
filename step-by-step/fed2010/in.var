@@ -11,7 +11,7 @@ variable ysize equal 20 # 20 p. 4
 
 if "${ndim}==3" &
 then &
-"variable zsize equal 20"
+"variable zsize equal ${ysize}"
 
 variable kb equal 1.3806488e-23
 variable T equal 1.0/${kb} # Table 1
