@@ -15,6 +15,7 @@ Loop example
 
 One atom example
 [[file:in.oneatom]]
+
 Analytical solution for one atom problem
 [[file:oneatom.mac]]
 
@@ -23,7 +24,7 @@ Redefine "equal" variable
 
 Move two atoms with DPD equation of motion
 [[file:in.twoatoms]]
-Analytical solution for two atom in DPD
+Solve the same equations with Runge-Kutta
 [[file:twoatoms.mac]]
 
 Move two atoms with DPD equation of motion and compute msd
@@ -42,7 +43,7 @@ Use dump_image
 [[file:in.dump_image]]
 Output in dump.*.jpg
 
-dump_image for bonds
+dump_image for the bonds
 file:in.poly-dump
 
 Read atoms configuration from the input file
@@ -53,14 +54,14 @@ Kinetic energy tensor
 file:in.temp
 file:temp.mac
 
-Create 2 beads polymer from input file
+Create 2 beads polymer from an input file
 [[file:in.polymer]]
 [[file:polymer.data]]
 
 Two atoms with SPH
 [[file:in.sph-twoatoms]]
 
-Two dump with SPH
+Dump two atoms with SPH
 [[file:in.sph-dump]]
 
 LE style boundary conditions

@@ -1,5 +1,0 @@
-lmpdir=/scratch/litvinov/lammps-ro/
-lmpconfigdir=${lmpdir}/lammps-configs/
-lmp=${lmpdir}/src/lmp_linux
-restart2data=${lmpdir}/tools/restart2data
-mpirun=/scratch/litvinov/prefix-mpich/bin/mpiexec

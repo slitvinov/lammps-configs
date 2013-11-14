@@ -5,7 +5,7 @@ echo     both
 
 variable    pmass index 1.0
 units       si
-atom_modify map array sort 0.0 0.0
+atom_modify map array sort 0 0
 region		box block 0 10 0 10 0 10 units box
 atom_style      angle
 create_box	1 box

@@ -15,8 +15,8 @@ pair_coeff	* * ${adpd} ${gamma} 1.0
 
 compute         imsd all msd
 variable        vmsd_x equal c_imsd[1]
-variable        vmsd_t equal c_imsd[4]
-fix             pmsd all   print 1 "${vmsd_t} ${vmsd_x}" file "msd.dat" screen no
+variable        physical_time   equal dt*step
+fix             pmsd all   print 1 "${physical_time} ${vmsd_x}" file "msd.dat" screen no
 
 fix	        1 all nve
 neighbor	5.0 bin
@@ -24,5 +24,4 @@ neigh_modify    delay 0 every 1
 timestep        1e-3
 
 run 1000
-variable dxpos equal x[2]-x[1]
-print "dx(t=1) = ${dxpos}"
+print           "output was writen to msd.dat file"
