@@ -39,7 +39,3 @@ variable v3ecpt equal c_thermo_temp[3]
 
 fix extra all print 1 "T(t=1) = ${cpt} ${v1ecpt} ${v2ecpt} ${v3ecpt}"
 run 1
-
-
-
-

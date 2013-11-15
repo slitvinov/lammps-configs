@@ -1,7 +1,7 @@
 echo               both
 dimension          2
 units              si
-atom_modify map array sort 0.0 0.0
+atom_modify map array sort 0 0
 atom_style         meso
 #2D box
 # domain size

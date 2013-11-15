@@ -15,6 +15,7 @@ Loop example
 
 One atom example
 [[file:in.oneatom]]
+
 Analytical solution for one atom problem
 [[file:oneatom.mac]]
 
@@ -23,7 +24,7 @@ Redefine "equal" variable
 
 Move two atoms with DPD equation of motion
 [[file:in.twoatoms]]
-Analytical solution for two atom in DPD
+Solve the same equations with Runge-Kutta
 [[file:twoatoms.mac]]
 
 Move two atoms with DPD equation of motion and compute msd
@@ -42,8 +43,13 @@ Use dump_image
 [[file:in.dump_image]]
 Output in dump.*.jpg
 
-dump_image for bonds
+dump_image for the bonds
 file:in.poly-dump
+
+Three atoms with angle
+[[file:in.polymer-angle]]
+[[file:angle.data]]
+[[file:polymer-angle.mac]]
 
 Read atoms configuration from the input file
 [[file:in.readinput]]
@@ -53,14 +59,14 @@ Kinetic energy tensor
 file:in.temp
 file:temp.mac
 
-Create 2 beads polymer from input file
+Create 2 beads polymer from an input file
 [[file:in.polymer]]
 [[file:polymer.data]]
 
 Two atoms with SPH
 [[file:in.sph-twoatoms]]
 
-Two dump with SPH
+Dump two atoms with SPH
 [[file:in.sph-dump]]
 
 LE style boundary conditions
@@ -73,11 +79,10 @@ Compute examples
 Ouptut compute to the file:
 file:in.compute.fixprint
 
-Calculate radious of gyration
+Calculate the radious of gyration
 file:rg.mac
 
-
-OOP in lammps
+OOP in lammps based on `include'
 [[file:in.oop]]
 (see methods definitions in  file:oop)
 

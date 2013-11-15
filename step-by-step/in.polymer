@@ -4,7 +4,7 @@ echo     both
 variable    pmass index 1.0
 units       si
 atom_style  bond
-atom_modify map array sort 0.0 0.0
+atom_modify map array sort 0 0
 # initial data
 read_data       polymer.data
 
@@ -15,7 +15,7 @@ variable        r0_fene equal 1.0
 bond_coeff	1 ${H_fene} ${r0_fene} 0.0 0.0
 
 fix	        1 all nve
-neighbor	5.0 bin
+neighbor	0.0 bin
 neigh_modify    delay 0 every 1
 timestep        0.0001
 

@@ -19,8 +19,6 @@ last(sol)[3] - last(sol)[2];
 xi0: first(sol)[2]$
 xj0: first(sol)[3]$
 msd: map(lambda([x], 1/2 * ((x[2]-xi0)^2 + (x[3]-xj0)^2)), sol)$
+ti: map(first, sol)$
 
-with_stdout("msd.maxima.dat", for x in msd do (?princ(x), ?terpri()));
-
-
-
+write_data(transpose(matrix(ti, msd)), "msd.maxima.dat");
