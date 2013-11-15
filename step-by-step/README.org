@@ -46,6 +46,11 @@ Output in dump.*.jpg
 dump_image for the bonds
 file:in.poly-dump
 
+Three atoms with angle
+[[file:in.polymer-angle]]
+[[file:angle.data]]
+[[file:polymer-angle.mac]]
+
 Read atoms configuration from the input file
 [[file:in.readinput]]
 [[file:generator.input]]
@@ -74,11 +79,10 @@ Compute examples
 Ouptut compute to the file:
 file:in.compute.fixprint
 
-Calculate radious of gyration
+Calculate the radious of gyration
 file:rg.mac
 
-
-OOP in lammps
+OOP in lammps based on `include'
 [[file:in.oop]]
 (see methods definitions in  file:oop)
 
