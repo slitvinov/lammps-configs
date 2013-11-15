@@ -8,8 +8,16 @@ atom_modify map array sort 0 0
 # initial data
 read_data       angle.data
 
-angle_style     harmonic
-angle_coeff     1 1.0 80
+#angle_style     harmonic
+#angle_coeff     1 1.0 80
+
+    # K (energy/radian^2)
+    # theta0 (degrees)
+    # K_ub (energy/distance^2)
+    # r_ub (distance) 
+
+angle_style charmm
+angle_coeff 1 1.0 107.0 50.0 3.0 
 
 run 0
 variable dxpos equal x[2]-x[1]
