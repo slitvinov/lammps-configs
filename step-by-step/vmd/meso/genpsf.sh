@@ -3,7 +3,7 @@
 # generate psf file with vmd
 vmd -dispdev text -eofexit <<EOF
 package require topotools
-topo readlammpsdata poly-mod.txt angle
+topo readxyzdata punto.xyz
 set sel [atomselect top all]
 $sel set name A
 animate write psf poly3d.psf

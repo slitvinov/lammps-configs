@@ -1,0 +1,10 @@
+punto-n60-nset100.dat: a 3D particle data in "punto" format
+(http://sourceforge.net/projects/punto)
+
+punto2xyz.awk: a script to change punto format to xyz format
+
+rxyz.tcl: vmd script to vizulize (adjust change radius of the atoms)
+
+Usage:
+awk -f punto2xyz.awk punto-n60-nset100.dat > punto.xyz
+vmd -e rxyz.tcl -xyz punto.xyz
