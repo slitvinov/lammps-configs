@@ -1,0 +1,50 @@
+kill(all);
+depends(E, theta);
+depends(theta, c);
+depends(c, [dR1, dR2]);
+depends(dR1, [R1, R2]);
+depends(dR2, [R2, R3]);
+dotexptsimp: false;
+dotassoc: true;
+declare([dR1, dR2, R1, R2], nonscalar);
+norm(R):=sqrt(R.R);
+E(theta):= k*(theta-theta0)^2;
+/* E(theta):= k*(theta-theta0)^2 + Kub*(r-norm(R1-R3))^2; */
+theta(c):= acos(c);
+c(dR1, dR2):= dR1.dR2 / (norm(dR1)*norm(dR2));
+dR1(R1, R2, R3):= R1-R2;
+dR2(R1, R2, R3):= R3-R2;
+
+gradef(theta, c,   diff(theta(c), c));
+gradef(c,     dR1, diff(c(dR1, dR2), dR1));
+gradef(c,     dR2, diff(c(dR1, dR2), dR2));
+
+gradef(dR1,   R1,  diff(dR1(R1, R2, R3), R1));
+gradef(dR1,   R2,  diff(dR1(R1, R2, R3), R2));
+gradef(dR1,   R3,  diff(dR1(R1, R2, R3), R3));
+
+gradef(dR2,   R1,  diff(dR2(R1, R2, R3), R1));
+gradef(dR2,   R2,  diff(dR2(R1, R2, R3), R2));
+gradef(dR2,   R3,  diff(dR2(R1, R2, R3), R3));
+  
+F1: -diff(E(theta), R1);
+F2: -diff(E(theta), R2);
+F3: -diff(E(theta), R3);
+
+ang2rad(a):=a/180*%pi;
+  
+env: [k=1, theta0=ang2rad(80),
+R1[1]=5.5, R1[2]=5.0, R1[3]=6.0,
+R2[1]=5.0, R2[2]=4.0, R2[3]=5.0,
+R3[1]=5.0, R3[2]=5.5, R3[3]=5.0];
+
+sb_list: [R1=[R1[1], R1[2], R1[3]],
+R2=[R2[1], R2[2], R2[3]],
+R3=[R3[1], R3[2], R3[3]],
+E=E(theta), theta=theta(c), c=c(dR1, dR2), dR1=dR1(R1, R2, R3), dR2=dR2(R1, R2, R3)];
+
+ev(F1, sb_list, env, infeval, numer);
+ev(F2, sb_list, env, infeval, numer);
+ev(F3, sb_list, env, infeval, numer);
+
+

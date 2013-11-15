@@ -47,9 +47,9 @@ dump_image for the bonds
 file:in.poly-dump
 
 Three atoms with angle
-[[file:in.polymer-angle]]
+[[file:in.angle]]
 [[file:angle.data]]
-[[file:polymer-angle.mac]]
+[[file:angle.mac]]
 
 Read atoms configuration from the input file
 [[file:in.readinput]]
