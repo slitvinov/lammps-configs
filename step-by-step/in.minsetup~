@@ -1,0 +1,12 @@
+# minimum set up
+
+# log to the screen and to the log.lammps file
+echo     both
+
+variable    pmass index 1.0
+units       si
+atom_modify map array sort 0.0 0.0
+region		box block 0 10 0 10 0 10 units box
+create_box	1 box
+mass            1 ${pmass}
+# end of minimum setup
