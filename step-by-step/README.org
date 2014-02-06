@@ -1,6 +1,8 @@
 * lammps examples
 A collection of minimal LAMPS scripts
 
+#adding a new line for test
+
 Minimal setup 10x10x10 box, no atoms
 [[file:in.minsetup]]
 
