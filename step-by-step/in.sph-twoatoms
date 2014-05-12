@@ -18,13 +18,13 @@ mass               1 1.7e-7
 
 # create atom with id=1
 create_atoms 1 single ${xcenter} ${xcenter} 0.0 units box
-group        fst id == 1
+group        fst id 1
 velocity     fst set 0.0 0.0 0.0 units box
 
 # create atom with id=2
 variable          x2pos equal ${xcenter}+0.90*${h}
 create_atoms 1 single ${x2pos} ${xcenter} 0.0 units box
-group        scd id == 2
+group        scd id 2
 velocity     scd set 0.0 0.0 0.0 units box
 
 # use Tait's EOS in combination with Morris' laminar viscosity.
