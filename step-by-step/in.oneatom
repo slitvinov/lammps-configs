@@ -1,17 +1,16 @@
 # move one atom with a constant acceleration
 include in.minsetup
 
+# create an atom in the middle of the domain
 create_atoms 1 single 5 5 5 units box
 variable xpos equal x[1]
 
 # equation of motion is
 # d^2x/dt^2 = f(t), x(0)=0, dx/dt(0)=0. See oneatom.mac
-#variable fx equal step*dt
 variable fx equal sin(step*dt)
-#variable fx atom sin(step*dt)+x
 fix simpleforce all addforce  v_fx 0.0 0.0
-timestep 0.01
-fix	     1 all nve
+timestep     0.01
+fix	     f_nve all nve
 
 run 100
 print "x(t=1) = ${xpos}"

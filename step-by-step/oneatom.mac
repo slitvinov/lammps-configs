@@ -1,5 +1,8 @@
-/* solve equation of motion for one atom */
+/* solve equation of motion for one atom (see in.oneatom) */
 eq: 'diff(x, t, 2) = sin(t);
 
-eqofm: ic2(ode2(eq, x, t ), t=0, x=x0, 'diff(x, t)=v0)$
-float(rhs(subst( [x0=5.0, v0=0.0, t=1], eqofm)));
+eq_sol: ic2(ode2(eq, x, t ), t=0, x=x0, 'diff(x, t)=v0);
+
+/* substitute initial conditions */
+subst( ['x0=5.0, 'v0=0.0, 't=1], eq_sol) ;
+ev(%, numer);

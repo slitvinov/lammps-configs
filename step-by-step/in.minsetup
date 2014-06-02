@@ -5,7 +5,12 @@ echo     both
 
 variable        pmass index 1.0
 units           si
+
+# we switch off the sorting of atoms because be default the sorting
+# uses neighbor cutoff as a binsize and we want to run some
+# simulations without given `cutoff'
 atom_modify     map array sort 0 0
+
 region		box block 0 10 0 10 0 10 units box
 create_box	1 box
 mass            1 ${pmass}
