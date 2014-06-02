@@ -32,15 +32,19 @@ velocity_verlet_step(frhs, m, xvars, vvars, x0, v0, f0, dt):= block([listarith: 
   );
 
 m : [1, 1];
-x: [0, 1/2];
+x: [5, 5+1/2];
 v: [0, 1];
 f: [];
 dt   : 1/10;
 psubst( maplist("=", append(xvars, vvars), append(x, v)), [eq3, eq4]);
 ev(%, numer);
 
-thru 2 do
-[x, v, f] : velocity_verlet_step([eq3, eq4], m, xvars, vvars, x, v, [], dt);
+thru 10 do
+[x, v, f] : velocity_verlet_step([eq3, eq4], m, xvars, vvars, x, v, f, dt);
+
+
+/*[x, v, f] : velocity_verlet_step([eq3, eq4], m, xvars, vvars, x, v, [], dt); */
+
 f[1];
 x[2] - x[1];
 v[2] - v[1];

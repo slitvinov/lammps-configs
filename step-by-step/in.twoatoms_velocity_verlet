@@ -21,7 +21,7 @@ neighbor	5.0 bin
 neigh_modify    delay 0 every 1
 
 timestep        0.1
-run             2
+run             10
 variable dxpos equal x[2]-x[1]
 variable dvpos equal vx[2]-vx[1]
 variable f1    equal fx[1]
