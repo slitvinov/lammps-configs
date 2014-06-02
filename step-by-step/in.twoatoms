@@ -1,6 +1,6 @@
 # move two atoms with DPD
 include in.minsetup
-communicate	single vel yes
+comm_modify    vel yes
 
 create_atoms 1 single 5.0 5.0 5.0 units box
 create_atoms 1 single 5.5 5.0 5.0 units box
