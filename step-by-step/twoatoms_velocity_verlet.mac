@@ -1,0 +1,46 @@
+/* solve equation of motion for two DPD atoms */
+numer: true;
+rc: 1;
+A: 0;
+m: 1;
+gamma: 1;
+w(r):=block([s], s: abs(r/rc), if (abs(s)<=1.0) then (1 - s) else 0);
+uvec(ri, rj):=block([listarith: true], (rj - ri)/abs(rj - ri));
+  
+eq3: A*w(xj-xi) * uvec(xj, xi) - gamma*uvec(xi, xj)*(vi-vj)*w(xj-xi)^2;
+eq4: A*w(xi-xj) * uvec(xi, xj) - gamma*uvec(xi, xj)*(vj-vi)*w(xj-xi)^2;
+vars: ['xi, 'xj, 'vi, 'vj];
+
+xvars: ['xi, 'xj];
+vvars: ['vi, 'vj];
+
+velocity_verlet_step(frhs, m, xvars, vvars, x0, v0, f0, dt):= block([listarith: true,
+  ftm2v, dtv, dtfm, v, dtv, x, f
+  ],
+  ftm2v: 1,
+  dtv: dt,
+  dtf: 1/2*dt * ftm2v,
+  dtfm: dtf/m,
+  if emptyp(f0) then
+  v: v0 + dtfm * psubst( maplist("=", append(xvars, vvars), append(x0, v0)), frhs)
+  else
+  v: v0 + dtfm * f0,
+  x: x0 + dtv * v,
+  f: psubst( maplist("=", append(xvars, vvars), append(x, v)), frhs),
+  v: v + dtf * f,
+  ev([x, v, f])
+  );
+
+m : [1, 1];
+x: [0, 1/2];
+v: [0, 1];
+f: [];
+dt   : 1/10;
+psubst( maplist("=", append(xvars, vvars), append(x, v)), [eq3, eq4]);
+ev(%, numer);
+
+thru 2 do
+[x, v, f] : velocity_verlet_step([eq3, eq4], m, xvars, vvars, x, v, [], dt);
+f[1];
+x[2] - x[1];
+v[2] - v[1];
