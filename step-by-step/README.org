@@ -13,6 +13,9 @@ Input variable from a command line
 Loop example
 [[file:in.loop]]
 
+Redefine "equal" variable
+[[file:in.redefine]]
+
 One atom example
 [[file:in.oneatom]]
 
@@ -24,9 +27,6 @@ One atom example with external force depending on position, velocity and time
 
 A "prototype" of LAMMPS velocity-Verlet integration algorithm
 [[file:verlet.mac]]
-
-Redefine "equal" variable
-[[file:in.redefine]]
 
 Move two atoms with DPD equation of motion
 [[file:in.twoatoms]]
