@@ -33,6 +33,11 @@ Move two atoms with DPD equation of motion
 Solve the same equations with Runge-Kutta
 [[file:twoatoms.mac]]
 
+Move two atoms with DPD equations of motion
+[[file:in.twoatoms_velocity_verlet]]
+A "prototype" of LAMMPS with two atoms and two equations of motion
+[[file:twoatoms_velocity_verlet.mac]]
+
 Move two atoms with DPD equation of motion and compute msd
 [[file:in.msd]]
 Analytical solution for two atom in DPD
