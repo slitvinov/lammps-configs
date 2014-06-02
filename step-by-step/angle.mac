@@ -9,6 +9,7 @@ dotassoc: true;
 declare([dR1, dR2, R1, R2], nonscalar);
 norm(R):=sqrt(R.R);
 /* E(theta):= k*(theta-theta0)^2; */
+/* http://lammps.sandia.gov/doc/angle_charmm.html */
 E(theta, R1, R3):= k*(theta-theta0)^2 + Kub*(r-norm(R1-R3))^2;
 theta(c):= acos(c);
 c(dR1, dR2):= dR1.dR2 / (norm(dR1)*norm(dR2));
