@@ -4,7 +4,7 @@ echo     both
 variable    pmass index 1.0
 units       si
 atom_modify map array sort 0 0
-communicate	single vel yes
+comm_modify    vel yes
 
 read_data       generator.input
 

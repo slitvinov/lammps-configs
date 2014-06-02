@@ -3,7 +3,8 @@ dimension          2
 units              si
 atom_modify        map array sort 0 0
 atom_style         meso
-communicate	   single vel yes
+comm_modify    vel yes
+
 #2D box
 # domain size
 variable          Lx equal 1.000e-3
