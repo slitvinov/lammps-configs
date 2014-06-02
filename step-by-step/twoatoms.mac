@@ -1,9 +1,8 @@
 /* solve equation of motion for two DPD atoms */
 rc: 1.0;
 A: 1.0;
-m: 1.0;
 gamma: 1.0;
-w(r):=block([s], s: abs(r/rc), if (abs(s)<=1.0) then (1 - s)^m else 0);
+w(r):=block([s], s: abs(r/rc), if (abs(s)<1.0) then (1 - s) else 0);
 uvec(ri, rj):=(rj - ri)/abs(rj - ri);
   
 eq1: vi;
