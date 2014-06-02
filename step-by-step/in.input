@@ -1,6 +1,10 @@
 include in.minsetup
-# default value of the dimension 
-# can be overwritten with -var 
-# <lmp> -var ndim 2 -in in.input 
+
+# default value of the dimension can be overwritten with -var 
+
+# Example:
+# <lmp> -var ndim 2 -in in.input
+# where <lmp> is lammps binary
+
 variable ndim index 3
 print "ndim = ${ndim}"
