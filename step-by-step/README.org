@@ -1,8 +1,6 @@
 * lammps examples
 A collection of minimal LAMPS scripts
 
-#adding a new line for test
-
 Minimal setup 10x10x10 box, no atoms
 [[file:in.minsetup]]
 
@@ -18,8 +16,14 @@ Loop example
 One atom example
 [[file:in.oneatom]]
 
-Analytical solution for one atom problem
+Analytical solution for one atom
 [[file:oneatom.mac]]
+
+One atom example with external force depending on position, velocity and time
+[[file:in.verlet]]
+
+A "prototype" of LAMMPS velocity-Verlet integration algorithm
+[[file:verlet.mac]]
 
 Redefine "equal" variable
 [[file:in.redefine]]

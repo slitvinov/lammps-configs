@@ -1,0 +1,47 @@
+/*
+
+This is a model of one atom LAMMPS Velocity-Verlet integration (see
+in.verlet)
+http://en.wikipedia.org/wiki/Velocity_Verlet#Velocity_Verlet
+
+*/
+
+/*
+define external force on an atom
+*/
+force(t, x, v):= v + x/5 + t;
+
+/* mass */
+m : 1;
+
+/* time step */
+dt: 1;
+
+/* constants are the same as in <lmp_source>/src/fix_nve.cpp */
+ftm2v: 1.0;
+dtv: dt;
+dtf: 0.5 * dt * ftm2v;
+dtfm: dtf / m;
+
+/* time */
+t: 0;
+
+/* initial postion and velocity */
+[x, v]: [5, 1];
+
+/* initial force */
+f: force(t, x, v);
+
+/* time steps */
+thru 2 do (
+  t: t + dt,
+  
+  v: v + dtfm * f,
+  x: x + dtv  * v,
+
+  f: force(t, x, v),
+
+  v: v + dtf * f);
+
+/* final position and velocity */
+[x, v];
