@@ -1,0 +1,57 @@
+echo               both
+
+include            in.vars
+dimension          ${ndim}
+units              si
+atom_modify        map array sort 0 0
+atom_style         hybrid meso angle
+communicate	   single vel yes
+
+read_data          data.polymer
+
+# use Tait's EOS in combination with Morris' laminar viscosity.
+# We set rho_0 = 1000 kg/m^3, c = 0.1 m/s, h = 6.5e-5 m.
+# The dynamic viscosity is set to 1.0e-3 Pa s, corresponding to a kinematic viscosity of 1.0e-6 m^2/s
+#The temperature is set to 1e5C.
+#pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
+pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater
+#pair_coeff * *     sph/taitwater/morris 1000 0.1 1.0e-3 ${h}
+pair_coeff * *     sph/taitwater 1.0 0.1 1.0 ${h}
+pair_coeff * *     sph/rhosum ${h}
+
+# Swimmer definitions: bonds, angles
+bond_style      fene
+special_bonds 	lj 1 1 1
+variable        H_fene equal 0.001
+variable        r0_fene equal ${h}
+bond_coeff	1 ${H_fene} ${r0_fene} 0.0 0.0
+
+angle_style     harmonic
+angle_coeff	1 60 109.5
+
+
+# do full time integration
+fix                integrate_fix_full all  meso
+
+neighbor           ${h} bin
+timestep           1e-4
+
+variable           force_sdpd_fx equal fx[1]
+variable           force_sdpd_fy equal fy[1]
+
+compute            rho_peratom all meso_rho/atom
+
+#dump               myDump all image 1 dump.*.jpg type type adiam 0.05 bond type 0.02
+#dump_modify        myDump pad 7
+
+dump               d0 all custom 1 dump.sph_sw id type x y vx vy c_rho_peratom
+dump_modify        d0 pad 7
+
+variable      xone equal x[1]
+variable      xtwo equal x[2]
+variable      vone equal vx[1]
+variable      vtwo equal vx[2]
+fix extra all print 1 "${xone} ${xtwo} ${vone} ${vtwo}" file pos.dat screen no
+run                100
+
+print              "f: ${force_sdpd_fx} ${force_sdpd_fy}"

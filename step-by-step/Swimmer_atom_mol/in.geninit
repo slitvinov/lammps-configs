@@ -1,0 +1,26 @@
+# Create Initial grid with box and particle inside
+
+echo               both 
+
+include            in.vars # include variables 
+dimension          ${ndim}
+units              si
+atom_modify        map array sort 0 0
+atom_style         hybrid meso angle
+communicate	   single vel yes
+
+variable           nh equal -${h}/3.0
+region             box block 0 ${Lx} 0 ${Lx} ${nh} ${h} units box # create simulation box
+create_box         2 box # two types of atoms: meso for solvent and bond for the swimmer
+
+variable           dx equal ${h}/3.0
+lattice            sq ${h} origin 0.5 0.5 0.0
+create_atoms       1  box
+
+variable           Nsw equal ${Nb}+1 # Nsw: number of atoms in the swimmer
+group              sw id <= ${Nsw} # define the atoms which belong to the swimmer
+set                group sw type 2 # define type 2 (bond) for the swimmer partciles
+
+mass               * ${sph_mass}
+
+write_data   data.grid

@@ -1,0 +1,12 @@
+variable          ndim equal 2 # dimension set 2D
+
+variable          Lx equal 1.0 # length in x-dircetion
+
+# the center of the domain
+variable          xcenter equal 0.5*${Lx}
+
+# smothing length
+variable          h equal 0.1 # cutoff distance
+
+# particle mass
+variable          sph_mass equal 1.0
