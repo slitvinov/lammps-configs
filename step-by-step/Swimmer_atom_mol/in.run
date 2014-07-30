@@ -11,13 +11,13 @@ read_data          data.polymer
 
 # Swimmer definitions: bonds, angles
 bond_style      fene
-special_bonds 	lj 0.0 1.0 1.0 angle yes 
+special_bonds 	lj 1.0 1.0 1.0 angle yes 
 #variable        r0_fene equal 0.00001
 bond_coeff	1 ${H_fene} ${r0_fene} 0.0 0.0
 #bond_coeff	1 ${H_fene} 0.0001 0.001 0.01
 
-#angle_style     harmonic
-#angle_coeff	1 60 0.0
+angle_style     harmonic
+angle_coeff	1 1e-3 60
 
 variable        Natoms equal count(all)
 if ${ndim}==2 then "variable        domain_volume equal ${Lx}*${Ly}"
