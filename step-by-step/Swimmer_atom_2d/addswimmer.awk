@@ -9,14 +9,14 @@ BEGIN {
 
 NR==3 {
     print
-    print 3*sw_length+1, "bonds"
+    print 3*sw_length+1 + sw_length, "bonds"
     next
 }
 
 
 NR==4 {
     print
-    print "1 bond types"
+    print "3 bond types"
     next
 }
 
@@ -49,16 +49,30 @@ in_atoms&&NF {
 # Add bonds list
  
 END {
+    # line 1
     if (sw_length>0) print "\nBonds\n" #  Bonds definition : id type atom_i atom_j
+    btype = 1
     for (ip=1; ip<=sw_length; ip++) {
-	print ++ibond, 1, ip, ip+1
+	print ++ibond, btype, ip, ip+1
     }
 
+    # line 2
+    btype = 2
     for (ip=1; ip<=sw_length; ip++) {
-	print ++ibond, 1, np_second+ip-1, np_second+ip
+	print ++ibond, btype, np_second+ip-1, np_second+ip
     }
 
+    # vertical
+    btype = 3
     for (ip=1; ip<=sw_length+1; ip++) {
-	print ++ibond, 1, ip, np_second+ip-1
+	print ++ibond, btype, ip, np_second+ip-1
     }
+
+    for (ip=1; ip<=sw_length; ip++) {
+	print ++ibond, btype, ip, np_second+ip-1  + 1
+    }
+
+    print 1, sw_length > "swimmer.topology"
+    print np_second, np_second+sw_length-1 >> "swimmer.topology"
+    close("swimmer.topology")
 }
