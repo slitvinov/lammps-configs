@@ -10,11 +10,18 @@ comm_modify        vel yes
 read_data          data.polymer
 
 # Swimmer definitions: bonds
-bond_style harmonic/shift
+# harmonic/swimmer requires a custom version of lammps
+bond_style harmonic/swimmer
 
 special_bonds 	lj 1 0 0
 #bond_coeff	1 ${H_fene} ${r0_fene} 0 0 ${dx}
-bond_coeff	1 ${H_fene} ${dx} ${r0_fene}
+variable        A equal 0.5*${dx}
+variable        omega equal 1.0
+variable        phi equal 0.0
+variable        vel_sw equal 5.0
+variable        n1     equal 1
+variable        n2     equal 4
+bond_coeff	1 ${H_fene} ${dx} ${r0_fene} ${A} ${omega} ${phi} ${vel_sw} ${n1} ${n2}
 
 variable        Natoms equal count(all)
 if ${ndim}==2 then "variable        domain_volume equal ${Lx}*${Ly}"
@@ -26,11 +33,6 @@ pair_coeff * *     sph/taitwater ${sph_rho0} ${sph_c} ${sph_eta} ${h}
 pair_coeff * *     sph/rhosum ${h}
 
 # set forces into the head and the tail of the swimmer
-
-variable           i_head equal 1
-variable           i_tail equal ${sw_length}+1
-group              h_t   id ${i_head} ${i_tail} # h_t => head and tail 
-fix                add_f  h_t  addforce 0.01 0.01 0
 
 # do full time integration
 fix                integrate_fix_full all  meso
