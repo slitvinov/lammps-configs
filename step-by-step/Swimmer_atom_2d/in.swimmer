@@ -1,0 +1,14 @@
+# Swimmer definitions: bonds
+# harmonic/swimmer requires a custom version of lammps
+bond_style harmonic/swimmer
+
+special_bonds 	lj 1 0 0
+#bond_coeff	1 ${H_fene} ${r0_fene} 0 0 ${dx}
+variable        A equal 0.5*${dx}
+variable        omega equal 1.0
+variable        phi equal 0.0
+variable        vel_sw equal 5.0
+variable        n1     equal 1
+variable        n2     equal 4
+bond_coeff	1 ${H_fene} ${dx} ${r0_fene} ${A} ${omega} ${phi} ${vel_sw} ${n1} ${n2}
+
