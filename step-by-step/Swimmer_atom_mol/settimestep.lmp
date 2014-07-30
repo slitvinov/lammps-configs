@@ -1,3 +1,9 @@
+# calculate sph timestep
+# Input:
+# ${dx}, ${sph_mu}, ${sph_c}
+# Outpup:
+# ${dt}
+
 variable dt_eta equal 1/8.0*${dx}*${dx}/(${sph_mu})
 
 if "${sph_c}>0.0" then &
