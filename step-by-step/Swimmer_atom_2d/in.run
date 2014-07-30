@@ -1,0 +1,56 @@
+echo               both
+
+include            in.vars
+dimension          ${ndim}
+units              si
+atom_modify        map array sort 0 0
+atom_style         hybrid meso bond
+comm_modify        vel yes
+
+read_data          data.polymer
+
+# Swimmer definitions: bonds
+bond_style harmonic/shift
+
+special_bonds 	lj 1 0 0
+#bond_coeff	1 ${H_fene} ${r0_fene} 0 0 ${dx}
+bond_coeff	1 ${H_fene} ${dx} ${r0_fene}
+
+variable        Natoms equal count(all)
+if ${ndim}==2 then "variable        domain_volume equal ${Lx}*${Ly}"
+variable       sph_mass equal ${sph_rho}*${domain_volume}/${Natoms}
+mass           * ${sph_mass}
+
+pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater
+pair_coeff * *     sph/taitwater ${sph_rho0} ${sph_c} ${sph_eta} ${h}
+pair_coeff * *     sph/rhosum ${h}
+
+# set forces into the head and the tail of the swimmer
+
+variable           i_head equal 1
+variable           i_tail equal ${sw_length}+1
+group              h_t   id ${i_head} ${i_tail} # h_t => head and tail 
+fix                add_f  h_t  addforce 0.01 0.01 0
+
+# do full time integration
+fix                integrate_fix_full all  meso
+
+neighbor           ${h} bin
+
+include            settimestep.lmp
+timestep           ${dt}
+
+variable           force_sdpd_fx equal fx[1]
+variable           force_sdpd_fy equal fy[1]
+
+compute            rho_peratom all meso_rho/atom
+
+dump               myDump all image 10 dump.*.jpg type type adiam 0.05 bond type 0.02
+dump_modify        myDump pad 7
+
+dump               d0 all custom 10 dump.sph_sw id type x y vx vy c_rho_peratom
+dump_modify        d0 pad 7
+
+run                1000
+
+print              "f: ${force_sdpd_fx} ${force_sdpd_fy}"
