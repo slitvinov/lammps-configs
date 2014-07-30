@@ -7,7 +7,7 @@ special_bonds 	lj 1 0 0
 variable        A equal 0.10*${dx}
 variable        omega equal 2*PI/${sw_length}
 variable        phi equal 0.0
-variable        vel_sw equal -0.02
+variable        vel_sw equal -0.01
 bond_coeff	1 harmonic/swimmer ${H_fene} ${dx} ${r0_fene} ${A} ${omega} ${phi} ${vel_sw} ${n1_l1} ${n2_l1}
 
 variable        nA equal -${A}

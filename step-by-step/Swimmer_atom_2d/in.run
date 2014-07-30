@@ -11,8 +11,10 @@ read_data          data.polymer
 include            in.swimmer
 
 variable        Natoms equal count(all)
-if ${ndim}==2 then "variable        domain_volume equal ${Lx}*${Ly}"
-variable       sph_mass equal ${sph_rho}*${domain_volume}/${Natoms}
+if ${ndim}==2 then "variable domain_volume equal ${Lx}*${Ly}" else "variable domain_volume equal ${Lx}*${Ly}*${Lz}"
+variable        sph_mass equal ${sph_rho}*${domain_volume}/${Natoms}
+
+
 mass           * ${sph_mass}
 
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater
@@ -34,12 +36,18 @@ variable           force_sdpd_fy equal fy[1]
 
 compute            rho_peratom all meso_rho/atom
 
-dump               myDump all image 1000 dump.*.jpg type type adiam 0.05 bond type 0.02 zoom 15 size 2024 200
+if  ${ndim}==2 then &
+"dump               myDump all image 5000 dump.*.jpg type type adiam 0.05 bond type 0.02 zoom 6 size 2024 400" &
+else &
+"dump               myDump all image 5000 dump.*.jpg type type adiam 0.05 bond type 0.02 zoom 3 size 2024 2024 view 0 30"
 dump_modify        myDump pad 7
 
-dump               d0 all custom 1000 dump.sph_sw id type x y vx vy c_rho_peratom
+if "${ndim}==2" then &
+"dump               d0 all custom 1000 dump.sph_sw id type x y vx vy c_rho_peratom" &
+else &
+"dump               d0 all custom 1000 dump.sph_sw id type x y z vx vy vz c_rho_peratom"
 dump_modify        d0 pad 7
 
-run                100000000
+run                50000000
 
 print              "f: ${force_sdpd_fx} ${force_sdpd_fy}"

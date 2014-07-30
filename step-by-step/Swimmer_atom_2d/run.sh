@@ -23,7 +23,7 @@ n2_l1=$(awk 'NR==1{print $2}' swimmer.topology)
 n1_l2=$(awk 'NR==2{print $1}' swimmer.topology)
 n2_l2=$(awk 'NR==2{print $2}' swimmer.topology)
 
-./lmp_linux  \
+~/prefix-mpi/bin/mpirun -np 4 ./lmp_linux  \
 -var n1_l1 ${n1_l1} \
 -var n2_l1 ${n2_l1} \
 -var n1_l2 ${n1_l2} \
