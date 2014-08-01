@@ -20,19 +20,22 @@ function xy2id(x, y) {
 BEGIN {
     eps = 1e-12
 
-    # total number of bonds styles
-    n_bond_types = 4
+    bond_strong  = 1 # bond style of inside bonds of the swimmer
+    bond_passive = 2 # bond style of the passive (head and tail ) of the swimmer
 
-    bond_active1 = 1 # bond style of the lower active part of the swimmer
-    bond_active2 = 2 # bond style of the upper active part of the swimmer
-    bond_strong  = 3 # bond style of inside bonds of the swimmer
-    bond_passive = 4 # bond style of the passive (head and tail ) of the swimmer
-    
-    first_line = 5 # first line where the swimmer will be created
+    sw_start_x     = 1
+    sw_start_y     = 5 # first line where the swimmer will be created
     sw_tail_length = int(2.0/9.0*sw_length) # length of the tail part
     sw_head_length = 3 # length of the head part
     sw_head_start = sw_length - sw_head_length # position where the head starts
 
+    n_swimmer = 3 # the number of swimmers
+
+    # total number of bonds styles
+    n_bond_types = 2*n_swimmer + 2
+
+    bond_coef_template_top    = "bond_coeff %i harmonic/swimmer ${Umin_SW_} ${req_SW_} ${rmax_SW_} ${A_SW_} ${omega_SW_} ${phi_SW_} ${vel_sw_SW_} %i %i\n"
+    bond_coef_template_bottom    = "bond_coeff %i harmonic/swimmer ${Umin_SW_} ${req_SW_} ${rmax_SW_} ${nA_SW_} ${omega_SW_} ${phi_SW_} ${vel_sw_SW_} %i %i\n"
 }
 
 
@@ -75,12 +78,15 @@ in_atoms&&NF {
     print
 }
 
-function create_active_line(x_start, x_end, y_level, b_type,         btype, ip) {
-    btype = b_type
+function create_active_line(x_start, x_end, y_level, is_top_line,        btype, ip, bond_coef_template) {
+    btype = (i_swimmer - 1)*2 + 3 + is_top_line
     for (ip=x_start; ip<=x_end; ip++) {
 	print ++ibond, btype, xy2id(ip, y_level), xy2id(ip+1, y_level)
     }
-    print xy2id(x_start, y_level), xy2id(x_end, y_level) > "swimmer.topology"
+    if (is_top_line) {bond_coef_template = bond_coef_template_top} else {bond_coef_template = bond_coef_template_bottom}
+    gsub("_SW_", i_swimmer, bond_coef_template)
+    
+    printf bond_coef_template, btype, xy2id(x_start, y_level), xy2id(x_end, y_level) > "in.swimmer.topology"
 }
 
 function create_passive_line(x_start, x_end, y_level, b_type,       btype, ip) {
@@ -148,29 +154,49 @@ function create_grid(x1, y1, x2, y2,                              ip, jp) {
     }
 }
 
+function create_swimmer() {
+    i_swimmer++
+    # bottom line
+    create_active_line(sw_start_x + sw_tail_length+1,  sw_start_x  + sw_head_start,
+		       sw_start_y, 
+		       0)
+
+    create_passive_line(sw_start_x, sw_start_x + sw_tail_length,
+			sw_start_y, bond_passive)
+
+    # top line
+    create_active_line(sw_start_x + sw_tail_length+1, sw_start_x + sw_head_start, 
+		       sw_start_y+1, 
+		       1)
+
+    create_passive_line(sw_start_x, sw_start_x + sw_tail_length, 
+			sw_start_y+1, bond_passive)
+
+    create_internal_line(sw_start_x, sw_start_x + sw_tail_length,
+			 sw_start_y, 1, 0, bond_passive)
+
+    create_internal_line(sw_start_x + sw_tail_length+1, sw_start_x + sw_head_start, 
+			 sw_start_y, 1, 0, bond_strong)
+
+    create_grid(sw_start_x + sw_head_start+1, sw_start_y - 1, 
+		sw_start_x + sw_head_start + sw_head_length + 1, sw_start_y + 2,
+		bond_passive)
+}
+
 END {
     # Add bonds list
     if (sw_length>0) print "\nBonds\n" #  Bonds definition : id type atom_i atom_j
-    printf "" > "swimmer.topology"
+    printf "" > "in.swimmer.topology"
 
-    # line 1
-    create_active_line(sw_tail_length+1, sw_head_start, first_line, bond_active1)
-    create_passive_line(1, sw_tail_length, first_line, bond_passive)
+    sw_start_y = 2
+    create_swimmer()
 
-    # line 2
-    create_active_line(sw_tail_length+1, sw_head_start, first_line+1, bond_active2)
-    create_passive_line(1, sw_tail_length, first_line+1, bond_passive)
+    sw_start_y = 8
+    create_swimmer()
 
-    create_internal_line(1, sw_tail_length, first_line, 1, 0, bond_passive)
-    create_internal_line(sw_tail_length+1, sw_head_start, first_line, 1, 0, bond_strong)
+    sw_start_y = 16
+    create_swimmer()
 
-    printf "sw_length: %i\n", sw_length > "/dev/stderr"
-    printf "sw_head_start: %i\n", sw_head_start > "/dev/stderr"
-    printf "sw_head_length: %i\n", sw_head_length > "/dev/stderr"
-
-    create_grid(sw_head_start+1, first_line - 1, 
-		sw_head_start + 1 + sw_head_length, first_line + 2,
-		bond_passive)
-    close("swimmer.topology")
+    close("in.swimmer.topology")
 }
 
