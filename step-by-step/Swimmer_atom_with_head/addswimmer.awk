@@ -30,6 +30,7 @@ BEGIN {
     bond_passive = 4
 
     first_line = 1
+    sw_tail_length = int(2.0/9.0*sw_length)
 }
 
 
@@ -80,13 +81,21 @@ function create_active_line(x_start, x_end, y_level, b_type) {
     print xy2id(x_start, y_level), xy2id(x_end, y_level) > "swimmer.topology"
 }
 
+function create_passive_line(x_start, x_end, y_level, b_type) {
+    btype = b_type
+    for (ip=x_start; ip<=x_end; ip++) {
+	print ++ibond, btype, xy2id(ip, y_level), xy2id(ip+1, y_level)
+    }
+}
+
 END {
     # Add bonds list
     if (sw_length>0) print "\nBonds\n" #  Bonds definition : id type atom_i atom_j
     printf "" > "swimmer.topology"
 
     # line 1
-    create_active_line(1, sw_length, first_line, bond_active1)
+    create_active_line(sw_tail_length+1, sw_length, first_line, bond_active1)
+    create_passive_line(1, sw_tail_length, first_line, bond_passive)
 
     # line 2
     create_active_line(1, sw_length, first_line+1, bond_active2)
