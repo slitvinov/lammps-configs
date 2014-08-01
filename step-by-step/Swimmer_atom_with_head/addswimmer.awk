@@ -73,7 +73,7 @@ in_atoms&&NF {
     print
 }
 
-function create_active_line(x_start, x_end, y_level, b_type) {
+function create_active_line(x_start, x_end, y_level, b_type,         btype, ip) {
     btype = b_type
     for (ip=x_start; ip<=x_end; ip++) {
 	print ++ibond, btype, xy2id(ip, y_level), xy2id(ip+1, y_level)
@@ -81,7 +81,7 @@ function create_active_line(x_start, x_end, y_level, b_type) {
     print xy2id(x_start, y_level), xy2id(x_end, y_level) > "swimmer.topology"
 }
 
-function create_passive_line(x_start, x_end, y_level, b_type) {
+function create_passive_line(x_start, x_end, y_level, b_type,       btype, ip) {
     btype = b_type
     for (ip=x_start; ip<=x_end; ip++) {
 	print ++ibond, btype, xy2id(ip, y_level), xy2id(ip+1, y_level)
@@ -90,7 +90,7 @@ function create_passive_line(x_start, x_end, y_level, b_type) {
 
 function create_internal_line(x_start, x_end, y_level, 
 			      start_closed, end_closed,
-			      b_type) {
+			      b_type,                               btype, ip) {
     # vertical
     btype = b_type
     for (ip=x_start + 1 - start_closed; ip<=x_end+end_closed; ip++) {
