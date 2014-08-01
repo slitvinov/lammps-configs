@@ -2,6 +2,21 @@ function fabs(x) {
     return x ? x : -x
 }
 
+# transform [x, y] coordiantes to id of the atom
+# NOTE: uses a global variable `np_second'
+function xy2id(x, y) {
+    if (length(np_second)==0) {
+	printf "addswimmer.awk error: np_second is not defined\n" > "/dev/stderr"
+	exit
+    }
+    
+    if (x>np_second) {
+	printf "addswimmer.awk error: x>np_second\n" > "/dev/stderr"
+	exit
+    }
+    return (np_second - 1)*(y-1) + x
+}
+
 BEGIN {
     eps = 1e-12
 
@@ -13,6 +28,8 @@ BEGIN {
     
     bond_strong  = 3
     bond_passive = 4
+
+    first_line = 3
 }
 
 
@@ -63,26 +80,28 @@ END {
     # line 1
     btype = bond_active1
     for (ip=1; ip<=sw_length; ip++) {
-	print ++ibond, btype, ip, ip+1
+	print ++ibond, btype, xy2id(ip, first_line), xy2id(ip+1, first_line)
     }
 
     # line 2
     btype = bond_active2
     for (ip=1; ip<=sw_length; ip++) {
-	print ++ibond, btype, np_second+ip-1, np_second+ip
+	print ++ibond, btype, xy2id(ip, first_line+1), xy2id(ip+1, first_line+1)
     }
 
     # vertical
     btype = bond_strong
     for (ip=1; ip<=sw_length+1; ip++) {
-	print ++ibond, btype, ip, np_second+ip-1
+	print ++ibond, btype, xy2id(ip, first_line), xy2id(ip, first_line+1)
     }
 
+    # diagonal
     for (ip=1; ip<=sw_length; ip++) {
-	print ++ibond, btype, ip, np_second+ip-1  + 1
+	print ++ibond, btype, xy2id(ip, first_line), xy2id(ip+1, first_line+1)
     }
 
     print 1, sw_length > "swimmer.topology"
     print np_second, np_second+sw_length-1 >> "swimmer.topology"
     close("swimmer.topology")
 }
+
