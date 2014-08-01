@@ -108,6 +108,7 @@ function create_grid(x1, y1, x2, y2, b_type,                              ip, jp
 	for (jp=y1; jp<=y2; jp++) {
 	    if (ip<x2) print ++ibond, b_type, xy2id(ip, jp), xy2id(ip+1, jp)
 	    if (jp<y2) print ++ibond, b_type, xy2id(ip, jp), xy2id(ip, jp+1)
+	    if ((ip<x2) && (jp<y2)) print ++ibond, b_type, xy2id(ip, jp), xy2id(ip+1, jp+1)
 	}
     }
 }
