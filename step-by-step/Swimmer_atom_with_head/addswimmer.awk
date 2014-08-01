@@ -29,7 +29,7 @@ BEGIN {
     bond_strong  = 3
     bond_passive = 4
 
-    first_line = 1
+    first_line = 2
     sw_tail_length = int(2.0/9.0*sw_length)
 }
 
@@ -88,6 +88,21 @@ function create_passive_line(x_start, x_end, y_level, b_type) {
     }
 }
 
+function create_internal_line(x_start, x_end, y_level, 
+			      start_closed, end_closed,
+			      b_type) {
+    # vertical
+    btype = b_type
+    for (ip=x_start + 1 - start_closed; ip<=x_end+end_closed; ip++) {
+	print ++ibond, btype, xy2id(ip, y_level), xy2id(ip, y_level+1)
+    }
+
+    # diagonal
+    for (ip=x_start; ip<=x_end; ip++) {
+	print ++ibond, btype, xy2id(ip, y_level), xy2id(ip+1, y_level+1)
+    }
+}
+
 END {
     # Add bonds list
     if (sw_length>0) print "\nBonds\n" #  Bonds definition : id type atom_i atom_j
@@ -101,18 +116,8 @@ END {
     create_active_line(sw_tail_length+1, sw_length, first_line+1, bond_active2)
     create_passive_line(1, sw_tail_length, first_line+1, bond_passive)
 
-
-    # vertical
-    btype = bond_strong
-    for (ip=1; ip<=sw_length+1; ip++) {
-	print ++ibond, btype, xy2id(ip, first_line), xy2id(ip, first_line+1)
-    }
-
-    # diagonal
-    for (ip=1; ip<=sw_length; ip++) {
-	print ++ibond, btype, xy2id(ip, first_line), xy2id(ip+1, first_line+1)
-    }
-
+    create_internal_line(1, sw_tail_length, first_line, 1, 0, bond_passive)
+    create_internal_line(sw_tail_length+1, sw_length, first_line, 1, 1, bond_strong)
     close("swimmer.topology")
 }
 
