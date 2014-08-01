@@ -16,3 +16,6 @@ bond_coeff	2 harmonic/swimmer ${H_fene} ${dx} ${r0_fene} ${nA} ${omega} ${phi} $
 variable        H_back equal 2*${H_fene}
 bond_coeff	3 harmonic/shift ${H_back} ${dx} ${r0_fene}
 
+bond_coeff	4 harmonic/shift ${H_fene} ${dx} ${r0_fene}
+
+

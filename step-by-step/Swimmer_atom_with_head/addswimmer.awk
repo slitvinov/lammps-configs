@@ -5,7 +5,8 @@ function fabs(x) {
 BEGIN {
     eps = 1e-12
 
-    n_bond_types = 3
+    # total number of bonds styles
+    n_bond_types = 4
 
     bond_active1 = 1
     bond_active2 = 2
@@ -57,9 +58,9 @@ in_atoms&&NF {
 # Add bonds list
  
 END {
-    # line 1
     if (sw_length>0) print "\nBonds\n" #  Bonds definition : id type atom_i atom_j
 
+    # line 1
     btype = bond_active1
     for (ip=1; ip<=sw_length; ip++) {
 	print ++ibond, btype, ip, ip+1
