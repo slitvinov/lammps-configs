@@ -4,6 +4,14 @@ function fabs(x) {
 
 BEGIN {
     eps = 1e-12
+
+    n_bond_types = 3
+
+    bond_active1 = 1
+    bond_active2 = 2
+    
+    bond_strong  = 3
+    bond_passive = 4
 }
 
 
@@ -16,7 +24,7 @@ NR==3 {
 
 NR==4 {
     print
-    print "3 bond types"
+    printf "%i bond types\n", n_bond_types
     next
 }
 
@@ -51,19 +59,20 @@ in_atoms&&NF {
 END {
     # line 1
     if (sw_length>0) print "\nBonds\n" #  Bonds definition : id type atom_i atom_j
-    btype = 1
+
+    btype = bond_active1
     for (ip=1; ip<=sw_length; ip++) {
 	print ++ibond, btype, ip, ip+1
     }
 
     # line 2
-    btype = 2
+    btype = bond_active2
     for (ip=1; ip<=sw_length; ip++) {
 	print ++ibond, btype, np_second+ip-1, np_second+ip
     }
 
     # vertical
-    btype = 3
+    btype = bond_strong
     for (ip=1; ip<=sw_length+1; ip++) {
 	print ++ibond, btype, ip, np_second+ip-1
     }
