@@ -98,7 +98,9 @@ END {
     create_passive_line(1, sw_tail_length, first_line, bond_passive)
 
     # line 2
-    create_active_line(1, sw_length, first_line+1, bond_active2)
+    create_active_line(sw_tail_length+1, sw_length, first_line+1, bond_active2)
+    create_passive_line(1, sw_tail_length, first_line+1, bond_passive)
+
 
     # vertical
     btype = bond_strong
