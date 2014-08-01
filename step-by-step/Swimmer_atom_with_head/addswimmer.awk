@@ -103,6 +103,15 @@ function create_internal_line(x_start, x_end, y_level,
     }
 }
 
+function create_grid(x1, y1, x2, y2, b_type,                              ip, jp) {
+    for (ip=x1; ip<=x2; ip++) {
+	for (jp=y1; jp<=y2; jp++) {
+	    if (ip<x2) print ++ibond, b_type, xy2id(ip, jp), xy2id(ip+1, jp)
+	    if (jp<y2) print ++ibond, b_type, xy2id(ip, jp), xy2id(ip, jp+1)
+	}
+    }
+}
+
 END {
     # Add bonds list
     if (sw_length>0) print "\nBonds\n" #  Bonds definition : id type atom_i atom_j
@@ -117,7 +126,9 @@ END {
     create_passive_line(1, sw_tail_length, first_line+1, bond_passive)
 
     create_internal_line(1, sw_tail_length, first_line, 1, 0, bond_passive)
-    create_internal_line(sw_tail_length+1, sw_length, first_line, 1, 1, bond_strong)
+    create_internal_line(sw_tail_length+1, sw_length, first_line, 1, 0, bond_strong)
+
+    create_grid(sw_length+1, first_line-1, sw_length+2, first_line+2, bond_strong)
     close("swimmer.topology")
 }
 
