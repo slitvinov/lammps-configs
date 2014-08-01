@@ -43,9 +43,9 @@ else &
 dump_modify        myDump pad 7
 
 if "${ndim}==2" then &
-"dump               d0 all custom 1000 dump.sph_sw id type x y vx vy c_rho_peratom" &
+"dump               d0 all custom ${saver_freq} dump.sph_sw id type x y vx vy c_rho_peratom" &
 else &
-"dump               d0 all custom 1000 dump.sph_sw id type x y z vx vy vz c_rho_peratom"
+"dump               d0 all custom ${saver_freq} dump.sph_sw id type x y z vx vy vz c_rho_peratom"
 dump_modify        d0 pad 7
 
 run                50000000
