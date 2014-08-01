@@ -29,13 +29,13 @@ BEGIN {
     bond_strong  = 3
     bond_passive = 4
 
-    first_line = 3
+    first_line = 1
 }
 
 
 NR==3 {
     print
-    print 3*sw_length+1 + sw_length, "bonds"
+    print "_PLACE_HOLDER_", "bonds"
     next
 }
 
@@ -72,22 +72,24 @@ in_atoms&&NF {
     print
 }
 
-# Add bonds list
- 
+function create_active_line(x_start, x_end, y_level, b_type) {
+    btype = b_type
+    for (ip=x_start; ip<=x_end; ip++) {
+	print ++ibond, btype, xy2id(ip, y_level), xy2id(ip+1, y_level)
+    }
+    print xy2id(x_start, y_level), xy2id(x_end, y_level) > "swimmer.topology"
+}
+
 END {
+    # Add bonds list
     if (sw_length>0) print "\nBonds\n" #  Bonds definition : id type atom_i atom_j
+    printf "" > "swimmer.topology"
 
     # line 1
-    btype = bond_active1
-    for (ip=1; ip<=sw_length; ip++) {
-	print ++ibond, btype, xy2id(ip, first_line), xy2id(ip+1, first_line)
-    }
+    create_active_line(1, sw_length, first_line, bond_active1)
 
     # line 2
-    btype = bond_active2
-    for (ip=1; ip<=sw_length; ip++) {
-	print ++ibond, btype, xy2id(ip, first_line+1), xy2id(ip+1, first_line+1)
-    }
+    create_active_line(1, sw_length, first_line+1, bond_active2)
 
     # vertical
     btype = bond_strong
@@ -100,8 +102,6 @@ END {
 	print ++ibond, btype, xy2id(ip, first_line), xy2id(ip+1, first_line+1)
     }
 
-    print 1, sw_length > "swimmer.topology"
-    print np_second, np_second+sw_length-1 >> "swimmer.topology"
     close("swimmer.topology")
 }
 
