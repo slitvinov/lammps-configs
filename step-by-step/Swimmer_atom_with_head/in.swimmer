@@ -34,7 +34,7 @@ variable        vel_sw3 equal -0.01
 
 variable        H_back equal 2*${H_fene}
 
-variable        req_head_flesh equal 0.25*${dx}
+variable        req_head_flesh equal 0.75*${dx}
 variable        Umin_head_flesh equal ${H_fene}
 bond_coeff	${bond_strong} harmonic/shift ${H_back} ${dx} ${r0_fene}
 bond_coeff	${bond_passive} harmonic/shift ${H_fene} ${dx} ${r0_fene}

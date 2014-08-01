@@ -228,14 +228,15 @@ END {
     printf "" > "in.swimmer_change_type"
 
     sw_start_y = 2
-    sw_start_x = 5
+    sw_start_x = 1
     create_swimmer()
 
-    #sw_start_y = 8
+    sw_start_y = 8
+    sw_start_x = 20
+    create_swimmer()
+
+    #sw_start_y = 20
     #create_swimmer()
-
-    sw_start_y = 10
-    create_swimmer()
 
     close("in.swimmer.topology")
     close("in.swimmer_change_type")
