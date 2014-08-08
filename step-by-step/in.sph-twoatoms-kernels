@@ -13,8 +13,8 @@ variable          xcenter equal 0.5*${Lx}
 # smothing length
 variable          h equal 6.5e-5
 variable          nLx equal -${Lx}
-
 region             box block 0 ${Lx} 0 ${Lx} ${nLx} ${Lx} units box
+
 create_box         1 box
 mass               1 1.7e-7
 
@@ -34,8 +34,8 @@ velocity     scd set 0.0 0.0 0.0 units box
 # The dynamic viscosity is set to 1.0e-3 Pa s, corresponding to a kinematic viscosity of 1.0e-6 m^2/s
 #The temperature is set to 1e5C.
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
-pair_coeff * *     sph/taitwater/morris 1000 0.1 1.0e-3 ${h}
-pair_coeff * *     sph/rhosum ${h}
+pair_coeff * *     sph/taitwater/morris lucy 1000 0.1 1.0e-3 ${h}
+pair_coeff * *     sph/rhosum lucy ${h} 
 
 # do full time integration
 fix                integrate_fix_full all  meso
