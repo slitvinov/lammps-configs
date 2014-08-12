@@ -56,6 +56,9 @@ else &
 "dump               d0 all custom ${saver_freq} dump.sph_sw id type x y z vx vy vz c_rho_peratom"
 dump_modify        d0 pad 9
 
+dump               dxyz  all xyz ${saver_freq} dump.xyz
+
+
 run                0
 run                ${nstep}
 

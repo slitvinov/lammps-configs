@@ -20,5 +20,5 @@ awk -f count_bonds.awk data.bond_nn data.bond_nn > data.bond
 # make all atoms of the swimmer of the type `new_type'
 awk -v new_type=2 -f change_type_of_bonded.awk  data.bond data.bond > data.polymer
 
-~/prefix-mpi/bin/mpirun -np 4 ./lmp_linux  \
+~/prefix-mpich/bin/mpirun -np 2 ./lmp_linux  \
     -var sw_length ${sw_length} -in in.run
