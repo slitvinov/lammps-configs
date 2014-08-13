@@ -4,7 +4,7 @@ rho0  : 1;
 cutoff: 1;
 soundspeed: 1;
 viscosity: [1, 1];
-pb       : 0.0;
+pb       : 1.0;
 
 h: cutoff;
 
@@ -33,17 +33,19 @@ P: maplist('P_fun, rho);
 sph_force_loop(expr)::= buildq([expr, n: length(x)], create_list(
     sum(if i#j then expr else 0, j, 1, n),
     i, 1, n));
-pair_sph_taitwater_morris(x, v, rho):= block([Fc, Fd, P, drho, numer: true],
+pair_sph_taitwater_morris(x, v, rho):= block([Fc, Fd, Fb, P, drho, numer: true],
+  Fb: sph_force_loop(-m[i]*m[j] * (pb/rho[i]^2 + pb/rho[j]^2) * dw(x[i] - x[j])),  
   P : maplist('P_fun, rho),
   Fc: sph_force_loop(-m[i]*m[j] * (P[i]/rho[i]^2 + P[j]/rho[j]^2) * dw(x[i] - x[j])),
   Fd: sph_force_loop(m[i]*m[j] * (viscosity[i] + viscosity[j])/(rho[i]*rho[j]) * (v[i] - v[j])*dw_scalar(x[i]-x[j]) / vabs(x[i]-x[j])),
   drho: sph_force_loop(m[j]*(v[i]-v[j]).dw(x[i] - x[j])),
-  [Fc + Fd, drho]);
+  [Fc + Fd, Fb, drho]);
 
-sph_velocity_verlet_step(x0, v0, rho0, f0, drho0):=
+sph_velocity_verlet_step(x0, v0, rho0, f0, fb0, drho0):=
 block([numer: true, ftm2v, dtv, dtfm, dtv,
   x: copylist(x0), v: copylist(v0),
-  rho: copylist(rho0), f: copylist(f0), drho: copylist(drho0)
+  rho: copylist(rho0), f: copylist(f0),
+  fb: copylist(fb0), drho: copylist(drho0)
   ],
   
   ftm2v: 1,
@@ -53,17 +55,15 @@ block([numer: true, ftm2v, dtv, dtfm, dtv,
 
   rho : rho + dtf*drho,
   v   : v + dtfm*f,
-  x   : x + dtv*v, /* + dtv * dtfm * fb,*/
-  [f, drho]: pair_sph_taitwater_morris(x, v, rho),
+  x   : x + dtv*v  + dtv * dtfm * fb,
+  [f, fb, drho]: pair_sph_taitwater_morris(x, v, rho),
 
   v   : v + dtfm*f,
   rho : rho + dtf*drho,
-  [x, v, rho, f, drho]);
+  [x, v, rho, f, fb, drho]);
 
 dt: 0.02;
-[f, drho]: pair_sph_taitwater_morris(x, v, rho);
+[f, fb, drho]: pair_sph_taitwater_morris(x, v, rho);
 
-thru 1 do [x, v, rho, f, drho]: sph_velocity_verlet_step(x, v, rho, f, drho);
+thru 2 do [x, v, rho, f, fb, drho]: sph_velocity_verlet_step(x, v, rho, f, fb, drho);
 [f[1][1],  x[1][1], v[1][1]];
-  
-
