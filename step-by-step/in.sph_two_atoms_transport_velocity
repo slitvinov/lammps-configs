@@ -26,7 +26,7 @@ variable        rho0   equal 1
 variable        cutoff equal 1
 variable        soundspeed equal 1
 variable        viscosity  equal 1
-variable        pb         equal 1
+variable        pb         equal 10
 pair_style      sph/adami
 pair_coeff	* * lucy ${rho0} ${soundspeed} ${viscosity} ${pb} ${cutoff}
 
@@ -34,7 +34,7 @@ fix	        1 all meso/trans
 neigh_modify    delay 0 every 1
 
 timestep        0.02
-run             2
+run             10
 
 print "f1(t_end) = $(fx[1])"
 print "x(t_end) = $(x[1])"

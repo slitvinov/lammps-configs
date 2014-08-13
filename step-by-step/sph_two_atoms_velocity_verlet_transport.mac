@@ -4,7 +4,7 @@ rho0  : 1;
 cutoff: 1;
 soundspeed: 1;
 viscosity: [1, 1];
-pb       : 1.0;
+pb       : 10;
 
 h: cutoff;
 
@@ -34,10 +34,19 @@ sph_force_loop(expr)::= buildq([expr, n: length(x)], create_list(
     sum(if i#j then expr else 0, j, 1, n),
     i, 1, n));
 pair_sph_taitwater_morris(x, v, rho):= block([Fc, Fd, Fb, P, drho, numer: true],
-  Fb: sph_force_loop(-m[i]*m[j] * (pb/rho[i]^2 + pb/rho[j]^2) * dw(x[i] - x[j])),  
+  Fb: sph_force_loop( block([Vi: m[i]/rho[i],
+      Vj: m[j]/rho[j],
+      pij_wave: (rho[j]*pb + rho[i]*pb)/(rho[i] + rho[j])],
+      - (Vi^2 + Vj^2) * pij_wave * dw(x[i] - x[j]))),
   P : maplist('P_fun, rho),
-  Fc: sph_force_loop(-m[i]*m[j] * (P[i]/rho[i]^2 + P[j]/rho[j]^2) * dw(x[i] - x[j])),
-  Fd: sph_force_loop(m[i]*m[j] * (viscosity[i] + viscosity[j])/(rho[i]*rho[j]) * (v[i] - v[j])*dw_scalar(x[i]-x[j]) / vabs(x[i]-x[j])),
+  Fc: sph_force_loop( block([Vi: m[i]/rho[i],
+      Vj: m[j]/rho[j],
+      pij_wave: (rho[j]*P[i] + rho[i]*P[j])/(rho[i] + rho[j])],
+      - (Vi^2 + Vj^2) * pij_wave * dw(x[i] - x[j]))),
+  Fd: sph_force_loop (block([Vi: m[i]/rho[i],
+      Vj: m[j]/rho[j]], 
+      Vi^2 + Vj^2)*viscosity[i] * (v[i] - v[j])*dw_scalar(x[i]-x[j]) / vabs(x[i]-x[j]
+    )),
   drho: sph_force_loop(m[j]*(v[i]-v[j]).dw(x[i] - x[j])),
   [Fc + Fd, Fb, drho]);
 
@@ -65,5 +74,5 @@ block([numer: true, ftm2v, dtv, dtfm, dtv,
 dt: 0.02;
 [f, fb, drho]: pair_sph_taitwater_morris(x, v, rho);
 
-thru 2 do [x, v, rho, f, fb, drho]: sph_velocity_verlet_step(x, v, rho, f, fb, drho);
+thru 10 do [x, v, rho, f, fb, drho]: sph_velocity_verlet_step(x, v, rho, f, fb, drho);
 [f[1][1],  x[1][1], v[1][1]];
