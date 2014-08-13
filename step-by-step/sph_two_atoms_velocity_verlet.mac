@@ -60,7 +60,7 @@ block([numer: true, ftm2v, dtv, dtfm, dtv,        vest,
   [x, v, rho, f, drho]);
 
 dt: 0.02;
-vest: 0*v;
+vest: v;
 
 [f, drho]: pair_sph_taitwater_morris(x, vest, rho);
 thru 10 do [x, v, rho, f, drho]: sph_velocity_verlet_step(x, v, rho, f, drho);
