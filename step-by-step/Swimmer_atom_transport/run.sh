@@ -6,7 +6,7 @@ set -e
 set -u
 
 # the length of the swimmer
-sw_length=20
+sw_length=100
 
 # generate grid
 ./lmp_linux -var sw_length ${sw_length} -in in.geninit

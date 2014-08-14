@@ -231,8 +231,8 @@ END {
     sw_start_x = 1
     create_swimmer()
 
-    sw_start_y = 8
-    sw_start_x = 20
+    sw_start_y = 30
+    sw_start_x = 60
     create_swimmer()
 
     #sw_start_y = 20

@@ -7,7 +7,7 @@ special_bonds 	lj 1 1 1
 variable        Umin1 equal ${H_fene}
 variable        req1  equal ${dx}
 variable        rmax1 equal ${r0_fene}
-variable        A1 equal 0.10*${dx}
+variable        A1 equal 0.02*${dx}
 variable        nA1 equal -${A1}
 variable        omega1 equal 2*PI/${sw_length}
 variable        phi1 equal 0.0
@@ -16,7 +16,7 @@ variable        vel_sw1 equal -0.01
 variable        Umin2 equal ${H_fene}
 variable        req2  equal ${dx}
 variable        rmax2 equal ${r0_fene}
-variable        A2 equal 0.10*${dx}
+variable        A2 equal 0.02*${dx}
 variable        nA2 equal -${A2}
 variable        omega2 equal 2*PI/${sw_length}
 variable        phi2 equal 0.0
