@@ -45,7 +45,7 @@ variable           image_y  equal round(${image_x}*${Ly}/${Lx})
 variable           image_z  equal 7*${Lx}/8.0
 
 if  ${ndim}==2 then &
-"dump               myDump all image ${saver_freq} dump.*.jpg type type adiam 0.05 bond type 0.02 zoom ${image_z} size ${image_x} ${image_y}" &
+"dump               myDump all image ${saver_freq} dump.*.jpg type type adiam 0.05 bond type 0.02 zoom 2 size 1024 768 "# zoom ${image_z} size ${image_x} ${image_y}" &
 else &
 "dump               myDump all image ${saver_freq} dump.*.jpg type type adiam 0.05 bond type 0.02 zoom 3 size 2024 2024 view 0 30"
 dump_modify        myDump pad 9

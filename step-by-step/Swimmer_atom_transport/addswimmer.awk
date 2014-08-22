@@ -31,7 +31,7 @@ BEGIN {
     sw_head_length = 3 # length of the head part
     sw_head_start = sw_length - sw_head_length # position where the head starts
 
-    n_swimmer = 2 # the number of swimmers
+    n_swimmer = 1 # the number of swimmers
 
     # total number of bonds styles
     n_bond_types = 2*n_swimmer + n_not_active_types
@@ -227,16 +227,13 @@ END {
     printf "" > "in.swimmer.topology"
     printf "" > "in.swimmer_change_type"
 
-    sw_start_y = 2
-    sw_start_x = 1
-    create_swimmer()
+    #sw_start_y = 2
+    #sw_start_x = 1
+    #create_swimmer()
 
     sw_start_y = 30
     sw_start_x = 60
     create_swimmer()
-
-    #sw_start_y = 20
-    #create_swimmer()
 
     close("in.swimmer.topology")
     close("in.swimmer_change_type")

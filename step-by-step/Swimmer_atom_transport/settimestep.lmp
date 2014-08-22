@@ -1,3 +1,10 @@
+# sets timestep ${dt}
+# Input:
+# sph_eta, sph_rho, dx
+# Output:
+# dt
+
+variable sph_mu   equal ${sph_eta}/${sph_rho}  
 variable dt_eta equal 1/8.0*${dx}*${dx}/(${sph_mu})
 
 if "${sph_c}>0.0" then &
@@ -14,3 +21,4 @@ print "(settimestep) dt_c dt_eta ${dt} ${dt_c} ${dt_eta} ${dt}"
 
 variable dt_eta delete
 variable dt_c   delete
+variable sph_mu delete
