@@ -1,0 +1,34 @@
+
+/*ndim: 3; */
+
+var: [m2 = mass_sw_surface_head, dx2 = dx_flesh,
+dx1 = dx, m1 = sph_mass, c1=sph_c, rho1=sph_rho0, rho2=sph_rho0_flesh];
+
+eq1: c1^2*rho1 = c2^2*rho2;
+eq2: rho1=m1/dx1^ndim;
+eq3: rho2=M2/V2;
+eq4: V2=(dx2*3)^2;
+eq5: M2=8*m1 + m2;
+
+so1: solve([eq3, eq4, eq5, eq1], [rho2, c2, V2, M2])[2];
+so2: solve([eq4, eq5, eq1], [c2, V2, M2])[1];
+
+/*
+
+* * * 
+* o * 
+* * *
+
+* * * *
+* o o * 
+* * * *
+
+
+*/
+subst(var, assoc(rho2, so1));
+grind(%);
+
+
+subst(var, assoc(c2, so2));
+grind(%);
+
