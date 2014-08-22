@@ -1,0 +1,31 @@
+atom_style         meso/trans
+
+# move one atom with a constant acceleration
+units           si
+
+# we switch off the sorting of atoms because be default the sorting
+# uses neighbor cutoff as a binsize and we want to run some
+# simulations without given `cutoff'
+atom_modify     map array sort 0 0
+
+region		box block 0 10 0 10 0 10 units box
+create_box	1 box
+mass            1 1
+
+# create an atom in the middle of the domain
+create_atoms 1 single 5.1 5.2 5.3 units box
+
+# set velocity of the atom
+group        fst id 1
+velocity     fst set 1 2 3 units box
+
+set          group fst meso_rho 100.0
+set          group fst meso_e   333.0
+
+timestep     1
+#fix	     f_fm all meso
+
+write_data   meso.data
+
+restart      1 meso.restart
+run          1

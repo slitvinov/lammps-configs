@@ -1,0 +1,10 @@
+# log to the screen and to the log.lammps file
+echo     both
+
+atom_style         meso
+
+# move one atom with a constant acceleration
+units           si
+
+read_data   meso.data
+write_data  meso.data.after_data

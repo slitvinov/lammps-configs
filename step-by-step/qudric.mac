@@ -1,5 +1,16 @@
+two_power(a, b):= if a=%e then mexp(b) 
+else if numberp(b) and b<0 then 1/two_power(a, -b)
+else pow(a, b);
+      
+
+expr2c(expr):=block([s],
+  load("opsubst"),
+  s: opsubst("^"= lambda([a, b], two_power(a, b)), expr),
+  s);
+
+
 ndim: 3;
-w(r):= A * (1 + 3*r/h)*(1 - r/h)^3;
+w(r):= A * (1 - (r/h)^2)^4;
 
 I: if ndim=2 then integrate(integrate( w(r)*r, r, 0, h), phi, 0, 2*%pi)
 else
@@ -17,8 +28,9 @@ block([h: 1],
     explicit( dw(r), r, 0, h)));
 
 factor(w(r)), numer;
-grind(factor(dw(r))), numer;
+factor(w(0)), numer;
 
-dw(r)/r;
+grind(expr2c(factor(w(r)))), numer;
+grind(expr2c(factor(dw(r)))), numer;
+grind(expr2c(factor(dw(r)/r))), numer;
 
-dw(r);
