@@ -1,0 +1,50 @@
+/*
+
+* --- * --- *
+
+* --- o --- *         (1)
+
+* --- * --- *
+
+
+*/
+
+var: [m2 = mass_sw_surface_head, dx2 = dx_flesh,
+dx1 = dx, m1 = sph_mass, c1=sph_c, rho1=sph_rho0, rho2=sph_rho0_flesh];
+
+assume(h>0);
+assume(m1>0);
+assume(m2>0);
+assume(dx2w>0, dx1w>0, dx1>0, dx2>0);
+w(r):= 1/h^2*exp(-(r/h)^2);
+/* dw(r):= ''(diff(w(r), r)); */
+dwt(r):=''(expand(taylor(dw(r), r, 0, 3)));
+
+p1: c1^2*rho1;
+p2: c2^2*rho2;
+V1: m1/rho1;
+V2: m2/rho2;
+
+pij(pi, pj, rhoi, rhoj):= (pi*rhoi + pj*rhoj)/(rhoi + rhoj);
+eq: makelist([], 5);
+eq[1]: F1 = (V1^2+V1^2)*pij(p1, p1, rho1, rho1) * dw(dx1);
+eq[2]: F2 = (V1^2+V2^2)*pij(p1, p2, rho1, rho2) * dw(dx2);
+eq[3]: F1 = F2;
+eq[4]: rho2 = (m2 + 8*m1)/9  / dx2^2;
+eq[5]: p1 = p2;
+
+load("to_poly_solve");
+so: solve(eq, [F1, F2, rho2, m2, c2]);
+
+rho2_expr: fullratsimp(assoc(rho2, so[2]));
+m2_expr:   fullratsimp(assoc(m2,   so[2]));
+
+load("sph-kernel.mac")$
+ndim: 2$
+
+define_kernel(ndim, 0.1, 'quintic, w, dw)$
+ev(m2_expr, infeval, numer,
+  rho1=1, h=0.1, dx1=h/3, m1=0.001111, dx2=0.5*dx1);
+ev(rho2_expr, infeval, numer,
+  rho1=1, h=0.1, dx1=h/3, m1=0.001111, dx2=0.5*dx1);
+

@@ -6,13 +6,12 @@ dx1 = dx, m1 = sph_mass, c1=sph_c, rho1=sph_rho0, rho2=sph_rho0_flesh];
 
 eq1: c1^2*rho1 = c2^2*rho2;
 eq2: rho1=m1/dx1^ndim;
-eq3: rho2=M2/V2;
-eq4: V2= (1/2*dx2 + dx2 + dx2 + 1/2*dx2)^2;
-/* eq4: V2= (1/2*dx2 + dx2 + dx2 + dx2 + 1/2*dx2) * (1/2*dx2 + dx2 + dx2 + 1/2*dx2); */
-eq5: M2=8*m1 + m2;
-/* eq5: M2=10*m1 + 2*m2$ */
+eq3: M2 = rho2*dx2*dx2 + 8*rho1*dx1*dx1;
+eq4: M2 = 8*m1 + m2;
 
-so1: solve([eq3, eq4, eq5, eq1], [rho2, c2, V2, M2])[2]$
+rho2_expr: expand(assoc(rho2, solve([eq1, eq3, eq4], [rho2, M2, c2])[1]));
+grind(%);
+
 so2: solve([eq4, eq5, eq1], [c2, V2, M2])[1]$
 
 /*
