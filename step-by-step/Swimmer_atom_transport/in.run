@@ -8,17 +8,18 @@ atom_style         hybrid meso/trans bond
 comm_modify        vel yes
 
 read_data          data.polymer
-include            in.swimmer
-
 variable        Natoms equal count(all)
 if ${ndim}==2 then "variable domain_volume equal ${Lx}*${Ly}" else "variable domain_volume equal ${Lx}*${Ly}*${Lz}"
 
-variable       sph_mass equal ${sph_rho}*${domain_volume}/${Natoms}
-variable       mass_sw_surface_head equal ${sph_mass}*${dx_flesh}/${dx}
-variable       sph_rho0_flesh       equal 1.0*${sph_rho0}
+variable       sph_mass             equal ${sph_rho}*${domain_volume}/${Natoms}
+variable       k                    equal ${dx_flesh}/${dx}
+variable       mass_sw_surface_head equal ((${k}<0.6)*${k}^3+(${k}>=0.6)*${k}^(1/2))*${sph_mass}
+variable       k                    delete
+variable       sph_rho0_flesh       equal ${sph_rho0}
 variable       sph_c_flesh          equal ${sph_c}*sqrt(${sph_rho0}/${sph_rho0_flesh})
-
 variable       pb_flesh equal ${sph_c_flesh}^2*${sph_rho0_flesh}
+
+include        in.swimmer
 
 mass           ${atom_type_solvent} ${sph_mass}
 mass           ${atom_type_sw_rest} ${sph_mass}
@@ -27,7 +28,9 @@ mass           ${atom_type_sw_surface_head} ${mass_sw_surface_head}
 # do full time integration
 fix                integrate_fix_full all  meso/trans
 
-neighbor           ${h} bin
+neighbor           0 bin
+neigh_modify       delay 0 every 1
+
 compute            rho_peratom all meso_rho/atom
 
 variable           image_x  equal 2024
@@ -35,29 +38,52 @@ variable           image_y  equal round(${image_x}*${Ly}/${Lx})
 variable           image_z  equal 7*${Lx}/8.0
 
 if  ${ndim}==2 then &
-"dump               myDump all image ${saver_freq} dump.*.jpg type type adiam 0.05 bond type 0.02 zoom ${image_z} size ${image_x} ${image_y}" &
+"dump               dump_img all image ${saver_freq} ${dname}/dump.*.jpg type type adiam 0.05 bond type 0.02 zoom ${image_z} size ${image_x} ${image_y}" &
 else &
-"dump               myDump all image ${saver_freq} dump.*.jpg type type adiam 0.05 bond type 0.02 zoom 3 size 2024 2024 view 0 30"
-dump_modify        myDump pad 9
+"dump               dump_img all image ${saver_freq} ${dname}/dump.*.jpg type type adiam 0.05 bond type 0.02 zoom 3 size 2024 2024 view 0 30"
+dump_modify         dump_img pad 9
 
 if "${ndim}==2" then &
-"dump               d0 all custom ${saver_freq} dump.sph_sw id type x y vx vy c_rho_peratom" &
+"dump               dump_ovito all custom ${saver_freq} ${dname}/dump.sph_sw id type x y vx vy c_rho_peratom" &
 else &
-"dump               d0 all custom ${saver_freq} dump.sph_sw id type x y z vx vy vz c_rho_peratom"
-dump_modify        d0 pad 9
+"dump               dump_ovito all custom ${saver_freq} ${dname}/dump.sph_sw id type x y z vx vy vz c_rho_peratom"
+dump_modify         dump_ovito pad 9
 
-dump               dxyz  all xyz ${saver_freq} dump.xyz
+dump               dump_txt all custom ${saver_freq} ${dname}/dump.*.dat id type x y z vx vy vz c_rho_peratom
+dump_modify        dump_txt pad 9
 
+dump               dxyz  all xyz ${saver_freq} ${dname}/dump.xyz
 thermo             ${saver_freq}
 
 variable           sph_eta equal ${sph_eta_relaxation}
 include            settimestep.lmp
 include            in.pairs
 timestep           ${dt}
-run                ${nrelaxation}
+group              solvent      type ${atom_type_solvent}
+variable           kb           equal 1.3806488e-23
+variable           Temp         equal 1e-5/${kb}
+fix                fix_langevin solvent langevin ${Temp} 0 1e-2 699483
+write_data         ${dname}/swimmer.dat
+run                ${nrelaxation1}
+unfix              fix_langevin
+variable           kb           delete
+variable           Temp         delete
+run                ${nrelaxation2}
+velocity           all zero linear
+velocity           all zero angular
+
 
 variable           sph_eta equal ${sph_eta_real}
 include            settimestep.lmp
 include            in.pairs
 timestep           ${dt}
+
+group              sw_rest           type ${atom_type_sw_rest}
+group              sw_surface_head   type ${atom_type_sw_surface_head}
+variable           physical_time equal ${dt}*(step-${nrelaxation1}-${nrelaxation2})
+compute            rho_max sw_surface_head reduce max c_rho_peratom
+compute            rho_min sw_surface_head reduce min c_rho_peratom
+fix                fprint all print ${saver_freq} "${physical_time} $(c_rho_min) $(c_rho_max)" &
+                   screen no file ${dname}/moments.dat
+
 run                ${nstep}
