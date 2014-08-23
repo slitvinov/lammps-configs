@@ -134,7 +134,19 @@ function is_on_grid(ip, jp) {
     return (ip>=_x1 && ip<=_x2 && jp>=_y1 && jp<=_y2)
 }
 
+# a scheme for bond filter
+# _x1    _x2
+#  x x x x  _y2
+#  x x x x
+#  x x x x
+#  x x x x  _y1
+#
+# (_x1, _y1) to (_x2, _y2)
 function bond_filter(ip1, jp1, ip2, jp2) {
+    if (    jp1!=_y1 && jp1!=_y2 \
+	 && jp2!=_y1 && jp2!=_y2 \
+	 && jp1==jp2+1 \
+       )   return 1
 #    if ( (ip1==_x1) && (jp1==_y1+1) && (ip2==_x1+1) && (jp2==_y1) ) return 1
 #    if ( (ip1==_x2-1) && (jp1==_y1) && (ip2==_x2) && (jp2==_y1+1) ) return 1
 #    if ( (ip1==_x1) && (jp1==_y2-1) && (ip2==_x1+1) && (jp2==_y2) ) return 1
