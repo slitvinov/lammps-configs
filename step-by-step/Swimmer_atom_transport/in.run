@@ -14,18 +14,8 @@ variable        Natoms equal count(all)
 if ${ndim}==2 then "variable domain_volume equal ${Lx}*${Ly}" else "variable domain_volume equal ${Lx}*${Ly}*${Lz}"
 
 variable       sph_mass equal ${sph_rho}*${domain_volume}/${Natoms}
-
-variable       mass_sw_surface_head equal 0.75^2*${sph_mass}
-#variable       sph_rho0_flesh       equal (8*${sph_mass}+${mass_sw_surface_head})/(9*${dx_flesh}^2)
-# variable       sph_rho0_flesh       equal (8*${sph_mass}+${mass_sw_surface_head})/(9*${dx_flesh}^2)
-
-#variable       sph_rho0_flesh       equal -4*${dx}*(${dx_flesh}-${dx})*${sph_rho0}/${h}^2+2*(${dx_flesh}-${dx})*${sph_rho0}/${dx}+${sph_rho0}
-variable        sph_rho0_flesh       equal 0.85
-
-#variable         sph_rho0_flesh       equal  &
-#-0.83303833007812*${dx}*(${dx_flesh}-1.0*${dx})*${sph_rho0}/${h}^2+0.41651916503906*(${dx_flesh}-1.0*${dx})*${sph_rho0}/${dx}+0.31640625*${sph_rho0}
-
-
+variable       mass_sw_surface_head equal ${sph_mass}*${dx_flesh}/${dx}
+variable       sph_rho0_flesh       equal 1.0*${sph_rho0}
 variable       sph_c_flesh          equal ${sph_c}*sqrt(${sph_rho0}/${sph_rho0_flesh})
 
 variable       pb_flesh equal ${sph_c_flesh}^2*${sph_rho0_flesh}
