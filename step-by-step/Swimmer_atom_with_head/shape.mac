@@ -1,13 +1,13 @@
 load("to_poly_solve");
-eq1: [ (x3 - x1)^2 + (y3 - y1)^2 = dx,
-       (x3 - x2)^2 + (y3 - y2)^2 = r2];
-so1: args(to_poly_solve(radcan(eq1), [x3, y3], 'use_grobner = true))[2];
-eq2: [ (x4 - x1)^2 + (y4 - y1)^2 = r1,
-       (x4 - x3)^2 + (y4 - y3)^2 = dx];
-so2: args(to_poly_solve(radcan(eq2), [x4, y4], 'use_grobner = true))[2];
+eq1: [ (x2p - x1)^2 + (y2p - y1)^2 = dx^2,
+       (x2p - x2)^2 + (y2p - y2)^2 = r2^2];
+so1: args(to_poly_solve(radcan(eq1), [x2p, y2p], 'use_grobner = true))[2];
+eq2: [ (x1p - x1)^2 + (y1p - y1)^2 = r1^2,
+       (x1p - x2p)^2 + (y1p - y2p)^2 = dx^2];
+so2: args(to_poly_solve(radcan(eq2), [x1p, y1p], 'use_grobner = true))[2];
 
 phi: 0;
-L    : 100;
+L    : 40;
 omega: 2*%pi/L;
 v:   0.02;
 dx:  0.01/3.0;
@@ -19,17 +19,18 @@ t: 0;
 rup(N):=  r0 + A*(if sin(omega*N - v*t + phi)>0 then 1 else -1);
 rdo(N):=  r0 + -A*(if sin(omega*N - v*t + phi)>0 then 1 else -1);
 
-next_element(x1, y1, x2, y2, n):= block([x3, y3, x4, y4, r1, r2],
+next_element(x1, y1, x2, y2, n):= block([x2p, y2p, x1p, y1p, r1, r2],
   r1: rup(n),
   r2: rdo(n),
-  [x3, y3]: maplist(rhs, float(ev(so1))),
-  [x4, y4]: maplist(rhs, float(ev(so2))),
-  [x4, y4, x3, y3]);
+  [x2p, y2p]: maplist(rhs, float(ev(so1))),
+  [x1p, y1p]: maplist(rhs, float(ev(so2))),
+  [x1p, y1p, x2p, y2p]);
 
 up_list: [];
 do_list: [];
 m_list : [];
 [x1, y1, x2, y2]: [0, 0, 0, dx];
+
 for n thru L do block([],
   m_list: append([[x2, y2], [x1, y1]], m_list),
   up_list: endcons([x2, y2], up_list),
@@ -40,6 +41,6 @@ load("draw");
 
 set_plot_option( [gnuplot_term, 'wjflk]);
 draw2d(
-  xrange = [-4,4],
-  yrange = [-4,4],
+  xrange = [-0.05, 0.25],
+  yrange = [-0.05,0.25],
   points_joined=true, points( up_list ), color='green, points( do_list ), color='red, points( m_list ));
