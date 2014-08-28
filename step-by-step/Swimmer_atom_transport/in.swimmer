@@ -34,9 +34,9 @@ variable        vel_sw3 equal -0.01
 
 variable        H_back equal 2*${H_fene}
 
-variable        rc_head_flesh equal 2*${dx_flesh}
-variable        r0_head_flesh equal ${dx_flesh}
-variable        Umin_head_flesh equal 0.1*${H_fene}
+variable        rc_head_flesh equal 2.5*${dx_flesh}
+variable        r0_head_flesh equal 1.4*${dx_flesh}
+variable        Umin_head_flesh equal ${H_fene}*(${dx_flesh}/${dx})^2*${mass_sw_surface_head}/${sph_mass}
 bond_coeff	${bond_strong} harmonic/shift ${H_back} ${dx} ${rc_fene}
 bond_coeff	${bond_passive} harmonic/shift ${H_fene} ${dx} ${rc_fene}
 bond_coeff	${bond_head_flesh} harmonic/shift ${Umin_head_flesh} ${r0_head_flesh} ${rc_head_flesh}
