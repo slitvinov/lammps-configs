@@ -9,10 +9,10 @@ set -u
 sw_length=100
 
 # generate grid
-# lmp=~/Thesis/lammps-swimmer-transport/src/lmp_linux
-# mpirun=~/prefix-mpi/bin/mpirun
-lmp=~/work/lammps-swimmer/src/lmp_linux
-mpirun=~/prefix-mpich/bin/mpirun
+lmp=~/Thesis/lammps-swimmer-transport/src/lmp_linux
+mpirun=~/prefix-mpi/bin/mpirun
+#lmp=~/work/lammps-swimmer/src/lmp_linux
+#mpirun=~/prefix-mpich/bin/mpirun
 
 ${lmp} -var sw_length ${sw_length} -in in.geninit
 
@@ -25,5 +25,5 @@ awk -f count_bonds.awk data.bond_nn data.bond_nn > data.bond
 # make all atoms of the swimmer of the type `new_type'
 awk -v new_type=2 -f change_type_of_bonded.awk  data.bond data.bond > data.polymer
 
-${lmp} \
+${mpirun} -np 4 ${lmp} \
     -var sw_length ${sw_length} -in in.run

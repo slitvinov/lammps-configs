@@ -55,6 +55,7 @@ dump_modify        dump_txt pad 9
 dump               dxyz  all xyz ${saver_freq} ${dname}/dump.xyz
 thermo             ${saver_freq}
 
+##################### relaxation: stage 1, heat up the liquid with Langevin thermostat 
 variable           sph_eta equal ${sph_eta_relaxation}
 include            settimestep.lmp
 include            in.pairs
@@ -65,14 +66,18 @@ variable           Temp         equal 1e-5/${kb}
 fix                fix_langevin solvent langevin ${Temp} 0 1e-2 699483
 write_data         ${dname}/swimmer.dat
 run                ${nrelaxation1}
+
+##################### relaxation: stage 2, cancel liner and angular momentum, "unfix" Langevin
 unfix              fix_langevin
 variable           kb           delete
 variable           Temp         delete
+velocity           all zero linear
+velocity           all zero angular
 run                ${nrelaxation2}
 velocity           all zero linear
 velocity           all zero angular
 
-
+##################### production run
 variable           sph_eta equal ${sph_eta_real}
 include            settimestep.lmp
 include            in.pairs

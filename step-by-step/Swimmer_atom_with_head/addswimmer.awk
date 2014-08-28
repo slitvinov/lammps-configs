@@ -177,12 +177,10 @@ function is_head_flesh(ip, jp) {
 
 #### Add filters to change configurations of the head ####
 function bond_filter(ip1, jp1, ip2, jp2) {
-#    if ( (ip1==_x1) && (jp1==_y1+1) && (ip2==_x1+1) && (jp2==_y1) ) return 1
-#    if ( (ip1==_x2-1) && (jp1==_y1) && (ip2==_x2) && (jp2==_y1+1) ) return 1
-#    if ( (ip1==_x1) && (jp1==_y2-1) && (ip2==_x1+1) && (jp2==_y2) ) return 1
-#    if ( (ip1==_x2-1) && (jp1==_y2) && (ip2==_x2) &&   (jp2==_y2-1) ) return 1
-#    if ( (ip1==_x1+1) && (jp1==_y2-1) && (ip2==_x2-1) &&   (jp2==_y2) ) return 1
-#    if ( (ip1==_x1+1) && (jp1==_y2) &&   (ip2==_x2-1) &&   (jp2==_y2-1) ) return 1
+    if (    jp1!=_y1 && jp1!=_y2 \
+	 && jp2!=_y1 && jp2!=_y2 \
+	 && jp1==jp2+1 \
+       )   return 1
     return 0
 }
 

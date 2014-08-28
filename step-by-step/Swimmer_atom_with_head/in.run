@@ -22,8 +22,8 @@ variable       mass_sw_surface_head equal 0.75^2*${sph_mass}
 mass           ${atom_type_sw_surface_head} ${mass_sw_surface_head}
 
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater
-pair_coeff * *     sph/taitwater ${sph_rho0} ${sph_c} ${sph_eta} ${h}
-pair_coeff * *     sph/rhosum ${h}
+pair_coeff * *     sph/taitwater quintic ${sph_rho0} ${sph_c} ${sph_eta} ${h}
+pair_coeff * *     sph/rhosum    quintic ${h}
 
 # set forces into the head and the tail of the swimmer
 
