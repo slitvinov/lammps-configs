@@ -82,6 +82,11 @@ compute            rho_min sw_surface_head reduce min c_rho_peratom
 fix                fprint_mom all print ${saver_freq} "${physical_time} $(c_rho_min) $(c_rho_max)" &
                    screen no file ${dname}/pmoments.dat
 
+# xcm: 2-4
+# vcm: 5-7
+# fcm: 8-10
+# omega: 11-13
+# torque:14-16
 fix                fprint_sw all print ${saver_freq} "${physical_time} &
 $(xcm(gswimmer,x)) $(xcm(gswimmer,y)) $(xcm(gswimmer,z)) &
 $(vcm(gswimmer,x)) $(vcm(gswimmer,y)) $(vcm(gswimmer,z)) &
