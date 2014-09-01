@@ -36,27 +36,8 @@ compute            vt_peratom  all meso_vt/atom
 variable           vtx         atom c_vt_peratom[1]
 variable           vty         atom c_vt_peratom[2]
 variable           vtz         atom c_vt_peratom[3]
+include            in.dump
 
-variable           image_x  equal 2024
-variable           image_y  equal round(${image_x}*${Ly}/${Lx})
-variable           image_z  equal 7*${Lx}/8.0
-
-if  ${ndim}==2 then &
-"dump               dump_img all image ${saver_freq} ${dname}/dump.*.jpg type type adiam 0.05 bond type 0.02 zoom ${image_z} size ${image_x} ${image_y}" &
-else &
-"dump               dump_img all image ${saver_freq} ${dname}/dump.*.jpg type type adiam 0.05 bond type 0.02 zoom 3 size 2024 2024 view 0 30"
-dump_modify         dump_img pad 9
-
-if "${ndim}==2" then &
-"dump               dump_ovito all custom ${saver_freq} ${dname}/dump.sph_sw id type x y vx vy v_vtx v_vty c_rho_peratom" &
-else &
-"dump               dump_ovito all custom ${saver_freq} ${dname}/dump.sph_sw id type x y z vx vy vz v_vtx v_vty v_vtz c_rho_peratom"
-dump_modify         dump_ovito pad 9
-
-dump               dump_txt all custom ${saver_freq} ${dname}/dump.*.dat id type x y z vx vy vz v_vtx v_vty v_vtz c_rho_peratom
-dump_modify        dump_txt pad 9
-
-dump               dxyz  all xyz ${saver_freq} ${dname}/dump.xyz
 thermo             ${saver_freq}
 
 ##################### relaxation: stage 1, heat up the liquid with Langevin thermostat 
@@ -89,10 +70,21 @@ timestep           ${dt}
 
 group              sw_rest           type ${atom_type_sw_rest}
 group              sw_surface_head   type ${atom_type_sw_surface_head}
+group              gswimmer          union sw_rest sw_surface_head
+
 variable           physical_time equal ${dt}*(step-${nrelaxation1}-${nrelaxation2})
 compute            rho_max sw_surface_head reduce max c_rho_peratom
 compute            rho_min sw_surface_head reduce min c_rho_peratom
-fix                fprint all print ${saver_freq} "${physical_time} $(c_rho_min) $(c_rho_max)" &
-                   screen no file ${dname}/moments.dat
+
+fix                fprint_mom all print ${saver_freq} "${physical_time} $(c_rho_min) $(c_rho_max)" &
+                   screen no file ${dname}/pmoments.dat
+
+fix                fprint_sw all print ${saver_freq} "${physical_time} &
+$(xcm(gswimmer,x)) $(xcm(gswimmer,y)) $(xcm(gswimmer,z)) &
+$(vcm(gswimmer,x)) $(vcm(gswimmer,y)) $(vcm(gswimmer,z)) &
+$(fcm(gswimmer,x)) $(fcm(gswimmer,y)) $(fcm(gswimmer,z)) &
+$(omega(gswimmer,x)) $(omega(gswimmer,y)) $(omega(gswimmer,z)) &
+$(torque(gswimmer,x)) $(torque(gswimmer,y)) $(torque(gswimmer,z))" &
+                   screen no file ${dname}/pswimmer.dat
 
 run                ${nstep}
