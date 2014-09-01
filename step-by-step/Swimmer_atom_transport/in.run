@@ -50,6 +50,9 @@ variable           kb           equal 1.3806488e-23
 variable           Temp         equal 1e-5/${kb}
 fix                fix_langevin solvent langevin ${Temp} 0 1e-2 699483
 write_data         ${dname}/swimmer.dat
+
+# Zero out the z-dimension velocity and force on each atom
+if "${ndim}==2"    then "fix                e2d  all enforce2d"
 run                ${nrelaxation1}
 
 ##################### relaxation: stage 2, cancel liner and angular momentum, "unfix" Langevin
