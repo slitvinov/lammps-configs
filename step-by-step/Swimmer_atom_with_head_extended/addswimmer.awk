@@ -56,13 +56,13 @@ BEGIN {
 
     # Template of the bond_coeff for top and bottom active bonds of each swimmer ( coefficients necessary for the bond style)
 
-#    bond_coef_template_top    = "bond_coeff %i harmonic/swimmer ${Umin_SW_} ${req_SW_} ${rmax_SW_} ${A_SW_} ${omega_SW_} ${phi_SW_} ${vel_sw_SW_} %i %i\n"
-#    bond_coef_template_bottom    = "bond_coeff %i harmonic/swimmer ${Umin_SW_} ${req_SW_} ${rmax_SW_} ${nA_SW_} ${omega_SW_} ${phi_SW_} ${vel_sw_SW_} %i %i\n"
+    bond_coef_template_top    = "bond_coeff %i harmonic/swimmer ${Umin_SW_} ${req_SW_} ${rmax_SW_} ${A_SW_} ${omega_SW_} ${phi_SW_} ${vel_sw_SW_} %i %i\n"
+    bond_coef_template_bottom    = "bond_coeff %i harmonic/swimmer ${Umin_SW_} ${req_SW_} ${rmax_SW_} ${nA_SW_} ${omega_SW_} ${phi_SW_} ${vel_sw_SW_} %i %i\n"
 
-    bond_coef_template_top    = "bond_coeff %i harmonic/swimmer/extended ${Umin_SW_} ${req_SW_} ${rmax_SW_} "\
-	"${A_alpha_SW_} ${A_beta_SW_} ${omega_alpha_SW_} ${omega_beta_SW_} ${phi_SW_} ${vel_sw_SW_} %i %i\n"
-    bond_coef_template_bottom    = "bond_coeff %i harmonic/swimmer/extended ${Umin_SW_} ${req_SW_} ${rmax_SW_} " \
-	"${nA_alpha_SW_} ${nA_beta_SW_} ${omega_alpha_SW_} ${omega_beta_SW_} ${phi_SW_} ${vel_sw_SW_} %i %i\n"
+#    bond_coef_template_top    = "bond_coeff %i harmonic/swimmer/extended ${Umin_SW_} ${req_SW_} ${rmax_SW_} "\
+#	"${A_alpha_SW_} ${A_beta_SW_} ${omega_alpha_SW_} ${omega_beta_SW_} ${phi_SW_} ${vel_sw_SW_} %i %i\n"
+#    bond_coef_template_bottom    = "bond_coeff %i harmonic/swimmer/extended ${Umin_SW_} ${req_SW_} ${rmax_SW_} " \
+#	"${nA_alpha_SW_} ${nA_beta_SW_} ${omega_alpha_SW_} ${omega_beta_SW_} ${phi_SW_} ${vel_sw_SW_} %i %i\n"
 
     head_surface_type = 3 # ?
 }
