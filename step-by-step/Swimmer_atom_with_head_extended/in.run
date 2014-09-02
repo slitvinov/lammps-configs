@@ -1,0 +1,65 @@
+echo               both
+
+include            in.vars
+dimension          ${ndim}
+units              si
+atom_modify        map array sort 0 0
+atom_style         hybrid meso bond
+comm_modify        vel yes
+
+read_data          data.polymer
+include            in.swimmer
+
+variable        Natoms equal count(all)
+if ${ndim}==2 then "variable domain_volume equal ${Lx}*${Ly}" else "variable domain_volume equal ${Lx}*${Ly}*${Lz}"
+variable        sph_mass equal ${sph_rho}*${domain_volume}/${Natoms}
+
+
+mass           ${atom_type_solvent} ${sph_mass}
+mass           ${atom_type_sw_rest} ${sph_mass}
+
+variable       mass_sw_surface_head equal 0.75^2*${sph_mass}
+mass           ${atom_type_sw_surface_head} ${mass_sw_surface_head}
+
+pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater
+pair_coeff * *     sph/taitwater quintic ${sph_rho0} ${sph_c} ${sph_eta} ${h}
+pair_coeff * *     sph/rhosum    quintic ${h}
+
+# set forces into the head and the tail of the swimmer
+
+# do full time integration
+fix                integrate_fix_full all  meso
+
+neighbor           ${h} bin
+
+include            settimestep.lmp
+timestep           ${dt}
+
+variable           force_sdpd_fx equal fx[1]
+variable           force_sdpd_fy equal fy[1]
+
+compute            rho_peratom all meso_rho/atom
+
+variable           image_x  equal 2024
+variable           image_y  equal round(${image_x}*${Ly}/${Lx})
+variable           image_z  equal 7*${Lx}/8.0
+
+if  ${ndim}==2 then &
+"dump               myDump all image ${saver_freq} dump.*.jpg type type adiam 0.05 bond type 0.02 zoom 2 size 1024 768 "# zoom ${image_z} size ${image_x} ${image_y}" &
+else &
+"dump               myDump all image ${saver_freq} dump.*.jpg type type adiam 0.05 bond type 0.02 zoom 3 size 2024 2024 view 0 30"
+dump_modify        myDump pad 9
+
+if "${ndim}==2" then &
+"dump               d0 all custom ${saver_freq} dump.sph_sw id type x y vx vy c_rho_peratom" &
+else &
+"dump               d0 all custom ${saver_freq} dump.sph_sw id type x y z vx vy vz c_rho_peratom"
+dump_modify        d0 pad 9
+
+dump               dxyz  all xyz ${saver_freq} dump.xyz
+
+
+run                0
+run                ${nstep}
+
+print              "f: ${force_sdpd_fx} ${force_sdpd_fy}"

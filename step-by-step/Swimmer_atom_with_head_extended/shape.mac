@@ -1,0 +1,54 @@
+load("to_poly_solve");
+eq1: [ (x2p - x1)^2 + (y2p - y1)^2 = dx^2,
+       (x2p - x2)^2 + (y2p - y2)^2 = r2^2];
+so1: args(to_poly_solve(radcan(eq1), [x2p, y2p], 'use_grobner = true))[2];
+eq2: [ (x1p - x1)^2 + (y1p - y1)^2 = r1^2,
+       (x1p - x2p)^2 + (y1p - y2p)^2 = dx^2];
+so2: args(to_poly_solve(radcan(eq2), [x1p, y1p], 'use_grobner = true))[2];
+
+phi: 0;
+L    : 100;
+omega: 2*%pi/L;
+v:   0.02;
+dx:  0.01/3.0;
+r0: dx;
+A(N):= 0.02*dx;
+/*A: 0.02*dx; */
+
+t: 0;
+
+/*
+rup(N):=  r0 + A*(if sin(omega*N - v*t + phi)>0 then 1 else -1);
+rdo(N):=  r0 + -A*(if sin(omega*N - v*t + phi)>0 then 1 else -1);
+*/
+
+rup(N):=  r0 + A(N)*sin(omega*N - v*t + phi);
+rdo(N):=  r0 + -A(N)*sin(omega*N - v*t + phi);
+
+next_element(x1, y1, x2, y2, n):= block([x2p, y2p, x1p, y1p, r1, r2],
+  r1: rup(n),
+  r2: rdo(n),
+  [x2p, y2p]: maplist(rhs, float(ev(so1))),
+  [x1p, y1p]: maplist(rhs, float(ev(so2))),
+  [x1p, y1p, x2p, y2p]);
+
+up_list: [];
+do_list: [];
+m_list : [];
+
+p0: %pi/4;
+[x1, y1, x2, y2]: [0, 0, dx*cos(p0), dx*sin(p0)];
+
+for n thru L do block([],
+  m_list: append([[x2, y2], [x1, y1]], m_list),
+  up_list: endcons([x2, y2], up_list),
+  do_list: endcons([x1, y1], do_list),
+  [x1, y1, x2, y2]: next_element(x1, y1, x2, y2, n));
+
+load("draw");
+
+draw2d(
+  xrange = [-0.30, 0.30],
+  yrange = [-0.30, 0.30],
+  points_joined=true, points( up_list ),
+  color='green, points( do_list ), color='red, points( m_list ));
