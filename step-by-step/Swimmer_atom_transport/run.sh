@@ -13,7 +13,7 @@ n_swimmer=1
 
 # 0: bond_style harmonic/swimmer
 # 1: bond_style harmonic/swimmer/extended
-bond_extended=1
+bond_extended=0
 
 # generate grid
 lmp=~/Thesis/lammps-swimmer-transport/src/lmp_linux
@@ -25,7 +25,7 @@ ${lmp} -var sw_length ${sw_length} -in in.geninit
 
 # create bonds for the swimmer
 awk -f ../scripts/template_eng.awk  ../scripts/addswimmer.awk > addswimmer.awk
-awk -v bond_extended=${bond_extended} -v n_swimmer=${n_swimmer} -v sw_length=${sw_length} \
+awk -v n_swimmer=${n_swimmer} -v sw_length=${sw_length} -v bond_extended=${bond_extended} \
     -f addswimmer.awk data.grid > data.bond_nn
 
 # count the number of bonds

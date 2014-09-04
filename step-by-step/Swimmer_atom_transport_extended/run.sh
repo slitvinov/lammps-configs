@@ -24,9 +24,9 @@ mpirun=~/prefix-mpi/bin/mpirun
 ${lmp} -var sw_length ${sw_length} -in in.geninit
 
 # create bonds for the swimmer
-# create bonds for the swimmer
 awk -f ../scripts/template_eng.awk  ../scripts/addswimmer.awk > addswimmer.awk
-awk -v n_swimmer=${n_swimmer} -v bond_extended=${bond_extended} -v sw_length=${sw_length} -f addswimmer.awk data.grid > data.bond_nn
+awk -v n_swimmer=${n_swimmer} -v sw_length=${sw_length} -v bond_extended=${bond_extended} \
+    -f addswimmer.awk data.grid > data.bond_nn
 
 # count the number of bonds
 awk -f count_bonds.awk data.bond_nn data.bond_nn > data.bond
