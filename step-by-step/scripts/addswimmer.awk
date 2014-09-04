@@ -25,9 +25,6 @@ function xy2id(x, y) {
 BEGIN {
     eps = 1e-12 # define Episoln value ~ 0
 
-    # Define the number of swimmers
-
-    n_swimmer = 1
        
     # Define bond styles for differents parts of the swimmer
 
@@ -37,16 +34,11 @@ BEGIN {
 
     n_not_active_types = 3 # the number of non active type of the bonds (strong, passive and head)
 
-     
+@include "addswimmer.tmp1"
 
-    # Define position and lengths of the swimmer
-
-    sw_start_x     = 1 # start position in x-direction where the swimmer will be created ( initializing from the tail)
-    sw_start_y     = 5 # first line where the swimmer will be created ( position in y-direction)
     sw_tail_length = int(2.0/9.0*sw_length) # length of the tail of the swimmer ( 2/9 of the total swimmer length)
     sw_head_length = 3 # length of the swimmer head
     sw_head_start = sw_length - sw_head_length # position where the head starts
-
   
 
     # Define total number of bonds styles
@@ -295,9 +287,7 @@ END {
 ##       sw_start_x = (starting point of the swimmer in x-direction) 
 ##       create_swimmer()   
 
-    sw_start_y = 30
-    sw_start_x = 60
-    create_swimmer()
+@include "addswimmer.tmp2"
 
 #    sw_start_y = 25
 #    sw_start_x = 3
