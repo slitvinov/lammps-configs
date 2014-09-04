@@ -1,0 +1,20 @@
+#variable           image_x  equal 2024
+#variable           image_y  equal round(${image_x}*${Ly}/${Lx})
+#variable           image_z  equal 7*${Lx}/8.0
+
+#if  ${ndim}==2 then &
+#"dump               dump_img all image ${saver_freq} ${dname}/dump.*.jpg type type adiam 0.05 bond type 0.02 zoom ${image_z} size ${image_x} ${image_y}" &
+#else &
+#"dump               dump_img all image ${saver_freq} ${dname}/dump.*.jpg type type adiam 0.05 bond type 0.02 zoom 3 size 2024 2024 view 0 30"
+#dump_modify         dump_img pad 9
+
+#if "${ndim}==2" then &
+#"dump               dump_ovito all custom ${saver_freq} ${dname}/dump.sph_sw id type x y vx vy v_vtx v_vty c_rho_peratom" &
+#else &
+#"dump               dump_ovito all custom ${saver_freq} ${dname}/dump.sph_sw id type x y z vx vy vz v_vtx v_vty v_vtz c_rho_peratom"
+#dump_modify         dump_ovito pad 9
+
+dump               dump_txt all custom ${saver_freq} ${dname}/dump.*.dat id type x y z vx vy vz v_vtx v_vty v_vtz c_rho_peratom
+dump_modify        dump_txt pad 9
+
+#dump               dxyz  all xyz ${saver_freq} ${dname}/dump.xyz

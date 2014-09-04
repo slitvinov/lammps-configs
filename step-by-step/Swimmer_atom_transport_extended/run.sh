@@ -13,15 +13,11 @@ n_swimmer=1
 
 # 0: bond_style harmonic/swimmer
 # 1: bond_style harmonic/swimmer/extended
-bond_extended=0
+bond_extended=1
 
 # generate grid
-#lmp=~/Thesis/lammps-swimmer-transport/src/lmp_linux
-#mpirun=~/prefix-mpi/bin/mpirun
-
-lmp=/scratch/tfaria/lammps-swimmer-transport/src/lmp_linux
-mpirun=mpirun
-
+lmp=~/Thesis/lammps-swimmer-transport-wip/src/lmp_linux
+mpirun=~/prefix-mpi/bin/mpirun
 #lmp=~/work/lammps-swimmer/src/lmp_linux
 #mpirun=~/prefix-mpich/bin/mpirun
 
