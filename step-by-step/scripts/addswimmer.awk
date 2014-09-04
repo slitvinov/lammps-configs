@@ -34,8 +34,6 @@ BEGIN {
 
     n_not_active_types = 3 # the number of non active type of the bonds (strong, passive and head)
 
-@include "addswimmer.tmp1"
-
     sw_tail_length = int(2.0/9.0*sw_length) # length of the tail of the swimmer ( 2/9 of the total swimmer length)
     sw_head_length = 3 # length of the swimmer head
     sw_head_start = sw_length - sw_head_length # position where the head starts
@@ -287,7 +285,7 @@ END {
 ##       sw_start_x = (starting point of the swimmer in x-direction) 
 ##       create_swimmer()   
 
-@include "addswimmer.tmp2"
+@include "add.swimmer.position"
 
 #    sw_start_y = 25
 #    sw_start_x = 3
