@@ -1,0 +1,6 @@
+    # Define the number of swimmers
+    n_swimmer = 1
+
+    # Define position and lengths of the swimmer
+    sw_start_x     = 1 # start position in x-direction where the swimmer will be created ( initializing from the tail)
+    sw_start_y     = 5 # first line where the swimmer will be created ( position in y-direction)
