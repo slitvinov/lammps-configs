@@ -5,12 +5,15 @@ bond_style hybrid harmonic/swimmer/extended harmonic/shift
 
 special_bonds 	lj 1 1 1
 
+include in.swimmer.parameters
+
 variable        Umin1 equal ${H_fene}
 variable        req1  equal ${dx}
 variable        rmax1 equal ${rc_fene}
 
 variable        A_alpha1 equal 0.02*${dx}
-variable        A_beta1 equal 0.0000066
+variable        A_beta1 equal ${A_alpha1}/${sw_active_lenght1}
+#variable        A_beta1 equal 0.000006
 variable        nA_alpha1 equal -${A_alpha1}
 variable        nA_beta1 equal -${A_beta1}
 variable        omega_alpha1 equal 2*PI/${sw_length}
