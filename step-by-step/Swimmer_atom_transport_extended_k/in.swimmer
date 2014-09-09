@@ -1,0 +1,59 @@
+# Swimmer definitions: bonds
+# harmonic/swimmer requires a custom version of lammps with USER-SWIMMER2D
+# harmonic/shift  requires USER-MISC package
+bond_style hybrid harmonic/swimmer/extended/k harmonic/shift
+
+special_bonds 	lj 1 1 1
+
+include in.swimmer.parameters
+
+variable        Umin1 equal ${H_fene}
+variable        req1  equal ${dx}
+variable        rmax1 equal ${rc_fene}
+
+variable        k_alpha1 equal ${Umin1}/((${req1}-${rmax1})*(${req1}-${rmax1}))
+#variable        k_beta1 equal ${k_alpha1}/${sw_active_lenght1}
+variable        k_beta1  equal 0.0
+
+variable        A_alpha1 equal 0.02*${dx}
+#variable        A_beta1 equal ${A_alpha1}/${sw_active_lenght1}
+variable        A_beta1 equal 0.0
+variable        nA_alpha1 equal -${A_alpha1}
+variable        nA_beta1 equal -${A_beta1}
+variable        omega_alpha1 equal 2*PI/${sw_length}
+variable        omega_beta1 equal 0
+
+variable        phi1 equal 0.0
+variable        vel_sw1 equal -0.05
+
+
+
+variable        Umin2 equal ${H_fene}
+variable        req2  equal ${dx}
+variable        rmax2 equal ${rc_fene}
+variable        A2 equal 0.02*${dx}
+variable        nA2 equal -${A2}
+variable        omega2 equal 2*PI/${sw_length}
+variable        phi2 equal 0.0
+variable        vel_sw2 equal -0.02
+
+variable        Umin3 equal ${H_fene}
+variable        req3  equal ${dx}
+variable        rmax3 equal ${rc_fene}
+variable        A3 equal 0.30*${dx}
+variable        nA3 equal -${A3}
+variable        omega3 equal 2*PI/${sw_length}
+variable        phi3 equal 0.0
+variable        vel_sw3 equal -0.01
+
+variable        H_back equal 2*${H_fene}
+
+variable        rc_head_flesh equal 2.5*${dx_flesh}
+variable        r0_head_flesh equal 1.4*${dx_flesh}
+variable        Umin_head_flesh equal ${H_fene}*(${dx_flesh}/${dx})^2*${mass_sw_surface_head}/${sph_mass}
+bond_coeff	${bond_strong} harmonic/shift ${H_back} ${dx} ${rc_fene}
+bond_coeff	${bond_passive} harmonic/shift ${H_fene} ${dx} ${rc_fene}
+bond_coeff	${bond_head_flesh} harmonic/shift ${Umin_head_flesh} ${r0_head_flesh} ${rc_head_flesh}
+
+include         in.swimmer.topology
+include         in.swimmer_change_type

@@ -1,0 +1,12 @@
+group  sw_aux id 7649
+set    group sw_aux type 3
+
+group  sw_aux id 7650
+set    group sw_aux type 3
+
+group  sw_aux id 6929
+set    group sw_aux type 3
+
+group  sw_aux id 6930
+set    group sw_aux type 3
+

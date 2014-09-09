@@ -1,0 +1,15 @@
+# Comparison of time calculation depending on the size domain
+
+
+# Simulation 1
+
+Lx = 8
+Ly = 2 
+Time fpr 3000 timesteps = 1:45 min
+
+
+# Simulation 2
+
+Lx = 16
+Ly = 4
+Time for 3000 timesteps = 7:40 min
