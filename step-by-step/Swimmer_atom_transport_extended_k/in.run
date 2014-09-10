@@ -80,7 +80,10 @@ variable           physical_time equal ${dt}*(step-${nrelaxation1}-${nrelaxation
 compute            rho_max sw_surface_head reduce max c_rho_peratom
 compute            rho_min sw_surface_head reduce min c_rho_peratom
 
-fix                fprint_mom all print ${saver_freq} "${physical_time} $(c_rho_min) $(c_rho_max)" &
+compute            bl all bond/local/extended power
+compute            power all reduce sum c_bl
+
+fix                fprint_mom all print ${saver_freq} "${physical_time} $(c_rho_min) $(c_rho_max) $(c_power)" &
                    screen no file ${dname}/pmoments.dat
 
 # xcm: 2-4

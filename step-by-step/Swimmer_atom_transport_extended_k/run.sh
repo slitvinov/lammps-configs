@@ -6,7 +6,7 @@ set -e
 set -u
 
 # the length of the swimmer
-sw_length=150
+sw_length=100
 # the nubmer of swimmers (see add.swimmer.position for definition of
 # swimers' positions)
 n_swimmer=1

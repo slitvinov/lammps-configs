@@ -35,7 +35,7 @@ BEGIN {
     n_not_active_types = 3 # the number of non active type of the bonds (strong, passive and head)
 
 #    sw_tail_length = int(2.0/9.0*sw_length) # length of the tail of the swimmer ( 2/9 of the total swimmer length)
- sw_tail_length = int(1.0/9.0*sw_length) # length of the tail of the swimmer ( 2/9 of the total swimmer length)
+ sw_tail_length = int(2.0/9.0*sw_length) # length of the tail of the swimmer ( 2/9 of the total swimmer length)
     sw_head_length = 3 # length of the swimmer head
     sw_head_start = sw_length - sw_head_length # position where the head starts
   
