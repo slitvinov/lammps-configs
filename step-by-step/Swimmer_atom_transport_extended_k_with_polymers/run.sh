@@ -29,7 +29,7 @@ awk -v n_swimmer=${n_swimmer} -v sw_length=${sw_length} -v bond_extended=${bond_
     -f addswimmer.awk data.grid > data.bond_nn
 
 # count the number of bonds
-awk -f count_bonds.awk data.bond_nn data.bond_nn > data.bond
+awk -f count_bonds.awk pass=1 data.bond_nn pass=2 data.bond_nn > data.bond
 
 # make all atoms of the swimmer of the type `new_type'
 awk -v new_type=2 -f change_type_of_bonded.awk pass=1 data.bond pass=2 data.bond > data.polymer
