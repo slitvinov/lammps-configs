@@ -1,0 +1,2 @@
+bond_coeff 4 harmonic/swimmer/extended/k ${Umin1} ${k_beta1} ${req1} ${rmax1} ${nA_alpha1} ${nA_beta1} ${omega_alpha1} ${omega_beta1} ${phi1} ${vel_sw1} 7043 7117
+bond_coeff 5 harmonic/swimmer/extended/k ${Umin1} ${k_beta1} ${req1} ${rmax1} ${A_alpha1} ${A_beta1} ${omega_alpha1} ${omega_beta1} ${phi1} ${vel_sw1} 7283 7357
