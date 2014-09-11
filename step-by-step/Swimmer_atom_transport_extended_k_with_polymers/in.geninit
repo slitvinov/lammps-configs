@@ -17,7 +17,9 @@ if ${ndim}==2      then &
 else &
 "region             box block 0 ${Lx} 0 ${Ly} 0  ${Lz} units box"
 
-create_box         3 box # three types of atoms: solven (1), surface of the swimmer head (3), the rest of the swimmer (2)
+create_box         4 box # three types of atoms: solven (1), surface
+			 # of the swimmer head (3), the rest of the
+			 # swimmer (2), type for the polymers (4)
 
 if ${ndim}==2      then &
 "lattice            sq ${dx} origin 0.5 0.5 0.0" &

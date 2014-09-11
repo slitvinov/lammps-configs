@@ -25,13 +25,15 @@ function xy2id(x, y) {
 BEGIN {
     eps = 1e-12 # define Episoln value ~ 0
 
-       
-    # Define bond styles for differents parts of the swimmer
+    # extra bonds (for example, polymer bonds)
+    n_bond_extra = 1
 
+    # Define bond styles for differents parts of the swimmer
     bond_strong  = 1 # bond style of inside bonds of the swimmer
     bond_passive = 2 # bond style of the passive (head and tail ) of the swimmer
     bond_head_flesh = 3 # bond style of the flesh in the head of the swimmer
 
+    head_surface_type =  4 # ?
     n_not_active_types = 3 # the number of non active type of the bonds (strong, passive and head)
 
 #    sw_tail_length = int(2.0/9.0*sw_length) # length of the tail of the swimmer ( 2/9 of the total swimmer length)
@@ -40,10 +42,6 @@ BEGIN {
     sw_head_start = sw_length - sw_head_length # position where the head starts
   
 
-    # Define total number of bonds styles
-    # NOTE: for every swimmer there will be created two differen active bond styles
-
-    n_bond_types = 2*n_swimmer + n_not_active_types
 
     # Template of the bond_coeff for top and bottom active bonds of each swimmer ( coefficients necessary for the bond style)
 
@@ -66,20 +64,19 @@ BEGIN {
     }
     top_line_length_template   = "sw_active_lenght_SW_"
 	
-    head_surface_type = 3 # ?
 }
 
 # Hold a place for the number of bonds which will be later calculated
 NR==3 {
     print
-    print "_PLACE_HOLDER_", "bonds"
+    print "_n_bonds_", "bonds"
     next
 }
 
 
 NR==4 {
     print
-    printf "%i bond types\n", n_bond_types
+    print "_n_bond_type_",  "bond types"
     next
 }
 
@@ -94,7 +91,6 @@ NR==4 {
 in_atoms&&!NF {
     in_atoms=0
 }
-
 
 in_atoms&&NF { #?
     x=$3; y=$4; z=$5
@@ -123,12 +119,12 @@ function create_active_line(x_start, x_end, y_level, is_top_line,        btype, 
     # is_top_line => 1 for top  line and 0 for bottom line
     
     for (ip=x_start; ip<=x_end; ip++) {
-	print ++ibond, btype, xy2id(ip, y_level), xy2id(ip+1, y_level)
+	print ++ibond, n_bond_extra + btype, xy2id(ip, y_level), xy2id(ip+1, y_level)
     }
     if (is_top_line) {bond_coef_template = bond_coef_template_top} else {bond_coef_template = bond_coef_template_bottom}
     gsub("_SW_", i_swimmer, bond_coef_template) #?
     
-    printf bond_coef_template, btype, xy2id(x_start, y_level), xy2id(x_end, y_level) >> "in.swimmer.topology"
+    printf bond_coef_template, n_bond_extra + btype, xy2id(x_start, y_level), xy2id(x_end, y_level) >> "in.swimmer.topology"
     
     if (is_top_line) {
 	# create a variable with active line length
@@ -142,7 +138,7 @@ function create_active_line(x_start, x_end, y_level, is_top_line,        btype, 
 function create_passive_line(x_start, x_end, y_level, b_type,       btype, ip) {
     btype = b_type
     for (ip=x_start; ip<=x_end; ip++) {
-	print ++ibond, btype, xy2id(ip, y_level), xy2id(ip+1, y_level)
+	print ++ibond, n_bond_extra + btype, xy2id(ip, y_level), xy2id(ip+1, y_level)
     }
 }
 
@@ -153,12 +149,12 @@ function create_internal_line(x_start, x_end, y_level,
     # vertical
     btype = b_type
     for (ip=x_start + 1 - start_closed; ip<=x_end+end_closed; ip++) {
-	print ++ibond, btype, xy2id(ip, y_level), xy2id(ip, y_level+1)
+	print ++ibond, n_bond_extra + btype, xy2id(ip, y_level), xy2id(ip, y_level+1)
     }
 
     # diagonal
     for (ip=x_start; ip<=x_end; ip++) {
-	print ++ibond, btype, xy2id(ip, y_level), xy2id(ip+1, y_level+1)
+	print ++ibond, n_bond_extra + btype, xy2id(ip, y_level), xy2id(ip+1, y_level+1)
     }
 }
 
@@ -211,7 +207,7 @@ function make_grid_bond(ip1, jp1, ip2, jp2,                btype) {
     if (!(is_on_grid(ip1, jp1) && is_on_grid(ip2, jp2))) return 0
     if (bond_filter(ip1, jp1, ip2, jp2)) return 0 # Set bond type passive to the front part of the swimmer head
     btype = head_bond_dispatch(ip1, jp1, ip2, jp2)
-    print ++ibond, btype, xy2id(ip1, jp1), xy2id(ip2, jp2)
+    print ++ibond, n_bond_extra + btype, xy2id(ip1, jp1), xy2id(ip2, jp2)
 }
 
 # Special function to change atom type of the atoms in the flesh region of the head

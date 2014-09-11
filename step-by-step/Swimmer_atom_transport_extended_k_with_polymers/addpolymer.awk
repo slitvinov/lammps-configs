@@ -24,7 +24,6 @@ BEGIN {
 
 /^Bonds/ && pass==1 {
     has_bonds_block = 1
-    print
 }
 
 # output everythin

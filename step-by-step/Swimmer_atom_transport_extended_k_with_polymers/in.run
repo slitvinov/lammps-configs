@@ -21,8 +21,10 @@ variable       sph_c_flesh          equal ${sph_c}*sqrt(${sph_rho0}/${sph_rho0_f
 variable       pb_flesh equal ${sph_c_flesh}^2*${sph_rho0_flesh}
 
 include        in.swimmer
+include        in.polymers
 
 mass           ${atom_type_solvent} ${sph_mass}
+mass           ${atom_type_polymer} ${sph_mass}
 mass           ${atom_type_sw_rest} ${sph_mass}
 mass           ${atom_type_sw_surface_head} ${mass_sw_surface_head}
 
@@ -47,9 +49,11 @@ include            settimestep.lmp
 include            in.pairs
 timestep           ${dt}
 group              solvent      type ${atom_type_solvent}
+group              polymer      type ${atom_type_polymer}
+group              p_and_s      union polymer solvent
 variable           kb           equal 1.3806488e-23
 variable           Temp         equal 1e-5/${kb}
-fix                fix_langevin solvent langevin ${Temp} 0 1e-2 699483
+fix                fix_langevin p_and_s langevin ${Temp} 0 1e-2 699483
 write_data         ${dname}/swimmer.dat
 
 # Zero out the z-dimension velocity and force on each atom

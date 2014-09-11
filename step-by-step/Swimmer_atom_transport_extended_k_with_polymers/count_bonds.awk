@@ -33,6 +33,6 @@ $2=="bond" && $3=="types" && NF==3 && pass==2 {
     next
 }
 
-NR!=FNR {
+pass==2 {
     print
 }
