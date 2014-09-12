@@ -18,6 +18,7 @@ bond_extended=2
 # generate grid
 lmp=~/Thesis/lammps-swimmer-transport-wip/src/lmp_linux
 mpirun=~/prefix-mpi/bin/mpirun
+#lmp=/scratch/tfaria/lammps-swimmer-transport/src/lmp_linux
 #lmp=~/work/lammps-swimmer/src/lmp_linux
 #mpirun=~/prefix-mpich/bin/mpirun
 
