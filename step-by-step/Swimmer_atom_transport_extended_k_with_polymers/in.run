@@ -86,9 +86,14 @@ compute            rho_min sw_surface_head reduce min c_rho_peratom
 
 compute            bl all bond/local/extended power
 compute            power all reduce sum c_bl
+compute            binfo all property/local batom1 batom2
 
-fix                fprint_mom all print ${printer_freq} "${physical_time} $(c_rho_min) $(c_rho_max) $(c_power)" &
-                   screen no file ${dname}/pmoments.dat
+dump               dump_local all local ${printer_freq} ${dname}/dump_local/dump.*.dat index c_bl c_binfo[1] c_binfo[2]
+dump_modify        dump_local pad 9
+
+fix                fprint_mom all print ${printer_freq} "${physical_time} $(c_rho_min) &
+                                                        $(c_rho_max) $(c_power)" &
+		   screen no file ${dname}/pmoments.dat
 
 # xcm: 2-4
 # vcm: 5-7
