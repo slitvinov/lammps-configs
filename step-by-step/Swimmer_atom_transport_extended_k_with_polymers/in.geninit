@@ -1,6 +1,6 @@
 # Create Initial grid with box and particle inside
 
-echo               both 
+echo               both
 
 include            in.vars # include variables 
 dimension          ${ndim}

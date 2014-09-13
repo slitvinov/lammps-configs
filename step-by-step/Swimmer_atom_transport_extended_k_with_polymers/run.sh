@@ -15,7 +15,7 @@ n_swimmer=1
 Ns=5
 
 # the number of beads in one polymer
-Nb=4
+Nb=1
 
 # 0: bond_style harmonic/swimmer
 # 1: bond_style harmonic/swimmer/extended
@@ -30,7 +30,7 @@ atom_type_sw_surface_head=4
 
 # generate grid
 lmp=~/work/lammps-swimmer/src/lmp_linux
-mpirun=~/prefix-mpich-clang/bin/mpirun
+mpirun=mpirun.mpich
 #lmp=~/work/lammps-swimmer/src/lmp_linux
 #mpirun=~/prefix-mpich/bin/mpirun
 

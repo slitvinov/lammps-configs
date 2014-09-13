@@ -1,13 +1,14 @@
 # definition of pairs
-pair_style         hybrid/overlay sph/rhosum 1 sph/adami
+variable           sph_formulation string sph/adami/sdpd
+pair_style         hybrid/overlay sph/rhosum 1 ${sph_formulation} 12345
 
 #pair_coeff	   ${atom_type_solvent}*${atom_type_sw_rest} ${atom_type_solvent}*${atom_type_sw_rest}  & 
 #                   sph/adami          quintic ${sph_rho0} ${sph_c} ${sph_eta} ${pb} ${h}
 
 pair_coeff	   1*${atom_type_sw_rest}       1*${atom_type_sw_surface_head}  & 
-                   sph/adami          quintic ${sph_rho0} ${sph_c} ${sph_eta} ${pb} ${h}
+                   ${sph_formulation}          quintic ${sph_rho0} ${sph_c} ${sph_eta} ${pb} ${sph_temperature} ${h}
 
 pair_coeff	   ${atom_type_sw_surface_head} ${atom_type_sw_surface_head}  & 
-                   sph/adami          quintic ${sph_rho0_flesh} ${sph_c_flesh} ${sph_eta} ${pb_flesh} ${h}
+                   ${sph_formulation}          quintic ${sph_rho0_flesh} ${sph_c_flesh} ${sph_eta} ${pb_flesh} ${sph_temperature} ${h}
 
 pair_coeff         * *     sph/rhosum quintic ${h}
