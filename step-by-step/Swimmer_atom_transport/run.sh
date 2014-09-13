@@ -16,8 +16,12 @@ n_swimmer=1
 bond_extended=0
 
 # generate grid
-lmp=~/Thesis/lammps-swimmer-transport/src/lmp_linux
-mpirun=~/prefix-mpi/bin/mpirun
+#lmp=~/Thesis/lammps-swimmer-transport/src/lmp_linux
+#mpirun=~/prefix-mpi/bin/mpirun
+
+lmp=/scratch/tfaria/lammps-swimmer-transport/src/lmp_linux
+mpirun=mpirun
+
 #lmp=~/work/lammps-swimmer/src/lmp_linux
 #mpirun=~/prefix-mpich/bin/mpirun
 
