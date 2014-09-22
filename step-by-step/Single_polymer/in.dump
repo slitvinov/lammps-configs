@@ -1,11 +1,11 @@
-variable           image_x  equal 2024
+variable           image_x  equal 512
 variable           image_y  equal round(${image_x}*${Ly}/${Lx})
-variable           image_z  equal 7*${Lx}/8.0
+variable           image_z  equal 7*${Lx}/4.0
 
 if  ${ndim}==2 then &
-"dump               dump_img all image ${img_freq} ${dname}/dump.*.jpg type type adiam 0.04 bond type 0.02 zoom ${image_z} size ${image_x} ${image_y}" &
+"dump               dump_img all image ${img_freq} ${dname}/dump.*.jpg type type adiam 0.03 bond type 0.02 zoom ${image_z} size ${image_x} ${image_y}" &
 else &
-"dump               dump_img all image ${img_freq} ${dname}/dump.*.jpg type type adiam 0.04 bond type 0.02 zoom 3 size 2024 2024 view 0 30"
+"dump               dump_img all image ${img_freq} ${dname}/dump.*.jpg type type adiam 0.03 bond type 0.02 zoom ${image_z} size 512 512 view 0 30"
 dump_modify         dump_img pad 9
 
 #if "${ndim}==2" then &

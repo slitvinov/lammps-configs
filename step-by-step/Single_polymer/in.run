@@ -31,12 +31,25 @@ variable           vtx         atom c_vt_peratom[1]
 variable           vty         atom c_vt_peratom[2]
 variable           vtz         atom c_vt_peratom[3]
 include            in.dump
+include            settimestep.lmp
 
+compute             ktemp all temp
+variable            reftemp equal c_ktemp/${sph_temperature}
+
+variable            physical_time equal ${dt}*step
+compute             rho_max all reduce max c_rho_peratom
+compute             rho_min all reduce min c_rho_peratom
+
+group               gpolymer    type ${atom_type_polymer}
+compute             rg          gpolymer gyration
+
+fix                fprint_polymer all print ${printer_freq} "${physical_time} $(c_rg)" &
+		   screen no file ${dname}/polymer.dat
+
+thermo_style       custom step v_reftemp c_rho_min c_rho_max
 thermo             ${saver_freq}
 
 ##################### production run
-variable           sph_eta equal ${sph_eta_real}
-include            settimestep.lmp
 include            in.pairs
 timestep           ${dt}
 

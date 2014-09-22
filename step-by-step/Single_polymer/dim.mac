@@ -1,0 +1,22 @@
+load("dimension");
+fundamental_dimensions: ['mass, 'length, 'time];
+
+qput(rho0, mass/length^3, dimension);
+qput(L   , length, dimension);
+qput(eta   , mass/length/time, dimension);
+
+qput(h    , length, dimension);
+qput(dr   , length, dimension);
+
+qput(kb   , length^2*mass*time^(-2)*'K^(-1), dimension);
+qput(T    , 'K, dimension);
+put(kT  , expand(dimension('kb*'T)),                   dimension);
+
+qput(p0   , mass*length^(-1)*time^(-2),      dimension);
+qput(c    , length/time,                     dimension);
+qput(rc   , length,                     dimension);
+qput(rg20,  length,                     dimension);
+qput(rg40,  length,                     dimension);
+
+todms(expr):= expr/natural_unit(expr, ['L, 'rho0, 'kT])[1]$
+etodms(expr):=block([e: todms(expr)], ev(e, infeval));
