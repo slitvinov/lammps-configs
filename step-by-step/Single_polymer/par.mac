@@ -1,0 +1,24 @@
+/* Litvinov2008 */
+Np: 3600;
+rho0: 1e3;
+L:   1e-5;
+mu:  1e-6;
+T:   300;
+h:   5.0e-7;
+dr:  h/3;
+kb:  1.3806488e-23 / dr;
+p0:  0.5;
+gamma: 1.0;
+
+
+rc: 6.67e-7;
+K : 5.3;
+
+'K*'rc^2/('kb*'T);
+ev(%);
+
+p(rho):= p0 * (rho/rho0);
+dp(rho):= ''(diff(p('rho), 'rho));
+
+c: sqrt(dp(rho0));
+

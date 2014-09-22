@@ -15,7 +15,7 @@ n_swimmer=1
 Ns=15
 
 # the number of beads in one polymer
-Nb=15
+Nb=10
 
 # 0: bond_style harmonic/swimmer
 # 1: bond_style harmonic/swimmer/extended
