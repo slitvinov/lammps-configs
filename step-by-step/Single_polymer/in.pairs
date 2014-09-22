@@ -1,0 +1,6 @@
+# definition of pairs
+variable           sph_formulation string sph/adami/sdpd
+pair_style         hybrid/overlay sph/rhosum 1 ${sph_formulation} 12345
+
+pair_coeff	   * *     ${sph_formulation}  quintic ${sph_rho0} ${sph_c} ${sph_eta} ${pb} ${sph_temperature} ${h}
+pair_coeff         * *     sph/rhosum quintic ${h}

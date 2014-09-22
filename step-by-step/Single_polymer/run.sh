@@ -36,20 +36,14 @@ mpirun=mpirun.mpich
 
 ${lmp} -var sw_length ${sw_length} -in in.geninit
 
-# create bonds for the swimmer
-#awk -f ../scripts/template_eng.awk  ../scripts/addswimmer.awk > addswimmer.awk
-awk -v n_swimmer=${n_swimmer} -v sw_length=${sw_length} -v bond_extended=${bond_extended} \
-    -f addswimmer.awk data.grid > data.swimmer
-
-# make all atoms of the swimmer of the type `new_type'
-awk -v new_type=${atom_type_sw_rest} -f change_type_of_bonded.awk pass=1 data.swimmer pass=2 data.swimmer > data.swimmer.types
+awk -f add_place_holder.awk data.grid > data.place_holder
 
 # add polymer
-awk -v polymer_candidate_type=${atom_type_solvent} -v polymer_bond_type=${polymer_bond_type} -v Nb=${Nb} -v Ns=${Ns} -v Np=full \
-    -f addpolymer.awk pass=1 data.swimmer.types pass=2 data.swimmer.types > data.polymer
+awk -v polymer_candidate_type=${atom_type_solvent} -v polymer_bond_type=${polymer_bond_type} -v Nb=${Nb} -v Ns=${Ns} -v Np=1 \
+    -f addpolymer.awk pass=1 data.place_holder pass=2 data.place_holder > data.polymer.ph
 
 # renumber bonds
-awk -f renumber_bonds.awk data.polymer > data.polymer.renumberd
+awk -f renumber_bonds.awk data.polymer.ph > data.polymer.renumberd
 
 # count the number of bonds
 awk -f count_bonds.awk pass=1 data.polymer.renumberd pass=2 data.polymer.renumberd > data.polymer.counted

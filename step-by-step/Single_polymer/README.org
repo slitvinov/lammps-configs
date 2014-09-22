@@ -1,0 +1,7 @@
+* How to add polymer?
+
+#+BEGIN_SRC emacs-lisp
+
+
+addpolymer.awk -v nb=10 -v np=full -v p_atom_type=4 -v p_bond_type=4
+#+END_SRC

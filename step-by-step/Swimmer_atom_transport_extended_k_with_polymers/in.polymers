@@ -1,4 +1,4 @@
 variable        H_polymer  equal  ${H_fene}/10.0
-variable        r0_polymer equal 1.0*${dx}
-variable        rc_polymer equal 2.0/3.0*${h}
+variable        r0_polymer equal 1.0/2.0*${dx}
+variable        rc_polymer equal 4.0/2.0*${dx}
 bond_coeff	${bond_polymer} harmonic/shift ${H_polymer} ${r0_polymer} ${rc_polymer}

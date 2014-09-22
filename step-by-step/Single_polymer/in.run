@@ -1,0 +1,43 @@
+echo               both
+
+include            in.vars
+dimension          ${ndim}
+units              si
+atom_modify        map array sort 0 0
+atom_style         hybrid meso/trans bond
+comm_modify        vel yes
+log                ${dname}/lammps.log
+
+read_data          data.polymer
+variable        Natoms equal count(all)
+if ${ndim}==2 then "variable domain_volume equal ${Lx}*${Ly}" else "variable domain_volume equal ${Lx}*${Ly}*${Lz}"
+
+variable       sph_mass             equal ${sph_rho}*${domain_volume}/${Natoms}
+
+include        in.polymers
+
+mass           ${atom_type_solvent} ${sph_mass}
+mass           ${atom_type_polymer} ${sph_mass}
+
+# do full time integration
+fix                integrate_fix_full all  meso/trans
+
+neighbor           0 bin
+neigh_modify       delay 0 every 1
+
+compute            rho_peratom all meso_rho/atom
+compute            vt_peratom  all meso_vt/atom
+variable           vtx         atom c_vt_peratom[1]
+variable           vty         atom c_vt_peratom[2]
+variable           vtz         atom c_vt_peratom[3]
+include            in.dump
+
+thermo             ${saver_freq}
+
+##################### production run
+variable           sph_eta equal ${sph_eta_real}
+include            settimestep.lmp
+include            in.pairs
+timestep           ${dt}
+
+run                ${nstep}
