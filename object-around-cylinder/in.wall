@@ -1,0 +1,2 @@
+region          rwall   cylinder z ${xc} ${yc} ${r} INF INF units box
+set             region  rwall   type ${wall_type}

@@ -1,0 +1,2 @@
+variable fx atom mass*${gx}
+fix fbody gnwallnsolid addforce v_fx 0 0

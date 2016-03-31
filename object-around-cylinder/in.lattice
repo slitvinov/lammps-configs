@@ -1,0 +1,6 @@
+# lattice parameter
+variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
+if "${ndim}==3" then "lattice sc ${lsp} origin 0.0 0.0 0.0" else &
+    "lattice sq  ${lsp} origin 0.0 0.0 0.0"
+if "${ndim}==3" then "region  box block 0 ${Lx} 0 ${Ly} 0 ${Lz} units box" else &
+    "region		box block 0 ${Lx} 0 ${Ly} -0.01 0.01 units box"

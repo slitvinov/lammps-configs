@@ -1,0 +1,25 @@
+include         in.pre
+include         in.neighbor
+
+include         in.var
+
+include         in.lattice
+include         in.create
+if "${ndim}==2" then  "fix e2d         all enforce2d"
+
+include         in.mass
+include         in.pair
+
+fix		nve  all  nve
+run             1000
+unfix           nve
+
+include         in.wall
+include         in.solid
+include         in.group
+include         in.dump
+include         in.force
+
+fix             frz  gsolid rigid single
+fix		nve  gnwallnsolid  nve
+run		${ntime}

@@ -1,0 +1,5 @@
+create_box	${ntypes}     box
+create_atoms	${fluid_type} box
+# delete extra atoms
+group extra_atoms id > ${Npart}
+delete_atoms group extra_atoms

@@ -1,0 +1,3 @@
+mass		${fluid_type} ${mass}
+mass		${wall_type}  ${mass}
+mass		${solid_type} ${mass}

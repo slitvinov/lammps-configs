@@ -1,0 +1,10 @@
+shell mkdir fluid wall solid
+
+dump dump_fluid gfluid custom ${dump_freq} fluid/d.*.dump id type xs ys zs vx vy vz
+dump_modify  dump_fluid   pad 8
+
+dump dump_solid gsolid atom ${dump_freq} solid/d.*.dump
+dump_modify  dump_solid   pad 8
+
+dump dump_wall gwall atom ${dump_freq} wall/d.*.dump
+dump_modify  dump_wall    pad 8
