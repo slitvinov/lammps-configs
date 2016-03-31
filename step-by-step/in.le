@@ -32,7 +32,7 @@ neigh_modify    delay 0 every 1
 
 fix extra all print 1 "${xpos} ${ypos}" file le.coord
 
-dump		1 all image 10 le.*.jpg type type adiam 1.0
+dump		1 all image 10 le.*.ppm type type adiam 1.0
 dump_modify	1 pad 5
 
 run 100

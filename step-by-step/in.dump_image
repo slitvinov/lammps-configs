@@ -18,7 +18,7 @@ neighbor	5.0 bin
 neigh_modify    delay 0 every 1
 timestep        0.01
 
-dump myDump all image 10 dump.*.jpg type type
+dump myDump all image 10 dump.*.ppm type type
 # When {pad} is specified with {Nchar} > 0, the string is padded with
 # leading zeroes so they are all the same length = {Nchar}.  For
 # example, pad 7 would yield 0000100, 0012000, 2000000.

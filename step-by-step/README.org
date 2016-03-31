@@ -96,13 +96,3 @@ file:rg.mac
 OOP in lammps based on `include'
 [[file:in.oop]]
 (see methods definitions in  file:oop)
-
-* moltemplate examples
-[[http://www.moltemplate.org]]
-
-Add to [[~/.bashrc]]
-#+BEGIN_SRC 
-export PATH="$PATH:$HOME/moltemplate/src"
-export MOLTEMPLATE_PATH="$HOME/moltemplate/common"
-#+END_SRC
-
