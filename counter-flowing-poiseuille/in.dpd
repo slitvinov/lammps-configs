@@ -1,0 +1,89 @@
+# DPD example
+# counter-flowing Poiseuille flow  (run with -var ndim 2 for 2D)
+# [1] Backer, J.A., Lowe, C.P., Hoefsloot, H.C.J. & Iedema,
+# P.D. J. Chem. Phys. 122, 154503 (2005).
+# doi:10.1063/1.1883163
+# [2] Espanol, P. & Warren, P. Europhys. Lett. 30, 191-196 (1995).
+# doi:10.1209/0295-5075/30/4/001
+#
+# the simulation produces spatially averages for `vy', `rho', `sxy'
+# profile.dim3
+
+units		si
+variable        ndim  index 3
+variable number_density equal 6
+# domain size
+variable        xsize equal 12
+variable        ysize equal 8
+if "${ndim}==3" then "variable  zsize equal 8"  else "variable zsize equal 1"
+# temperature
+variable        kb equal 1.3806488e-23
+variable        T equal 0.5/${kb}
+# interaction parameters
+variable        cutoff equal 1.0
+variable        sigma equal 4.5
+# gamma is not given in [1]
+# we get it using eq. (10) in [2]
+variable        gamma equal ${sigma}^2/(2*${T}*${kb})
+variable        sigma delete
+# "Conservative forces are not needed for this study and will be left
+# out" [1]
+variable       adpd    equal 0.0
+# body force (units of acceleration)
+variable gy equal 0.055
+# number of timesteps
+variable ntime equal 80000
+timestep	0.01
+
+dimension       ${ndim}
+atom_style	atomic
+#communicate	single vel yes
+comm_modify vel yes
+
+# lattice parameter
+variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
+if "${ndim}==3" then "lattice sc ${lsp} origin 0.0 0.0 0.0" else &
+    "lattice sq  ${lsp} origin 0.0 0.0 0.0"
+if "${ndim}==3" then "region  box block 0 ${xsize} 0 ${ysize} 0 ${zsize} units box" else &
+    "region		box block 0 ${xsize} 0 ${ysize} -0.01 0.01 units box"
+
+create_box	1 box
+create_atoms	1 box
+
+# delete extra atoms
+variable        Npart equal ${xsize}*${ysize}*${zsize}*${number_density}
+group extra_atoms id > ${Npart}
+delete_atoms group extra_atoms
+
+mass		1 1.0
+velocity	all create ${T} 87287 loop geom
+
+pair_style	dpd ${T} ${cutoff} 928948
+pair_coeff	1 1 ${adpd} ${gamma}
+
+neighbor	0.5 bin
+neigh_modify    delay 0 every 1
+
+fix		1 all nve
+
+variable        Nevery  equal  1
+variable        Nfreq   equal  ${ntime}
+variable        Nrepeat equal  round(0.9*${ntime})
+
+# stresses are in units of pressure*volume must be divided by per-atom
+# volume to have units of stress (pressue); components of the stress
+# are in the following order xx(1), yy(2), zz(3), xy(4), xz(5), yz(6)
+compute stress all stress/atom NULL
+variable stress_pressure atom c_stress[4]*${number_density}
+compute         ch_vy all chunk/atom  bin/1d x center 0.5
+fix av_profile  all ave/chunk  ${Nevery} ${Nrepeat} ${Nfreq} ch_vy &
+          vy density/number v_stress_pressure file profile.dim${ndim}
+
+if "${ndim}==3" then "dump mdump all custom 10000 dump.dpd.${ndim} id type xs ys vx vy" else &
+"dump mdump all custom 10000 dump.dpd.${ndim} id type xs ys zs vx vy vz"
+
+variable fy atom mass*${gy}*((x>${xsize}/2.0)-(x<${xsize}/2.0))
+fix reverce_periodic all addforce 0.0 v_fy 0.0
+
+if "${ndim}==2" then  "fix e2d         all enforce2d"
+run		${ntime} every 1000 "velocity all zero linear"
