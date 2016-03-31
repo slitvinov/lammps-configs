@@ -1,4 +1,0 @@
-bond_style      fene
-special_bonds 	lj 1 1 1
-
-bond_coeff	${bond_polymer} ${H_fene} ${rc_fene} 0 0

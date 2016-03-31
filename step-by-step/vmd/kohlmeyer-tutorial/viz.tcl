@@ -1,1 +1,0 @@
-topo readlammpsdata data.step1c angle

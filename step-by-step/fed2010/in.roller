@@ -1,5 +1,0 @@
-# roller force
-variable            A_roller equal 2.0
-variable            roller_x atom ${A_roller}*mass*sin(2*PI*x/${xsize})*cos(2*PI*y/${ysize})
-variable            roller_y atom -${A_roller}*mass*cos(2*PI*x/${xsize})*sin(2*PI*y/${ysize})
-fix                 roller_force all addforce v_roller_x v_roller_y 0.0

@@ -1,7 +1,0 @@
-# do OOP with lammmps
-include in.minsetup
-
-# class name can be "A" or "B"
-variable classname string "A"
-include oop/${classname}.fstmethod
-include oop/${classname}.scdmethod
