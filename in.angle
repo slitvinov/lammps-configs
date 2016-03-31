@@ -1,0 +1,27 @@
+# an example of three atoms with harmonic angle potential
+#echo     both
+
+variable    pmass index 1.0
+units       si
+atom_style  angle
+atom_modify map array sort 0 0
+# initial data
+read_data       angle.data
+
+#angle_style     harmonic
+#angle_coeff     1 1.0 80
+
+    # K (energy/radian^2)
+    # theta0 (degrees)
+    # K_ub (energy/distance^2)
+    # r_ub (distance) 
+
+angle_style charmm
+angle_coeff 1 1.0 107.0 50.0 3.0 
+
+run 0
+variable dxpos equal x[2]-x[1]
+print "abs(force[1]): $(sqrt(fx[1]^2+fy[1]^2+fz[1]^2))"
+print "force[1]: $(fx[1]) $(fy[1]) $(fz[1])"
+print "force[2]: $(fx[2]) $(fy[2]) $(fz[2])"
+print "force[3]: $(fx[3]) $(fy[3]) $(fz[3])"

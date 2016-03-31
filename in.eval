@@ -1,0 +1,3 @@
+include in.minsetup
+# run with no atoms
+run 10

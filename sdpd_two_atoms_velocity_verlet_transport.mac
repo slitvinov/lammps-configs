@@ -1,0 +1,96 @@
+kill(all);
+m0     : 1;
+rho0  : 1;
+cutoff: 1;
+soundspeed: 1;
+viscosity: [1, 1];
+pb       : 10;
+
+h: cutoff;
+
+/* normalization constant for Lucy kernel in 3D */
+s:  16*%pi/105$
+
+kb: 1.3806488e-23;
+T:  1.0/kb;
+
+/* Eq. (29) */
+vabs(dr):= sqrt(dr.dr);
+w_scalar(r):= 1/''s * (1+3*r/h)*(1-r/h)^3 * charfun(r<=h);
+block([x], gradef(charfun(x), 0));
+
+dw_scalar(dr):= block([r: vabs(dr)], ''(diff(w_scalar(r), r)));
+w(dr):= block([r: vabs(dr)], ''(w_scalar(r)));
+dw(dr):= block([r: vabs(dr)], dr/r * ''(diff(w_scalar(r), r)));
+
+/* Eq. (28) */
+c0: soundspeed;
+P_fun(rho):= ''( (c0^2*rho0) * ( ('rho/rho0) - 1) );
+
+x: [[5, 5, 5], [5.5, 5, 5]];
+v: [[0, 0, 0], [1,   0, 0]];
+m: [m0, m0];
+rho: [1, 2];
+P: maplist('P_fun, rho);
+d: 3;
+dW():= genmatrix(lambda([i, j], i*j), 3, 3);
+Wijf():= block([dWij: dW()],
+  1/2*(dWij + transpose(dWij)) - mat_trace(dWij)*ident(d)/d);
+tov(v):= flatten(args(v));
+
+sph_force_loop(expr)::= buildq([expr, n: length(x)], create_list(
+    sum(if i#j then expr else 0, j, 1, n),
+    i, 1, n));
+pair_sph_taitwater_morris(x, v, rho):= block([Fc, Fd, Fb, P, drho, numer: true],
+  Fb: sph_force_loop( block([Vi: m[i]/rho[i],
+      Vj: m[j]/rho[j],
+      pij_wave: (rho[j]*pb + rho[i]*pb)/(rho[i] + rho[j])],
+      - (Vi^2 + Vj^2) * pij_wave * dw(x[i] - x[j]))),
+  P : maplist('P_fun, rho),
+  Fc: sph_force_loop( block([Vi: m[i]/rho[i],
+      Vj: m[j]/rho[j],
+      pij_wave: (rho[j]*P[i] + rho[i]*P[j])/(rho[i] + rho[j])],
+      - (Vi^2 + Vj^2) * pij_wave * dw(x[i] - x[j]))),
+  Fd: sph_force_loop (block([Vi: m[i]/rho[i],
+      Vj: m[j]/rho[j]],
+      (Vi^2 + Vj^2)*viscosity[i] * (v[i] - v[j])*dw_scalar(x[i]-x[j])/vabs(x[i]-x[j]))),
+  Fr: sph_force_loop (block([Vi: m[i]/rho[i], Vj: m[j]/rho[j],
+      eij: (x[i] - x[j])/vabs(x[i] - x[j])],
+      sqrt(-4*kb*T*viscosity[i]*(Vi^2 + Vj^2)*dw_scalar(x[i]-x[j])/vabs(x[i]-x[j]))*
+      tov(Wijf() . eij) / sqrt(dt)
+      / m[i]
+      )),
+  print(Fr),
+  drho: sph_force_loop(m[j]*(v[i]-v[j]).dw(x[i] - x[j])),
+  [Fc + Fd + Fr, Fb, drho]);
+
+sph_velocity_verlet_step(x0, v0, rho0, f0, fb0, drho0):=
+block([numer: true, ftm2v, dtv, dtfm, dtv,
+  x: copylist(x0), v: copylist(v0),
+  rho: copylist(rho0), f: copylist(f0),
+  fb: copylist(fb0), drho: copylist(drho0)
+  ],
+  
+  ftm2v: 1,
+  dtv: dt,
+  dtf: 1/2*dt*ftm2v,
+  dtfm: dtf/m,
+
+  rho : rho + dtf*drho,
+  v   : v + dtfm*f,
+  x   : x + dtv*v  + dtv * dtfm * fb,
+  [f, fb, drho]: pair_sph_taitwater_morris(x, v, rho),
+
+  v   : v + dtfm*f,
+  rho : rho + dtf*drho,
+  [x, v, rho, f, fb, drho]);
+
+dt: 0.02;
+[f, fb, drho]: pair_sph_taitwater_morris(x, v, rho);
+
+/*
+Reference:
+<lmp> -in in.sdpd_two_atoms_transport_velocity
+*/
+thru 10 do [x, v, rho, f, fb, drho]: sph_velocity_verlet_step(x, v, rho, f, fb, drho);
+[f[1][1],  x[1][1], v[1][1]];

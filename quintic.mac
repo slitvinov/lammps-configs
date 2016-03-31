@@ -1,0 +1,33 @@
+ndim: 3;
+
+expr: if s<1 then
+(3 - s)^5 - 6*(2 - s)^5 + 15*(1 - s)^5
+elseif s<2 then
+(3 - s)^5 - 6*(2 - s)^5
+elseif s<3 then
+(3 - s)^5
+else 0;
+
+grind(subst(s=r/(3*h), expr));
+
+I: if ndim=2 then integrate(integrate( w(r)*r, r, 0, h), phi, 0, 2*%pi)
+else
+integrate(
+  integrate(
+    integrate( w(r)*r^2*sin(omega), r, 0, h), phi, 0, 2*%pi), omega, 0, %pi);
+
+A: rhs(solve(I=1, 'A)[1]);
+dw(r):= ''(factor(diff(w(r), r)));
+
+load("draw")$
+block([h: 1],
+  draw2d( explicit( w(r), r, 0, h),
+    color='red,
+    explicit( dw(r), r, 0, h)));
+
+factor(w(r)), numer;
+grind(factor(dw(r))), numer;
+
+dw(r)/r;
+
+dw(r);
