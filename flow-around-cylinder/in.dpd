@@ -1,0 +1,114 @@
+# DPD example
+# counter-flowing Poiseuille flow  (run with -var ndim 2 for 2D)
+# [1] Backer, J.A., Lowe, C.P., Hoefsloot, H.C.J. & Iedema,
+# P.D. J. Chem. Phys. 122, 154503 (2005).
+# doi:10.1063/1.1883163
+# [2] Espanol, P. & Warren, P. Europhys. Lett. 30, 191-196 (1995).
+# doi:10.1209/0295-5075/30/4/001
+#
+# the simulation produces spatially averages for `vy', `rho', `sxy'
+# profile.dim3
+
+echo            both
+units		si
+variable        ndim  index 2
+variable number_density equal 6
+# domain size
+variable        Lx equal 12
+variable        Ly equal 8
+if "${ndim}==3" then "variable  Lz equal 8"  else "variable Lz equal 1"
+
+variable        xc equal ${Lx}/2
+variable        yc equal ${Ly}/2
+variable        zc equal ${Ly}/2
+
+variable         r equal ${Lx}/6
+   
+# temperature
+variable        kb equal 1.3806488e-23
+variable        T equal 0.5/${kb}
+# interaction parameters
+variable        cutoff equal 1.0
+variable        sigma equal 4.5
+# gamma is not given in [1]
+# we get it using eq. (10) in [2]
+variable        gamma equal ${sigma}^2/(2*${T}*${kb})
+variable        sigma delete
+# "Conservative forces are not needed for this study and will be left
+# out" [1]
+variable       adpd    equal 10.0
+# body force (units of acceleration)
+variable gy equal 0.055
+# number of timesteps
+variable ntime equal 8000
+timestep	0.01
+
+dimension       ${ndim}
+atom_style	atomic
+#communicate	single vel yes
+comm_modify vel yes
+
+# lattice parameter
+variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
+if "${ndim}==3" then "lattice sc ${lsp} origin 0.0 0.0 0.0" else &
+    "lattice sq  ${lsp} origin 0.0 0.0 0.0"
+if "${ndim}==3" then "region  box block 0 ${Lx} 0 ${Ly} 0 ${Lz} units box" else &
+    "region		box block 0 ${Lx} 0 ${Ly} -0.01 0.01 units box"
+
+create_box	2 box
+create_atoms	1 box
+
+variable        fluid_type equal 1
+variable        wall_type equal 2
+region          rwall   cylinder z ${xc} ${yc} ${r} INF INF units box
+set             region  rwall   type ${wall_type}
+group           gwall   type ${wall_type}
+group           gnwall subtract all gwall
+
+# delete extra atoms
+variable        Npart equal ${Lx}*${Ly}*${Lz}*${number_density}
+group extra_atoms id > ${Npart}
+delete_atoms group extra_atoms
+
+mass		${fluid_type} 1
+mass		${wall_type}  1
+
+#velocity	all create ${T} 87287 loop geom
+
+pair_style	hybrid/overlay dpd ${T} ${cutoff} 928948 lj/cut ${cutoff}
+pair_coeff	* * dpd ${adpd} ${gamma}
+
+variable        lj_epsilon equal 0.001
+variable        lj_sigma   equal 0.5
+pair_coeff	* *                           dpd ${adpd} ${gamma}
+pair_coeff	${fluid_type} ${wall_type} lj/cut ${lj_epsilon} ${lj_sigma}
+
+neighbor	0.5 bin
+neigh_modify    delay 0 every 1
+
+fix		nve gnwall nve
+
+variable        Nevery  equal  1
+variable        Nfreq   equal  ${ntime}
+variable        Nrepeat equal  round(0.9*${ntime})
+
+# stresses are in units of pressure*volume must be divided by per-atom
+# volume to have units of stress (pressue); components of the stress
+# are in the following order xx(1), yy(2), zz(3), xy(4), xz(5), yz(6)
+compute stress all stress/atom NULL
+variable stress_pressure atom c_stress[4]*${number_density}
+compute         ch_vy all chunk/atom  bin/1d x center 0.5
+fix av_profile  all ave/chunk  ${Nevery} ${Nrepeat} ${Nfreq} ch_vy &
+          vy density/number v_stress_pressure file profile.dim${ndim}
+
+if "${ndim}==3" then "dump mdump all custom 10000 dump.dim${ndim}.dump id type xs ys vx vy" else &
+   "dump mdump all custom 10000 dump.dim${ndim}.dump id type xs ys zs vx vy vz"
+
+dump tdump all atom 1000 dump.*.dump
+dump_modify  tdump   pad 9
+
+variable fy atom mass*${gy}
+fix reverce_periodic all addforce 0.0 v_fy 0.0
+
+if "${ndim}==2" then  "fix e2d         all enforce2d"
+run		${ntime} every 1000 "velocity all zero linear"
