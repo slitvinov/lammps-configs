@@ -32,7 +32,7 @@ variable       adpd    equal 0.0
 # body force (units of acceleration)
 variable gy equal 0.055
 # number of timesteps
-variable ntime equal 80000
+variable ntime equal 8000
 timestep	0.01
 
 dimension       ${ndim}
@@ -79,8 +79,11 @@ compute         ch_vy all chunk/atom  bin/1d x center 0.5
 fix av_profile  all ave/chunk  ${Nevery} ${Nrepeat} ${Nfreq} ch_vy &
           vy density/number v_stress_pressure file profile.dim${ndim}
 
-if "${ndim}==3" then "dump mdump all custom 10000 dump.dpd.${ndim} id type xs ys vx vy" else &
-"dump mdump all custom 10000 dump.dpd.${ndim} id type xs ys zs vx vy vz"
+if "${ndim}==3" then "dump mdump all custom 10000 dump.dim${ndim}.dump id type xs ys vx vy" else &
+   "dump mdump all custom 10000 dump.dim${ndim}.dump id type xs ys zs vx vy vz"
+
+dump tdump all atom 1000 dump.*.dump
+dump_modify  tdump   pad 9
 
 variable fy atom mass*${gy}*((x>${xsize}/2.0)-(x<${xsize}/2.0))
 fix reverce_periodic all addforce 0.0 v_fy 0.0
