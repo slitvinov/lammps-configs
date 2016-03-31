@@ -1,4 +1,4 @@
-shell mkdir fluid wall solid
+shell "mkdir -p fluid wall solid"
 
 dump dump_fluid gfluid custom ${dump_freq} fluid/d.*.dump id type xs ys zs vx vy vz
 dump_modify  dump_fluid   pad 8

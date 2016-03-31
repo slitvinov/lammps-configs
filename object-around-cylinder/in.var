@@ -33,7 +33,9 @@ variable        sigma delete
 variable        adpd    equal 10.0
 # body force (units of acceleration)
 variable        gx equal 0.0055
-variable        ntime equal 800000
+
+variable        nstep     equal 800000
+variable        nstep_pre equal 1000
 
 variable        Npart equal ${Lx}*${Ly}*${Lz}*${number_density}
 

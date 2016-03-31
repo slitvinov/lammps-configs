@@ -1,2 +1,5 @@
 region          rsolid   cylinder z ${xs} ${ys} ${rs} INF INF units box
 set             region  rsolid   type ${solid_type}
+
+write_data      dump.atom
+read_data       dump.atom

@@ -1,8 +1,17 @@
-variable        ndim  index 2
+include         in.init
+include         in.neighbor
 
-echo            both
-units		si
-dimension       ${ndim}
-atom_style	atomic
-comm_modify vel yes
+include         in.var
 
+include         in.lattice
+include         in.create
+if "${ndim}==2" then  "fix e2d         all enforce2d"
+
+include         in.mass
+include         in.pair
+
+fix		nve  all  nve
+run             ${nstep_pre}
+
+shell           "mkdir pre"
+write_data      pre/pre.data.out
