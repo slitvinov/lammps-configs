@@ -11,7 +11,8 @@ include         in.mass
 include         in.pair
 
 fix		nve  all  nve
+thermo          10
 run             ${nstep_pre}
 
-shell           "mkdir pre"
+shell           "mkdir -p pre"
 write_data      pre/pre.data.out

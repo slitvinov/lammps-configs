@@ -32,7 +32,7 @@ variable        gamma equal ${sigma}^2/(2*${T}*${kb})
 variable        sigma delete
 variable        adpd    equal 10.0
 # body force (units of acceleration)
-variable        gx equal 0.0055
+variable        gx equal 0.1
 
 variable        nstep     equal 800000
 variable        nstep_pre equal 1000
@@ -44,7 +44,7 @@ variable        lj_sigma   equal 0.5
 
 variable        mass       equal 1.0
 
-timestep	0.01
+timestep	0.0001
 
 variable        fluid_type equal 1
 variable        wall_type  equal 2

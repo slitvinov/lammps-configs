@@ -13,6 +13,8 @@ include         in.group
 include         in.dump
 include         in.force
 
-fix             frz  gsolid rigid single
+fix             frz  gsolid rigid/nve single
 fix		nve  gnwallnsolid  nve
+
+thermo          100
 run		${nstep}

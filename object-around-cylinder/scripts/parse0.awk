@@ -1,6 +1,11 @@
 #!/usr/bin/awk -f
 
+function init() {
+    pi = 3.141592653589793
+}
+
 BEGIN {
+    init()
     fn = ARGC==1 ?  "-" : ARGV[1] # input file name
 
     where = "read_comment_line"
@@ -75,8 +80,37 @@ function read_masses(  type, mass) {
     }
 }
 
-function update_atom() {
-    if (x<8 && y<8) type = 3
+function abs(x) {return x>0 ? x : -x}
+function rbc2(x, y, D0, a0, a1, a2) {
+    D0 = 7.82; a0 = 0.0518; a1 = 2.0026; a2 = - 4.491
+    return D0^2*(1-(4*(y^2+x^2))/D0^2)*((a2*(y^2+x^2)^2)/D0^4+(a1*(y^2+x^2))/D0^2+a0)^2
+}
+
+function shift(R, dx, dy, dz) {
+    R[1] -= dx; R[2] -= dy; R[3] -= dz
+}
+
+function scale(R, sc) {
+    R[1] /= sc; R[2] /= sc; R[3] /= sc
+}
+
+function rotate(R, phi,   x, y, z) {
+    phi = -phi
+    x = R[1]; y = R[2]; z = R[3]
+    R[1] =  cos(phi)*x + sin(phi)*y
+    R[2] = -sin(phi)*x + cos(phi)*y
+    R[3] = z
+}
+
+function update_atom(   x0, y0, phi, R) {
+    x0 = 8; y0 = 20; z0 = 0; phi = pi/2
+    R[1] = x; R[2] = y; R[3] = z
+    shift(R, x0, y0, z0)
+    rotate(R, phi)
+    scale(R, 1)
+    
+    if (rbc2(R[1], R[3])>(R[2])^2)
+	type=3
 }
 
 function parse_atom_line(l,   a) {
