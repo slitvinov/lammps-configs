@@ -8,3 +8,6 @@ dump_modify  dump_solid   pad 8
 
 dump dump_wall gwall atom ${dump_freq} wall/d.*.dump
 dump_modify  dump_wall    pad 8
+
+dump dump_img all image 1000 dump.*.ppm type type
+dump_modify dump_img pad 8

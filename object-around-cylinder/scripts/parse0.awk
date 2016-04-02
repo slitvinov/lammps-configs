@@ -8,9 +8,7 @@ BEGIN {
     init()
     fn = ARGC==1 ?  "-" : ARGV[1] # input file name
 
-    where = "read_comment_line"
     read_comment_line()
-
     read_count_block()   # Ex.: 100 atoms
     read_box()
     read_masses()
@@ -103,11 +101,11 @@ function rotate(R, phi,   x, y, z) {
 }
 
 function update_atom(   x0, y0, phi, R) {
-    x0 = 8; y0 = 20; z0 = 0; phi = pi/2
+    x0 = 8; y0 = 33; z0 = 0; phi = pi/2
     R[1] = x; R[2] = y; R[3] = z
     shift(R, x0, y0, z0)
     rotate(R, phi)
-    scale(R, 1)
+    scale(R, 2.0)
     
     if (rbc2(R[1], R[3])>(R[2])^2)
 	type=3
@@ -117,7 +115,7 @@ function parse_atom_line(l,   a) {
     split(l, a)
     id=a[1]; type=a[2]
      x=a[3];  y=a[4];  z=a[5]
-    ix=a[3]; iy=a[4]; iz=a[5]	
+    ix=a[6]; iy=a[7]; iz=a[8]
 }
 
 function pack_atom_line(   l) {

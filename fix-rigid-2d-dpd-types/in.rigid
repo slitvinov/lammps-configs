@@ -1,10 +1,11 @@
 # move two atoms with DPD
+variable       ntypes  equal 2
 variable       ndim    equal 2
 include in.minsetup
 comm_modify    vel yes
 
-create_atoms 1 single 5.0 4.75 0.0 units box
-create_atoms 1 single 5.0 5.25 0.0 units box
+create_atoms 2 single 5.0 4.75 0.0 units box
+create_atoms 2 single 5.0 5.25 0.0 units box
 group        fst    id == 1
 group        scn    id == 2
 
@@ -24,7 +25,6 @@ group          solvent subtract all fst scn
 fix             frigid grigid rigid single
 fix	        1 solvent nve
 
-#fix	        1 all nve
 neighbor	5.0 bin
 neigh_modify    delay 0 every 1
 timestep        0.01

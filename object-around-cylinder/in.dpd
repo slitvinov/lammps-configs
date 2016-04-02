@@ -1,7 +1,7 @@
 include         in.init
+include         in.var
 include         in.neighbor
 
-include         in.var
 include         in.read
 if "${ndim}==2" then  "fix e2d         all enforce2d"
 
@@ -13,8 +13,8 @@ include         in.group
 include         in.dump
 include         in.force
 
-fix             frz  gsolid rigid/nve single
-fix		nve  gnwallnsolid  nve
+fix             frz  gsolid rigid   single
+fix		nve  gnwallnsolid      nve
 
-thermo          100
+thermo          1000
 run		${nstep}

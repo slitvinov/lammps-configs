@@ -1,7 +1,7 @@
 include         in.init
-include         in.neighbor
 
 include         in.var
+include         in.neighbor
 
 include         in.lattice
 include         in.create
@@ -11,7 +11,7 @@ include         in.mass
 include         in.pair
 
 fix		nve  all  nve
-thermo          10
+thermo          100
 run             ${nstep_pre}
 
 shell           "mkdir -p pre"
