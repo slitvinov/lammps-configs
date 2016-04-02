@@ -8,21 +8,7 @@ if "${ndim}==3" then "variable  Lz equal 8"  else "variable Lz equal 1"
 variable        xc equal ${Lx}/2
 variable        yc equal ${Ly}/2
 variable        zc equal ${Ly}/2
-
-variable        x14 equal ${Lx}/4
-variable        y14 equal ${Ly}/4
-variable        z14 equal ${Ly}/4
-
-variable        x34 equal 3*${Lx}/4
-variable        y34 equal 3*${Ly}/4
-variable        z34 equal 3*${Ly}/4
-
 variable         r equal ${Lx}/4
-
-variable         xs equal ${x14}
-variable         yp  equal ${Ly}/10
-variable         ys equal ${yc}+${yp}
-variable         rs equal ${Lx}/15
    
 variable        kb equal 1.3806488e-23
 variable        T  equal 0.25/${kb}
@@ -32,7 +18,7 @@ variable        gamma equal ${sigma}^2/(2*${T}*${kb})
 variable        sigma delete
 variable        adpd    equal 5.0
 # body force (units of acceleration)
-variable        gx equal 0.005
+variable        gx equal 0.0025
 
 variable        nstep     equal 80000000
 variable        nstep_pre equal 1000
