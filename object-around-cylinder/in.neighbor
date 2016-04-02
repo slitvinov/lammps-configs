@@ -1,4 +1,4 @@
-neighbor	0.2 bin
+neighbor	0.0 bin
 neigh_modify    delay 0 every 1
 neigh_modify    exclude type ${solid_type} ${solid_type}
 neigh_modify    exclude type ${wall_type}  ${wall_type}

@@ -1,5 +1,3 @@
-variable number_density equal 4
-
 # domain size
 variable        Lx equal 64
 variable        Ly equal 64
@@ -11,14 +9,15 @@ variable        zc equal ${Ly}/2
 variable         r equal ${Lx}/4
    
 variable        kb equal 1.3806488e-23
-variable        T  equal 0.25/${kb}
-variable        rc    equal 1.0
+variable        T  equal 0.25/${kb}/2^4
+variable        number_density equal 16
+variable        rc    equal 0.5
 variable        sigma equal 4.5
 variable        gamma equal ${sigma}^2/(2*${T}*${kb})
 variable        sigma delete
 variable        adpd    equal 5.0
 # body force (units of acceleration)
-variable        gx equal 0.0025
+variable        gx equal 0.005
 
 variable        nstep     equal 80000000
 variable        nstep_pre equal 1000
@@ -26,15 +25,14 @@ variable        nstep_pre equal 1000
 variable        Npart equal ${Lx}*${Ly}*${Lz}*${number_density}
 
 variable        lj_epsilon equal 0.001
-variable        lj_sigma   equal 0.5
+variable        lj_sigma   equal 0.25
 
-variable        mass       equal 1.0
-
-timestep	0.001
+variable        mass       equal 0.25
+timestep	                 0.001
 
 variable        fluid_type equal 1
 variable        wall_type  equal 2
 variable        solid_type equal 3
-
 variable        ntypes     equal 3
+
 variable        dump_freq equal 1000
