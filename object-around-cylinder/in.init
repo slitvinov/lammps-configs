@@ -1,4 +1,4 @@
-variable        ndim  index 2
+variable        ndim  index 3
 
 echo            both
 units		si

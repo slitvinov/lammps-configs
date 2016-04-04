@@ -1,6 +1,6 @@
 include         in.init
 include         in.var
-include         in.neighbor
+include         in.neighbor.dpd
 
 include         in.read
 if "${ndim}==2" then  "fix e2d         all enforce2d"

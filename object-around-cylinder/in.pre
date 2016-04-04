@@ -1,7 +1,7 @@
 include         in.init
 
 include         in.var
-include         in.neighbor
+include         in.neighbor.pre
 
 include         in.lattice
 include         in.create

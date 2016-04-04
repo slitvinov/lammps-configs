@@ -1,7 +1,6 @@
 pair_style	hybrid/overlay dpd ${T} ${rc} 928948 lj/cut ${rc}
-pair_coeff	* * dpd ${adpd} ${gamma}
 
-pair_coeff	* *                           dpd ${adpd} ${gamma}
+pair_coeff	* *                       dpd ${adpd} ${gamma}
 
 pair_coeff	${fluid_type} ${fluid_type} lj/cut 0 0
 pair_coeff	${fluid_type} ${wall_type}  lj/cut ${lj_epsilon} ${lj_sigma}

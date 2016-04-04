@@ -1,7 +1,7 @@
 # domain size
 variable        Lx equal 64
 variable        Ly equal 64
-if "${ndim}==3" then "variable  Lz equal 8"  else "variable Lz equal 1"
+if "${ndim}==3" then "variable  Lz equal 32"  else "variable Lz equal 1"
 
 variable        xc equal ${Lx}/2
 variable        yc equal ${Ly}/2
@@ -9,18 +9,18 @@ variable        zc equal ${Ly}/2
 variable         r equal ${Lx}/4
    
 variable        kb equal 1.3806488e-23
-variable        T  equal 0.25/${kb}/2^4
-variable        number_density equal 16
-variable        rc    equal 0.5
-variable        sigma equal 4.5
-variable        gamma equal ${sigma}^2/(2*${T}*${kb})
-variable        sigma delete
+variable        T  equal 0.25/${kb}
+variable        number_density equal 4
+variable        rc    equal 1.0
+variable        gamma equal 40.0
+variable        sigma equal sqrt(2)*sqrt(${T}*${kb}*${gamma})
+
 variable        adpd    equal 5.0
 # body force (units of acceleration)
-variable        gx equal 0.005
+variable        gx equal 0.025
 
 variable        nstep     equal 80000000
-variable        nstep_pre equal 1000
+variable        nstep_pre equal 100
 
 variable        Npart equal ${Lx}*${Ly}*${Lz}*${number_density}
 
@@ -28,7 +28,7 @@ variable        lj_epsilon equal 0.001
 variable        lj_sigma   equal 0.25
 
 variable        mass       equal 0.25
-timestep	                 0.001
+timestep	                 0.005
 
 variable        fluid_type equal 1
 variable        wall_type  equal 2

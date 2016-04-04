@@ -1,0 +1,3 @@
+variable        skin equal ${rc}/4
+neighbor	${skin} bin
+neigh_modify    delay 0 every 1
