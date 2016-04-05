@@ -1,6 +1,8 @@
 #!/bin/bash
 
 . local/brutus/vars.sh
+. local/brutus/utils.sh
+. local/brutus/module.sh
 
 d=lammps-stokes
 cd $HOME/src
@@ -8,8 +10,6 @@ cd $HOME/src
 #rm -rf $d
 #git clone --depth 1 https://github.com/slitvinov/lammps-stokes.git
 
-module load intel
-module load open_mpi
 
 cd $d/src
 
