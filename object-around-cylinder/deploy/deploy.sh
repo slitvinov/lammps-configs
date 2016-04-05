@@ -16,10 +16,10 @@ deploy/gcp/gcp "${default_dir}" "${rhost}":"${rpath}"
 
 # execute command remotely with <gitroot> as a current directory
 rt () {
-    ssh "${rhost}" "cd ${rpath}/${default_dir} ; cd object-around-cylinder ; $@"
+    ssh "${rhost}" "cd ${rpath}/${default_dir} ; cd object-around-cylinder ;" "$@"
 }
 
 #rt local/panda_dbg/setup.sh
 #rt local/$host/setup.sh
 
-rt local/brutus/setup.sh
+rt local/brutus/setupt.sh
