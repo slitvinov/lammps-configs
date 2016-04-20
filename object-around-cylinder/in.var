@@ -9,20 +9,19 @@ variable        zc equal ${Ly}/2
 variable         r equal ${Lx}/4
    
 variable        kb equal 1.3806488e-23
-variable        T  equal 0.25/${kb}
+variable        T  equal 0.125/${kb}
 variable        number_density equal 4
 variable        rc    equal 1.0
 variable        gamma equal 40.0
 variable        sigma equal sqrt(2)*sqrt(${T}*${kb}*${gamma})
 
-variable        adpd    equal 5.0
-# body force (units of acceleration)
-variable        gx equal 0.025
+variable        adpd  equal 5.0
+variable        gx    equal 3.90625e-4 # body force (units of acceleration)
 
 variable        nstep     equal 80000000
-variable        nstep_pre equal 100
+variable        nstep_pre equal 1000
 
-variable        Npart equal ${Lx}*${Ly}*${Lz}*${number_density}
+variable        Npart     equal ${Lx}*${Ly}*${Lz}*${number_density}
 
 variable        lj_epsilon equal 0.001
 variable        lj_sigma   equal 0.25
@@ -35,4 +34,5 @@ variable        wall_type  equal 2
 variable        solid_type equal 3
 variable        ntypes     equal 3
 
-variable        dump_freq equal 1000
+variable        dump_freq equal 10000
+variable        wall_freq equal 1000000 # do not dump wall

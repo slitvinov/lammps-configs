@@ -1,6 +1,6 @@
 shell "mkdir -p fluid wall solid ppm"
 
-dump dump_fluid gfluid custom ${dump_freq} fluid/d.*.dump id type xs ys zs vx vy vz
+dump dump_fluid gfluid custom ${wall_freq} fluid/d.*.dump id type xs ys zs vx vy vz
 dump_modify  dump_fluid   pad 8
 
 dump dump_solid gsolid atom ${dump_freq} solid/d.*.dump

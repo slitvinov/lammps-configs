@@ -3,7 +3,7 @@
 set -eux
 
 default_dir=lammps-configs
-rname=preved
+rname=T_0.125_gx_3.90625e-4_timestep_0.005
 
 # remote host name
 host=brutus
