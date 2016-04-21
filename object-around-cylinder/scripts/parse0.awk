@@ -101,11 +101,12 @@ function rotate(R, phi,   x, y, z) {
 }
 
 function update_atom(   x0, y0, phi, R) {
-    x0 = 8; y0 = 33; z0 = 0; phi = pi/2
+    sc = 2
+    x0 = 32*sc; y0 = 51*sc; z0 = 0*sc; phi = 0
     R[1] = x; R[2] = y; R[3] = z
     shift(R, x0, y0, z0)
     rotate(R, phi)
-    scale(R, 2.0)
+    scale(R, 2*sc)
     
     if (rbc2(R[1], R[3])>(R[2])^2)
 	type=3

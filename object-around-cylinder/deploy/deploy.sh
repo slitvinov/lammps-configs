@@ -3,13 +3,13 @@
 set -eux
 
 default_dir=lammps-configs
-rname=T_0.125_gx_3.90625e-4_timestep_0.005
+rname=T_0.125_gx_9.765625e-4_timestep_0.0025
 
 # remote host name
 host=brutus
 rhost=$host
 
-base=resolution
+base=zero
 rpath='$SCRATCH'/SYNC/$base/$rname
 
 deploy/gcp/gcp "${default_dir}" "${rhost}":"${rpath}"
@@ -22,4 +22,4 @@ rt () {
 #rt local/panda_dbg/setup.sh
 #rt local/$host/setup.sh
 
-rt local/brutus/setupt.sh
+rt local/brutus/setup.sh

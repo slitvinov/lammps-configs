@@ -7,10 +7,8 @@
 d=lammps-stokes
 cd $HOME/src
 
-#rm -rf $d
-#git clone --depth 1 https://github.com/slitvinov/lammps-stokes.git
-
-
+rm -rf $d
+git clone --depth 1 https://github.com/slitvinov/lammps-stokes.git
 cd $d/src
 
 trg=ompi_icc
