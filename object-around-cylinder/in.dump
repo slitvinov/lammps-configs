@@ -1,4 +1,4 @@
-shell "mkdir -p fluid wall solid ppm"
+shell "mkdir -p fluid wall solid ppm.gnfluid ppm.fluid"
 
 dump dump_fluid gfluid custom ${dump_freq} fluid/d.*.dump id type xs ys zs vx vy vz
 dump_modify  dump_fluid   pad 8
@@ -9,5 +9,8 @@ dump_modify  dump_solid   pad 8
 dump dump_wall gwall atom ${wall_freq} wall/d.*.dump
 dump_modify  dump_wall    pad 8
 
-dump dump_img gnfluid image ${dump_freq} ppm/dump.*.ppm type type
-dump_modify dump_img pad 8
+dump ppm_gnfluid gnfluid image ${dump_freq} ppm.gnfluid/dump.*.ppm type type
+dump_modify ppm_gnfluid pad 8
+
+dump ppm_fluid   gfluid image ${dump_freq} ppm.fluid/dump.*.ppm type type
+dump_modify ppm_fluid pad 8
