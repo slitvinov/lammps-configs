@@ -1,0 +1,16 @@
+# [(3*R)/(2*r^3)-(9*R*x^2)/(2*r^5),-(9*R*x*y)/(2*r^5)]
+
+variable xx  atom x-${xc}
+variable yy  atom y-${yc}
+variable rr  atom sqrt(v_xx^2+v_yy^2)
+
+#variable pcx atom (1.5*${r})/v_rr^3-(4.5*${r}*v_xx^2)/v_rr^5
+#variable pcy atom -(4.5*${r}*v_xx*v_yy)/v_rr^5
+
+variable pcx atom -(1.5*${r})/v_rr^3+(4.5*${r}*v_xx^2)/v_rr^5
+variable pcy atom (4.5*${r}*v_xx*v_yy)/v_rr^5
+
+variable fcx atom mass*${fcoeff}*v_pcx
+variable fcy atom mass*${fcoeff}*v_pcy
+
+fix pcorr gnwallnsolid addforce v_fcx v_fcy 0

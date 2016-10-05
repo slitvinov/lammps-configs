@@ -1,5 +1,9 @@
 group           gsolid   type ${solid_type}
 group           gwall    type ${wall_type}
 group           gfluid   type ${fluid_type}
+
+group           gsolidgfluid  union    all gsolid gfluid
+
 group           gnwallnsolid  subtract all gwall gsolid
 group           gnfluid       subtract all gfluid
+group           gnwall        subtract all gwall

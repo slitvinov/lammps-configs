@@ -1,40 +1,44 @@
 # domain size
-variable        sc equal 2
-variable        Lx equal 64*${sc}
-variable        Ly equal 64*${sc}
+#variable        sc equal 0.25
+variable        Lx equal round(96*${sc})
+variable        Ly equal round(96*${sc})
 if "${ndim}==3" then "variable  Lz equal 32"  else "variable Lz equal 1"
 
 variable        xc equal ${Lx}/2
 variable        yc equal ${Ly}/2
 variable        zc equal ${Ly}/2
-variable         r equal ${Lx}/4
+variable         r equal 9.775*${sc}
    
 variable        kb equal 1.3806488e-23
-variable        T  equal 0.125/${kb}
-variable        number_density equal 4
+variable        T  equal 0.03/${kb}
+variable        number_density equal ${nd}
 variable        rc    equal 1.0
-variable        gamma equal 40.0
+variable        gamma equal 15.0
 variable        sigma equal sqrt(2)*sqrt(${T}*${kb}*${gamma})
 
-variable        adpd  equal 5.0
-#variable        gx    equal 3.90625e-4 # body force (units of acceleration)
-variable        gx    equal 3.90625e-3/${sc}^2
+variable        adpd   equal 3.0
+variable        gx     equal ${gx0}/${sc}^3
+#variable        fcoeff equal 1.0*${gx}
 
 variable        nstep     equal 80000000
 variable        nstep_pre equal 1000
 
 variable        Npart     equal ${Lx}*${Ly}*${Lz}*${number_density}
 
+variable        lj_rc      equal 1.00*${rc}
 variable        lj_epsilon equal 0.001
-variable        lj_sigma   equal 0.25
+variable        lj_sigma   equal ${lj_rc}/2^(1.0/6.0)
 
-variable        mass       equal 0.25
-timestep	                 0.0025
+variable        fluid_mass equal 1.0
+variable        wall_mass  equal 1.0
+variable        solid_mass equal 1.0
+
+timestep	                 5e-4
 
 variable        fluid_type equal 1
 variable        wall_type  equal 2
 variable        solid_type equal 3
 variable        ntypes     equal 3
 
-variable        dump_freq equal 20000
+variable        dump_freq equal 10000
 variable        wall_freq equal 1000000 # do not dump wall

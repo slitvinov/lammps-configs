@@ -12,7 +12,7 @@ include         in.wall
 include         in.group
 include         in.dump
 include         in.force
-include         in.pcorr
+#include         in.pcorr
 
 fix             frz  gsolid rigid   single
 fix		nve  gnwallnsolid      nve

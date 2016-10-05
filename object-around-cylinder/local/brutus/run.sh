@@ -4,7 +4,11 @@
 . local/brutus/utils.sh
 . local/brutus/module.sh
 
-bsub -K -W 00:10  -n 8 mpirun lmp -in in.pre
-scripts/parse3d.awk pre/pre.data.out > pre/pre.data.in
+vars+=" -var sc  ${sc}"
+vars+=" -var gx0 ${gx0} "
+vars+=" -var nd  ${nd} "
 
-bsub    -W $wtime -n $np mpirun lmp -in in.dpd
+bsub -K -W 00:10  -n 4 mpirun lmp $vars -in in.pre
+
+scripts/parse0.awk -v xc=$xc -v sc=$sc pre/pre.data.out > pre/pre.data.in
+bsub    -W $wtime -n $np mpirun lmp $vars -in in.dpd

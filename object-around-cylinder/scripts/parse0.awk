@@ -2,6 +2,9 @@
 
 function init() {
     pi = 3.141592653589793
+    
+    # xc = 24
+    yc = 1/2*96 + 0.8145833333333334
 }
 
 BEGIN {
@@ -101,12 +104,12 @@ function rotate(R, phi,   x, y, z) {
 }
 
 function update_atom(   x0, y0, phi, R) {
-    sc = 2
-    x0 = 32*sc; y0 = 51*sc; z0 = 0*sc; phi = 0
+    if (sc==0) sc=1
+    x0 = xc*sc; y0 = yc*sc; z0 = zc*sc; phi = 0
     R[1] = x; R[2] = y; R[3] = z
     shift(R, x0, y0, z0)
     rotate(R, phi)
-    scale(R, 2*sc)
+    scale(R, sc)
     
     if (rbc2(R[1], R[3])>(R[2])^2)
 	type=3
