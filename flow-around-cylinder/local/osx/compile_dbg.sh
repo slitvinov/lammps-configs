@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Compiles lammps source code
+# Compiles debug version of lammps source code
 set -eu
 
 . local/osx/vars.sh
@@ -13,6 +13,6 @@ cd $HOME/src/$lmp_dir/src
 
 make clean-all
 make yes-RIGID
-make $trg -j $make_np
+make $trg -j $make_np CCFLAGS="-g -O0"
 
-safe_cp `pwd`/lmp_$trg $HOME/bin/lmp
+safe_cp lmp_$trg $lmp_dbg

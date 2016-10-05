@@ -1,7 +1,7 @@
 #!/bin/bash
 
-. local/brutus/vars.sh
+. local/osx/vars.sh
 
-#local/brutus/compile.sh
-local/brutus/pre.sh
-local/brutus/run.sh
+local/osx/fetch.sh
+local/osx/compile.sh
+local/osx/run.sh
