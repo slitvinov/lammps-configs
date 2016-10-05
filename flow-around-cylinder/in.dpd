@@ -1,5 +1,4 @@
-# DPD example
-# counter-flowing Poiseuille flow  (run with -var ndim 2 for 2D)
+# Flow around solid cylinder example
 # [1] Backer, J.A., Lowe, C.P., Hoefsloot, H.C.J. & Iedema,
 # P.D. J. Chem. Phys. 122, 154503 (2005).
 # doi:10.1063/1.1883163
