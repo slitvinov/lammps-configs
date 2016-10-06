@@ -1,5 +1,7 @@
 group           gdwall   type ${dwall_type}
 group           guwall   type ${uwall_type}
+group            gwall   union guwall gdwall
+
 group           gsolid   type ${solid_type}
 group           gfluid   type ${fluid_type}
 

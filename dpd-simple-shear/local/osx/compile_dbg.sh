@@ -11,7 +11,7 @@ cd $HOME/src/$lmp_dir/src
 make_env+=" CCFLAGS=\"-g -O0\""
 
 # emake is defined in utils.sh
-(cd .. && git clean -f -d -x)
+#(cd .. && git clean -f -d -x)
 emake clean-all
 emake $lmp_pkg
 emake $make_trg -j $make_np $make_env

@@ -1,0 +1,9 @@
+shell           "mkdir -p print"
+
+#compute rke all erotate/rigid frz
+
+# xcm = 1,2,3; vcm = 4,5,6; fcm = 7,8,9; torque =10,11,12; image = 13,14,15; omega = 16,17,18
+variable omegaz  equal f_frz[1][18]
+variable torquez equal f_frz[1][12]
+
+fix extra all print ${nprint} "${physical_time} ${omegaz} ${torquez}" file print/rg.dat screen no

@@ -1,5 +1,5 @@
 # shell scripts parameters for run on osx
-np=1 # number of processor
+np=4 # number of processor
 
 use_vtk=0 # compile lammps with USER-VTK package
 
@@ -14,6 +14,8 @@ lmp_dbg=lmp_dbg
 
 make_trg=mpi # lammps compilation target
 make_np=4 # number of process to make
+
+vars=
 
 set_vtk() {
     lmp_pkg+=" yes-USER-VTK"

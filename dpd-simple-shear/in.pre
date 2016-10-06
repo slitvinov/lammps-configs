@@ -8,13 +8,15 @@
 # the simulation produces spatially averages for `vy', `rho', `sxy'
 # profile.dim3
 
-#communicate	single vel yes
 include in.init
 include in.vars
 
 include in.box
-create_box	${n_types} box
-create_atoms	1 box
+create_box	${n_types}     box
+create_atoms	${fluid_type} box
+# delete extra atoms
+group extra_atoms id > ${Npart}
+delete_atoms group extra_atoms
 
 include in.groups
 

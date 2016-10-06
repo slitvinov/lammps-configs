@@ -18,19 +18,17 @@ velocity        all set 0 0 0
 include in.solid
 include in.walls
 include in.groups
-
-# delete extra atoms
-#variable        Npart equal ${Lx}*${Ly}*${Lz}*${number_density}
-#group extra_atoms id > ${Npart}
-#delete_atoms group extra_atoms
-
 include in.mass
 
 include in.pairs
 include in.neighbor
 
 include in.move.dpd
-include in.dump
 
 if "${ndim}==2" then  "fix e2d         all enforce2d"
-run		${nstep} every 1000 "velocity all zero linear"
+
+run             ${nstep_relax}
+reset_timestep 0
+include in.dump
+include in.print
+run		${nstep}

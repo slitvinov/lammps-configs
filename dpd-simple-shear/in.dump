@@ -1,2 +1,24 @@
-dump tdump all custom 1000 d.*.dump  id type xs ys zs vx vy vz
-dump_modify  tdump   pad 9
+shell "mkdir -p fluid wall solid all"
+
+variable dn string  fluid
+variable gn string gfluid
+dump        d${dn} ${gn} custom ${dump_freq} ${dn}/d.*.dump  id type xs ys zs vx vy vz
+dump_modify d${dn} pad 9
+
+variable dn string  wall
+variable gn string gwall
+dump        d${dn} ${gn} custom ${dump_freq} ${dn}/d.*.dump  id type xs ys zs vx vy vz
+dump_modify d${dn} pad 9
+
+variable dn string  solid
+variable gn string gsolid
+dump        d${dn} ${gn} custom ${dump_freq} ${dn}/d.*.dump  id type xs ys zs vx vy vz
+dump_modify d${dn} pad 9
+
+variable dn string  all
+variable gn string  all
+dump        d${dn} ${gn} custom ${dump_freq} ${dn}/d.*.dump  id type xs ys zs vx vy vz
+dump_modify d${dn} pad 9
+
+variable dn delete
+variable gn delete

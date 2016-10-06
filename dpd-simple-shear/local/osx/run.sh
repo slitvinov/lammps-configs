@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -eu
 . local/osx/vars.sh
 . local/osx/utils.sh
 
