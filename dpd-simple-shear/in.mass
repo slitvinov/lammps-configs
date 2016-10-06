@@ -1,0 +1,4 @@
+mass		${fluid_type} ${mass}
+mass		${uwall_type} ${mass}
+mass		${dwall_type} ${mass}
+mass		${solid_type} ${mass}

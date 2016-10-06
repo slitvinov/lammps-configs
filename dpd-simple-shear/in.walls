@@ -1,0 +1,12 @@
+variable    b_ylo equal ${Ly}-3/2*${rc}
+variable    b_yhi string INF
+region      uwall   block  INF INF ${b_ylo} ${b_yhi} INF INF units box
+set         region  uwall   type ${uwall_type}
+
+variable    b_ylo delete
+variable    b_ylo string INF
+
+variable    b_yhi delete
+variable    b_yhi equal  3/2*${rc}
+region      dwall   block  INF INF ${b_ylo} ${b_yhi} INF INF units box
+set         region  dwall   type ${dwall_type}

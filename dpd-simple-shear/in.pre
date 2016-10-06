@@ -12,25 +12,28 @@
 include in.init
 include in.vars
 
-read_data       pre/pre.data.out
-velocity        all set 0 0 0
+include in.box
+create_box	${n_types} box
+create_atoms	1 box
 
-include in.solid
-include in.walls
 include in.groups
 
 # delete extra atoms
-#variable        Npart equal ${Lx}*${Ly}*${Lz}*${number_density}
-#group extra_atoms id > ${Npart}
-#delete_atoms group extra_atoms
+variable        Npart equal ${Lx}*${Ly}*${Lz}*${number_density}
+group extra_atoms id > ${Npart}
+delete_atoms group extra_atoms
 
 include in.mass
 
 include in.pairs
 include in.neighbor
-
-include in.move.dpd
-include in.dump
+include in.move.pre
 
 if "${ndim}==2" then  "fix e2d         all enforce2d"
-run		${nstep} every 1000 "velocity all zero linear"
+run		${nstep_pre} every 1000 "velocity all zero linear"
+
+velocity all set 0 0 0
+run 0
+
+shell           "mkdir -p pre"
+write_data      pre/pre.data.out

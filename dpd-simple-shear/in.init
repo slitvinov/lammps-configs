@@ -1,0 +1,7 @@
+variable        ndim  index 2
+
+comm_modify vel yes
+echo            both
+units		si
+dimension       ${ndim}
+atom_style	atomic

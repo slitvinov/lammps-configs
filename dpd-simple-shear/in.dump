@@ -1,0 +1,2 @@
+dump tdump all custom 1000 d.*.dump  id type xs ys zs vx vy vz
+dump_modify  tdump   pad 9

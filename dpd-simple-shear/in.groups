@@ -1,0 +1,6 @@
+group           gdwall   type ${dwall_type}
+group           guwall   type ${uwall_type}
+group           gsolid   type ${solid_type}
+group           gfluid   type ${fluid_type}
+
+group           gnsolid  subtract all gsolid

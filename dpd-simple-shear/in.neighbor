@@ -1,0 +1,6 @@
+neigh_modify    delay 0 every 1
+neigh_modify    exclude type ${solid_type} ${solid_type}
+
+neigh_modify    exclude type ${dwall_type}  ${dwall_type}
+neigh_modify    exclude type ${uwall_type}  ${uwall_type}
+neigh_modify    exclude type ${dwall_type}  ${uwall_type}

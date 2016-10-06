@@ -1,0 +1,15 @@
+fix		nve gnsolid nve
+
+
+variable        dy        atom  y-${yc}
+variable        vx_wall   atom  ${gdot}*v_dy
+
+velocity        guwall    set  v_vx_wall 0 0
+velocity        gdwall    set  v_vx_wall 0 0
+
+
+fix		fuw guwall setforce 0.0 0.0 0.0
+fix		fdw gdwall setforce 0.0 0.0 0.0
+
+fix             frz  gsolid rigid   single  force 1 off off off
+
