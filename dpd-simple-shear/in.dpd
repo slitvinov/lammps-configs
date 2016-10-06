@@ -36,8 +36,6 @@ variable        sigma delete
 # "Conservative forces are not needed for this study and will be left
 # out" [1]
 variable       adpd    equal 10.0
-# body force (units of acceleration)
-variable gy equal 0.055
 # number of timesteps
 variable ntime equal 8000
 timestep	0.01
@@ -51,8 +49,8 @@ comm_modify vel yes
 variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
 if "${ndim}==3" then "lattice sc ${lsp} origin 0.0 0.0 0.0" else &
     "lattice sq  ${lsp} origin 0.0 0.0 0.0"
-if "${ndim}==3" then "region  box block 0 ${Lx} 0 ${Ly} 0 ${Lz} units box" else &
-    "region		box block 0 ${Lx} 0 ${Ly} -0.01 0.01 units box"
+if "${ndim}==3" then "region  box block 0 ${Lx} 0 ${Ly} 0 ${Lz} 0 0 0 units box" else &
+    "region		box prism 0 ${Lx} 0 ${Ly} -0.01 0.01 0 0 0 units box"
 
 create_box	2 box
 create_atoms	1 box
@@ -82,6 +80,13 @@ variable        lj_sigma   equal 0.5
 pair_coeff	* *                           dpd ${adpd} ${gamma}
 pair_coeff	${fluid_type} ${wall_type} lj/cut ${lj_epsilon} ${lj_sigma}
 
+# N = perform box deformation every this many timesteps 
+variable        N equal 1
+# {erate} value = R
+#   R = engineering strain rate (1/time units)
+variable        R equal 0.001
+fix	        deform gnwall deform ${N} xy erate ${R} remap v
+
 neighbor	0.5 bin
 neigh_modify    delay 0 every 1
 
@@ -91,23 +96,15 @@ variable        Nevery  equal  1
 variable        Nfreq   equal  ${ntime}
 variable        Nrepeat equal  round(0.9*${ntime})
 
-# stresses are in units of pressure*volume must be divided by per-atom
-# volume to have units of stress (pressue); components of the stress
-# are in the following order xx(1), yy(2), zz(3), xy(4), xz(5), yz(6)
-compute stress all stress/atom NULL
-variable stress_pressure atom c_stress[4]*${number_density}
-compute         ch_vy all chunk/atom  bin/1d x center 0.5
-fix av_profile  all ave/chunk  ${Nevery} ${Nrepeat} ${Nfreq} ch_vy &
-          vy density/number v_stress_pressure file profile.dim${ndim}
-
 if "${ndim}==3" then "dump mdump all custom 10000 dump.dim${ndim}.dump id type xs ys vx vy" else &
    "dump mdump all custom 10000 dump.dim${ndim}.dump id type xs ys zs vx vy vz"
 
 dump tdump all atom 1000 dump.*.dump
 dump_modify  tdump   pad 9
 
-variable fy atom mass*${gy}
-fix reverce_periodic all addforce 0.0 v_fy 0.0
+dump vdump all custom/vtk 1000 dump.*.vtk id type x y z vx vy vz
+dump_modify  vdump   pad 9
+
 
 if "${ndim}==2" then  "fix e2d         all enforce2d"
 run		${ntime} every 1000 "velocity all zero linear"
