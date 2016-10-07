@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Fetch lammps source code
-set -eu
+set -eux
 
 . local/osx/vars.sh
 . local/osx/utils.sh

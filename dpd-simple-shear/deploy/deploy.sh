@@ -20,5 +20,5 @@ rt () {
     ssh "${rhost}" "cd ${rpath}/${default_dir} ; cd dpd-simple-shear ;" "$@"
 }
 
-#deploy/gcp/gcp "${default_dir}" "${rhost}":"${rpath}"
+deploy/gcp/gcp "${default_dir}" "${rhost}":"${rpath}"
 rt local/$host/setup.sh
