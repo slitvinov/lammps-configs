@@ -1,3 +1,10 @@
+rx=4 # semi-major axis of a solid cylinder
+ry=2
+
+solid_type=2
+
+vars=""
+
 # shell scripts parameters for run on osx
 np=4 # number of processor
 
@@ -15,7 +22,6 @@ lmp_dbg=lmp_dbg
 make_trg=mpi # lammps compilation target
 make_np=4 # number of process to make
 
-vars=
 
 set_vtk() {
     lmp_pkg+=" yes-USER-VTK"

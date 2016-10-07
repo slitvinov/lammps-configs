@@ -2,6 +2,7 @@
 
 . local/osx/vars.sh
 . local/osx/utils.sh
+. local/osx/pre.sh
 
 lmp_dbg=$HOME/src/$lmp_dir/src/lmp_dbg
 

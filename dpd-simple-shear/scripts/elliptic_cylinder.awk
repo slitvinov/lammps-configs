@@ -1,6 +1,5 @@
 #!/usr/bin/awk -f
 
-
 # TEST: elliptic_cylinder.t1
 # rx=6 ry=2 type=2 ./elliptic_cylinder.awk test_data/pre.data.out | awk '$2==2' > lmp.out.dat
 #

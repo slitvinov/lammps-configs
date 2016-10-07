@@ -1,0 +1,138 @@
+#!/bin/bash
+
+# If
+# gcp <remote git root> <remote path>
+
+# is being ran from the directory which belongs to a git repository
+# all files under version control are copied to <remote path>
+
+# Usage:
+# ./gcp mygitrepo username@panda.ethz.ch:~/remote-dir
+#
+# TEST: gcp1
+# git init TEST.git
+# echo preved > TEST.git/A
+# (cd TEST.git; git add A; git commit -a -m "Initial import")
+# (cd TEST.git; ur gcp TEST.git ../TEST.deploy.git)
+# cat TEST.deploy.git/TEST.git/A > gcp.out.txt
+# rm -rf TEST.git TEST.deploy.git
+#
+# TEST: gcp2
+# git init TEST.git
+# echo preved > TEST.git/A
+# (cd TEST.git; git add A; git commit -a -m "Initial import")
+# (cd TEST.git; git branch bA ; git checkout bA; git commit -a -m "Branch import")
+# (cd TEST.git; ur gcp TEST.git ../TEST.deploy.git)
+# (cd TEST.deploy.git/TEST.git; git branch) > gcp.out.txt
+# rm -rf TEST.git TEST.deploy.git
+
+set -e
+
+function msg() {
+    printf -- "(gcp) $@"  > "/dev/stderr"
+}
+
+if test $# -ne 2
+then
+   msg "(ERROR) requires two arguments\n"
+   exit
+fi
+
+# copy command
+cpy=rsync
+cpy_args="-q -r -avz"
+
+# git command
+GIT=${GIT:-git}
+GITFLAGS="--depth 1"
+
+# default git root directory name on a remote host
+default_dir=$1
+target=$2
+
+thost=`echo "${target}" | awk -v FS=':' 'NF>1{print $1}'`
+tpath=`echo "${target}" | awk           '{sub("^[^:]*:", ""); print}'`
+
+top=$(${GIT} rev-parse --show-toplevel)
+msg "I think top level git directory is ${top}\n"
+
+file_list=$(mktemp  /tmp/gcp.flist.XXXXXX)
+dir_list=$(mktemp  /tmp/gcp.dlist.XXXXXX)
+local_target=$(mktemp -d /tmp/gcp.XXXXXX)
+local_target="${local_target}/${default_dir}"
+mkdir -p -- "${local_target}"
+
+msg "Host   name: {%s}\n" "${thost}"
+msg "Remote path: {%s}\n" "${tpath}"
+
+branch=`"${GIT}" rev-parse --abbrev-ref HEAD`
+revid=`"${GIT}" rev-parse HEAD`
+
+msg "Current branch: %s\n" "${branch}"
+"${GIT}" clone ${GITFLAGS} -b "${branch}" -- file://"${top}" "${local_target}"
+(
+    cd "${local_target}"
+    # --depth 1
+    git submodule update
+)
+
+msg "Create a list of all staged files: %s\n" "${file_list}"
+
+function create_file_list() {
+    "${GIT}" ls-files --cached --full-name  > "${file_list}"
+}
+
+function create_file_list_submodule() {
+    submod_list=`find . -name .gitmodules | xargs awk '/path = / {gsub("^[^=]*=[ ]*", ""); print}'`
+    for sm in ${submod_list}; do
+	msg "Appending a list of all staged files in submodule %s\n" "$sm"
+	(
+	    cd "$sm"
+	    "${GIT}" ls-files --cached --full-name | awk '{print "'"$sm/"'"$0}' >> "${file_list}"
+	    find .git -type f  | xargs -n1 printf  "${sm}/%s\n"                 >> "${file_list}"
+	 )
+    done
+}
+
+function create_dir_list() {
+    msg "Create a list of all staged directories: %s\n" "${dir_list}"
+    awk 'NR' "${file_list}" | xargs -n 1 -I {} dirname "{}" | sort | uniq  | grep . > "${dir_list}"
+}
+
+function copy_directory_structure() {
+    msg "Copy directory structure to %s\n" "${local_target}"
+    xargs  -I {}   mkdir -p -- "${local_target}/{}"           < "${dir_list}"
+}
+
+function copy_staged_files() {
+    msg "Copy staged files to %s\n" "${local_target}"
+    while read fname
+    do
+	if test -f "${fname}"
+	then
+	    cp -- "${fname}" "${local_target}/${fname}"
+	fi
+    done < "${file_list}"
+}
+
+(
+    cd "${top}"
+    create_file_list
+    create_file_list_submodule
+    create_dir_list    
+    copy_directory_structure
+    copy_staged_files
+)
+
+msg "Copying directory from %s to %s\n" "${local_target}" "${target}"
+
+if test -n "${thost}"
+then
+    ssh "${thost}" "test -d ${tpath} || mkdir -p ${tpath}"    
+fi
+
+msg "Copying from ${local_target} to ${target}\n"
+"${cpy}" ${cpy_args} -- "${local_target}" "${target}"
+
+# clean up
+rm -rf ${file_list?} ${dir_list?} ${local_target?}

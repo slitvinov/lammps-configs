@@ -1,2 +1,2 @@
-region          rsolid   cylinder z ${xc} ${yc} ${r} INF INF units box
-set             region   rsolid   type ${solid_type}
+#region          rsolid   cylinder z ${xc} ${yc} ${r} INF INF units box
+#set             region   rsolid   type ${solid_type}

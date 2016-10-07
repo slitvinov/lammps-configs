@@ -8,4 +8,4 @@ set -eu
 
 cd $HOME/src
 rm -rf $lmp_dir
-git clone --depth 1 https://github.com/lammps/lammps $lmp_dir
+git clone --branch rigid --depth 1 https://github.com/lammps/lammps $lmp_dir

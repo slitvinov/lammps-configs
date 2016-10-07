@@ -12,7 +12,7 @@
 include in.init
 include in.vars
 
-read_data       pre/pre.data.out
+read_data       pre/pre.data.in
 velocity        all set 0 0 0
 
 include in.solid
@@ -27,8 +27,12 @@ include in.move.dpd
 
 if "${ndim}==2" then  "fix e2d         all enforce2d"
 
+timestep        ${dt_relax}   
 run             ${nstep_relax}
+
 reset_timestep 0
 include in.dump
 include in.print
+
+timestep        ${dt}
 run		${nstep}

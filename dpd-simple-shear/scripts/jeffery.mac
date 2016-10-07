@@ -1,0 +1,13 @@
+/*a: 1; b: 2; k: 0.2; */
+eq: tan(phi) = a/b * tan(k*a*b*t/(a^2 + b^2));
+
+so: solve(eq, phi)[1];
+phi_e: rhs(so);
+
+om_e : diff(phi_e, t);
+
+subst("^"='pow, scanmap('float, om_e));
+grind(%);
+
+
+draw2d(explicit(om_e, t, 0, 250));
