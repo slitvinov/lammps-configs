@@ -3,6 +3,9 @@
 
 # TEST: elliptic_cylinder.t1
 # rx=6 ry=2 type=2 ./elliptic_cylinder.awk test_data/pre.data.out | awk '$2==2' > lmp.out.dat
+#
+# TEST: elliptic_cylinder.t2
+# rx=6 ry=2 c1=C c2=EDGE type=2 ./elliptic_cylinder.awk test_data/pre.data.out | awk '$2==2' > lmp.out.dat
 
 function usage() {
     printf "%s", "elliptic_cylinder.awk: create an elliptic cylinder in lammps data file\n"              | "cat 1>&2"
