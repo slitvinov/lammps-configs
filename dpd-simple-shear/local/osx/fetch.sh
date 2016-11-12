@@ -7,5 +7,5 @@ set -eux
 . local/osx/utils.sh
 
 cd $HOME/src
-rm -rf $lmp_dir
-git clone --branch rigid --depth 1 https://github.com/lammps/lammps $lmp_dir
+rm -rf "$lmp_dir"
+git clone --branch rigid --depth 1 "$lmp_repo" "$lmp_dir"

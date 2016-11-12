@@ -12,6 +12,7 @@ use_vtk=0 # compile lammps with USER-VTK package
 
 # lammps source code directory (in $HOME/src)
 lmp_dir=lammps-stokes
+lmp_repo=https://github.com/slitvinov/lammps-stokes.git
 lmp_pkg="yes-RIGID "
 
 # gdb related
