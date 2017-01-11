@@ -1,4 +1,4 @@
-/*a: 1; b: 2; k: 0.2; */
+a: 1; b: 2; k: 0.2; om: 1;
 eq: tan(phi) = a/b * tan(k*a*b*t/(a^2 + b^2));
 
 so: solve(eq, phi)[1];
@@ -9,5 +9,20 @@ om_e : diff(phi_e, t);
 subst("^"='pow, scanmap('float, om_e));
 grind(%);
 
-
 draw2d(explicit(om_e, t, 0, 250));
+draw2d(explicit(phi_e, t, 0, 250));
+
+x0: a*cos(phi);
+y0: b*sin(phi);
+
+x: x0*cos(phi0 + om*t) - y0*sin(phi0 + om*t);
+y: x0*sin(phi0 + om*t) + y0*cos(phi0 + om*t);
+
+dl: diff(sqrt(x^2 + y^2), phi);
+
+I(t):=block([phi0: subst('t=t, phi_e), e],
+  e: subst('phi0=phi0, x*y*dl),
+  quad_qag (e, 'phi, 0, 2*%pi, 3, 'epsrel=5d-8)[1]);
+
+trace(I);
+draw2d(explicit('I(t), t, 0, 250));

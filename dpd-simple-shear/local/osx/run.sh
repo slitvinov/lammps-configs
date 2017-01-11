@@ -5,4 +5,5 @@ set -eu
 . local/osx/utils.sh
 
 local/osx/pre.sh
-mpirun -n $np lmp $vars -in in.dpd
+# mpirun -n $np lmp $vars -in in.dpd
+lmp $vars -in in.dpd

@@ -22,12 +22,11 @@ include in.mass
 
 include in.pairs
 include in.neighbor
-
 include in.move.dpd
 
 if "${ndim}==2" then  "fix e2d         all enforce2d"
 
-timestep        ${dt_relax}   
+timestep        ${dt_relax}
 run             ${nstep_relax}
 
 reset_timestep 0
