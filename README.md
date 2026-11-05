@@ -36,3 +36,7 @@ al. (1997)
 2D polymer solution under Lees-Edwards shear, `dpd-2d-polymer-le`
 
 ![polymers in shear](img/polymers-shear.gif)
+
+3D polymer solution in reverse Poiseuille flow, `dpd-2d-reverse-polymer`
+
+![3D polymers](img/polymers-3d.gif)
