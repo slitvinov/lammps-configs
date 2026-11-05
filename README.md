@@ -5,9 +5,9 @@
 - `dpd-3d-polymer-le`: 3D polymer in LE
 - `dpd-2d-polymer-wall`: 2D polymer with moving walls
 
-## LAMMPS 2026
+## Build
 
-Branch `lammps2026` runs with current LAMMPS (30 Sep 2026).
+LAMMPS 30 Sep 2026:
 
 ```
 cp src/* lammps/src/
@@ -20,14 +20,6 @@ The mfsph inputs also need the multiphase styles from
 https://github.com/slitvinov/lammps-sph-multiphase (`MULTIPHASE/*`).
 
 Run scripts use `LMP` and `MPIRUN`, e.g. `LMP=lmp_mpi bash run.sh`.
-
-Reconstructed (the 2012 sources are lost):
-- pair dpd with weight exponent and two cutoffs: `dpd/ext` + `dpd`
-- `bond_style stretching`: `src/bond_stretching.cpp`
-- chain2: `scripts/mkchain.sh` and `create_atoms mol` in `in.generator`
-- pair sdpd: `sdpd/taitwater/isothermal`
-- mfsph: `sph/rhosum/multiphase` + `sph/taitwater/multiphase`
-- `wall/reflect` reftype back: plain `wall/reflect`
 
 ## Examples
 
