@@ -11,4 +11,4 @@ nbeads=$(awk '/monomers\/chain/{print $1}' def.chain)
 bash ../scripts/mkchain.sh def.chain > chain.mol
 ${lmp} -var nbeads ${nbeads} -in in.generator
 
-${mpirun} -np ${np} ${lmp} -in in.fedosov
+${mpirun} -np ${np} ${lmp} -in in.main

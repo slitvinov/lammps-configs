@@ -50,5 +50,5 @@ if "${ndim}==3" then "lattice sc      ${lsp} origin 0.0 0.0 0.0" else &
     "lattice sq  ${lsp} origin 0.1 0.1 0.0"
 variable  lsp   delete
 if "${ndim}==3" then "variable Npart equal ${xsize}*${ysize}*${zsize}*${number_density}" else &
-in.fedosov:    "variable Npart equal ${xsize}*${ysize}*${number_density}"
+in.main:    "variable Npart equal ${xsize}*${ysize}*${number_density}"
 

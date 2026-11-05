@@ -18,7 +18,7 @@ function runsingle() {
 	-f addpolymer.awk dpd.input > dpd.input2
     nbound=$(tail -n 1 dpd.input2 | awk '{print $1}')
     sed "s/_NUMBER_OF_BOUNDS_/$nbound/1" dpd.input2 > dpd.input
-    ${mpirun} -n ${np} ${lmp} -v Nbeads ${Nbeads} -v dpdrandom ${RANDOM} -in in.fedosov
+    ${mpirun} -n ${np} ${lmp} -v Nbeads ${Nbeads} -v dpdrandom ${RANDOM} -in in.main
 }
 
 nsl=10

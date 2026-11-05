@@ -6,7 +6,7 @@
 # vy.av (velocity), rho.av (density), sxy.av (shear stress)
 echo           both
 variable       ndim equal 2
-include        in.fedosov-def
+include        in.def
 
 variable        xsize equal 20   # 50 p. 4
 # use as a small number

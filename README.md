@@ -1,9 +1,9 @@
 # lammps-configs
 
-- `dpd-2d-fedosov`: 2D solvent in equilibrium, LE, and reverse flow
-- `dpd-2d-le-fedosov`: 2D polymer in LE
-- `dpd-3d-le-fedosov`: 3D polymer in LE
-- `dpd-2d-wall-fedosov`: 2D polymer with moving walls
+- `dpd-2d-solvent`: 2D solvent in equilibrium, LE, and reverse flow
+- `dpd-2d-polymer-le`: 2D polymer in LE
+- `dpd-3d-polymer-le`: 3D polymer in LE
+- `dpd-2d-polymer-wall`: 2D polymer with moving walls
 
 ## LAMMPS 2026
 
@@ -31,7 +31,7 @@ Reconstructed (the 2012 sources are lost):
 
 ## Examples
 
-Reverse Poiseuille flow, `dpd-2d-fedosov/in.reverse`
+Reverse Poiseuille flow, `dpd-2d-solvent/in.reverse`
 
 ![reverse Poiseuille](img/reverse-poiseuille.svg)
 
@@ -41,6 +41,6 @@ al. (1997)
 
 ![SPH cylinder](img/sph-cylinder.svg)
 
-2D polymer solution under Lees-Edwards shear, `dpd-2d-le-fedosov`
+2D polymer solution under Lees-Edwards shear, `dpd-2d-polymer-le`
 
 ![polymers in shear](img/polymers-shear.gif)
