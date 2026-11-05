@@ -62,7 +62,7 @@ compute chunk_av_xy_stress all chunk/atom bin/1d x lower 2.0
 fix av_xy_stress all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_xy_stress v_stress_pressure file sxy.av
 
 variable bodyfx atom mass*${gx}*((y>${ysize}/2.0)-(y<${ysize}/2.0))
-fix reverce_periodic all addforce v_bodyfx 0.0 0.0
+fix reverse_periodic all addforce v_bodyfx 0.0 0.0
 
 #thermo          100
 #dump myDump all image 1000 nb.*.jpg type type view 0 0

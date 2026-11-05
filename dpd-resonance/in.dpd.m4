@@ -15,7 +15,7 @@ units		si
 variable       ndim  index 3
 variable       use_sphere index 0
 variable       use_msd index 0
-variable       use_reverce_force index 0
+variable       use_reverse_force index 0
 
 
 variable number_density equal 6
@@ -104,7 +104,7 @@ dump_modify mdump sort id
 
 if "${use_msd}==1" then "include in.msd"
 
-if "${use_reverce_force}==1" then "include in.reverce_force"
+if "${use_reverse_force}==1" then "include in.reverse_force"
 
 if "${ndim}<3" then  "fix e2d         all enforce2d"
 

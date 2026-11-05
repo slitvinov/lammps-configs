@@ -92,7 +92,7 @@ if "${ndim}==3" then "dump mdump all custom 10000 dump.dpd.${ndim} id type xs ys
 "dump mdump all custom 10000 dump.dpd.${ndim} id type xs ys zs vx vy vz"
 
 variable fy atom mass*${gy}*((x>${xsize}/2.0)-(x<${xsize}/2.0))
-fix reverce_periodic all addforce 0.0 v_fy 0.0 
+fix reverse_periodic all addforce 0.0 v_fy 0.0 
 
 if "${ndim}<3" then  "fix e2d         all enforce2d"
 run		${ntime} every 1000 "velocity all zero linear"

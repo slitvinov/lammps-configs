@@ -2,4 +2,4 @@
 boundary     p f p
 
 read_data    ${id}/dpd.output
-include      wall-shear-force/in.wall
+include      wall-shear-velocity/in.wall

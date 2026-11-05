@@ -15,7 +15,7 @@ fix av_vx_hist flow ave/chunk 1 10000 10000 chunk_av_vx_hist vx file ${id}/vx.av
 
 group polymer type 3
 compute chunk_av_nd_hist polymer chunk/atom bin/2d x center 0.01 y lower 0.01 units reduced
-fix av_nd_hist polymer ave/chunk 1 10000 10000 chunk_av_nd_hist density/number file ${id}/polymer.ndensyty.hist ave running
+fix av_nd_hist polymer ave/chunk 1 10000 10000 chunk_av_nd_hist density/number file ${id}/polymer.ndensity.hist ave running
 
 compute chunk_av_sx_bond_hist flow chunk/atom bin/2d x center 0.01 y center 0.01 units reduced
 

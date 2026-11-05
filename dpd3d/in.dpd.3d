@@ -91,7 +91,7 @@ fix av_xz_stress all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_xz_stress v_stress
 
 dump mdump all custom 10000 dump.dpd id type xs ys vx vy
 variable fy atom mass*${gy}*((x>${xsize}/2.0)-(x<${xsize}/2.0))
-fix reverce_periodic all addforce 0.0 v_fy 0.0 
+fix reverse_periodic all addforce 0.0 v_fy 0.0 
 
 thermo          $(round(0.1*v_ntime))
 run		${ntime} every 1000 "velocity all zero linear"

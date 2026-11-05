@@ -39,7 +39,7 @@ fix av_vy all ave/chunk 1 ${ftime} ${avtime} chunk_av_vy vy file vy.av.${Nbeads}
 
 # add external force
 variable fy atom mass*${gy}*((x>${xsize}/2.0)-(x<${xsize}/2.0))
-fix reverce_periodic all addforce 0.0 v_fy 0.0 
+fix reverse_periodic all addforce 0.0 v_fy 0.0 
 
 # production run
 thermo          1000

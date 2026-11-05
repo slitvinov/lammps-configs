@@ -87,12 +87,12 @@ dump_modify mdump sort id
 #dump myDump all image 1000 nb.*.ppm type type view 0 0
 
 variable fy atom mass*${gy}
-fix reverce_periodic all addforce 0.0 v_fy 0.0
+fix reverse_periodic all addforce 0.0 v_fy 0.0
 
 region	     acylinder cylinder z ${cx} ${cy} ${a} INF INF units box
-group	     cylinder_gropup region acylinder
+group	     cylinder_group region acylinder
 
-velocity     cylinder_gropup set 0.0 0.0 0.0
-fix	     fcyl cylinder_gropup setforce 0.0 0.0 0.0
+velocity     cylinder_group set 0.0 0.0 0.0
+fix	     fcyl cylinder_group setforce 0.0 0.0 0.0
 
 run		${ntime}

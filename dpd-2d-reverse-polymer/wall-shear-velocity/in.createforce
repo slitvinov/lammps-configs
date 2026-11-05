@@ -1,1 +1,5 @@
 fix		idnve all nve
+variable     vwall index 1.0
+variable     nvwall equal -${vwall}
+velocity     upper set ${vwall} 0 0 units box
+velocity     lower set ${nvwall} 0 0 units box

@@ -26,7 +26,7 @@ addangle=0
 if grep -q angle_style ${st}/in.* 2>/dev/null; then addangle=1; fi
 periodic_y=1
 if grep -q "boundary *p f" ${st}/in.* 2>/dev/null; then periodic_y=0; fi
-../scritps/addpolymer.sh \
+../scripts/addpolymer.sh \
     input=${id}/dpd.restart \
     polyidfile=${id}/poly.id \
     output=${id}/dpd.output \

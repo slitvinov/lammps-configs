@@ -63,6 +63,6 @@ fix             integrate_fix_stationary group_solid sph/stationary
 
 # variable     gx equal 3e-7
 # variable bodyfx atom mass*${gx}*c_rho_peratom
-# fix reverce_periodic group_fluid addforce 0.0 v_bodyfx 0.0 
+# fix reverse_periodic group_fluid addforce 0.0 v_bodyfx 0.0 
 
 run	     ${ntime}

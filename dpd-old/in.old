@@ -5,7 +5,7 @@ variable ntime equal 10000000
 
 dimension       ${ndim}
 atom_style	bond
-comm_modify vel yes cutoff 10.0
+comm_modify vel yes cutoff 28.0
 
 # lattice parameter
 variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
@@ -38,14 +38,14 @@ pair_coeff 1 2 dpd ${adpdfw} 0.0 ${cutoff_cons}
 
 neighbor	0.5 bin
 neigh_modify    delay 0 every 1
-fix		1 all nve
+fix		1 all nve/limit 0.05
 
 # only for      2 beads
 special_bonds   lj 1 1 1
 bond_style hybrid fene stretching
 variable        fstr equal 10
 variable        szone equal 0.25*${ysize}
-bond_coeff 1 stretching 0 ${fstr} 0 -${INF} ${INF} -${INF} ${szone} -${INF} ${INF}
+bond_coeff 1 stretching 0 0 0 -${INF} ${INF} -${INF} ${szone} -${INF} ${INF}
 bond_coeff 2 fene ${H} ${r0} 0.0 0.0
 
 variable        Nfreq   equal  1000
@@ -54,10 +54,12 @@ include         in.wall
 
 #neigh_modify    exclude type 2 2
 # run before postprocessing 
-variable       predt equal 0.01*${dt}
-timestep      ${predt}
-variable       predt delete 
-run             1000
+timestep      ${dt}
+run             2000
+unfix           1
+fix             1 all nve
+run             2000
+bond_coeff 1 stretching 0 ${fstr} 0 -${INF} ${INF} -${INF} ${szone} -${INF} ${INF}
 
 variable fbody atom mass*${gy}
 fix body_force flow addforce 0.0 v_fbody 0.0 

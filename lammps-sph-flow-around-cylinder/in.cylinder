@@ -5,7 +5,7 @@ echo            both
 units		si
 variable       ndim  index 2
 # domain size 
-variable        Npx  equal 55
+variable        Npx  equal 110
 variable        xsize equal 0.1
 variable        ysize equal 0.1
 variable     cx equal 0.5*${xsize}
@@ -34,7 +34,7 @@ variable        csound equal 5.77e-4
 variable        rho0 equal ${rho_sph}
 
 # number of timesteps
-variable ntime equal 50000
+variable ntime equal 200000
 
 include         in.timestep
 timestep	${dt_sph}
@@ -92,12 +92,12 @@ include         in.profile
 variable     fy atom mass*${gy}
 fix          body_force group_fluid addforce 0.0 v_fy 0.0
 
-region	     acylinder cylinder z ${cx} ${cy} ${a} INF INF units box
-group	     cylinder_gropup region acylinder
-set          group cylinder_gropup type ${type_solid}
+region	     acylinder cylinder z ${cx} ${cy} $(v_a+0.5*v_dh) INF INF units box
+group	     cylinder_group region acylinder
+set          group cylinder_group type ${type_solid}
 
-velocity     cylinder_gropup set 0.0 0.0 0.0
-fix	     fcyl cylinder_gropup setforce 0.0 0.0 0.0
+velocity     cylinder_group set 0.0 0.0 0.0
+fix	     fcyl cylinder_group setforce 0.0 0.0 0.0
 
 pair_coeff * *     sph/taitwater/morris ${rho0} ${csound} ${nu} ${cutoff}
 

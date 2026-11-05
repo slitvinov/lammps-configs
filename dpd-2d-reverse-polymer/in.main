@@ -38,7 +38,7 @@ variable        H equal 50
 # number of timesteps
 timestep	0.005
 comm_modify vel yes cutoff 3.0
-include ${simulationtype}/in.readatmos
+include ${simulationtype}/in.readatoms
 include ${simulationtype}/in.setbonds
 
 mass		* 1.0
@@ -89,7 +89,7 @@ fix av_xy_bond all ave/chunk 1 ${savetime} ${savetime} chunk_av_xy_bond v_vstres
 
 group polymer type 3
 compute chunk_av_nd polymer chunk/atom bin/1d y lower 0.01 units reduced
-fix av_nd polymer ave/chunk 1 ${savetime} ${savetime} chunk_av_nd density/number file ${id}/polymer.ndensyty ave running
+fix av_nd polymer ave/chunk 1 ${savetime} ${savetime} chunk_av_nd density/number file ${id}/polymer.ndensity ave running
 
 include ${simulationtype}/in.setdump
 

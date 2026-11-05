@@ -13,7 +13,7 @@ vars="-var id ${id} \
     -var R ${R}"
 
 ${lmp} ${vars} -in in.geninit
-../scritps/addpolymer.sh \
+../scripts/addpolymer.sh \
     input=${id}/dpd.restart \
     polyidfile=${id}/poly.id \
     output=${id}/dpd.output \

@@ -16,11 +16,11 @@ variable     urw equal  ${upperwallpos}-0.5*${lsp}
 fix lrefwall flow wall/reflect ylo ${lrw} yhi ${urw} units box
 
 
-variable     sigmaxy equal 60.0
+variable     sigmaxy index 1.0
 if "${ndim}==2" then &
-"variable     fwallx equal ${sigmaxy}*${number_density}*${xsize}/count(wall)" &
+"variable     fwallx equal ${sigmaxy}*${xsize}/count(upper)" &
 else &
-"variable     fwallx equal ${sigmaxy}*${number_density}*${xsize}*${zsize}/count(wall)"
+"variable     fwallx equal ${sigmaxy}*${xsize}*${zsize}/count(upper)"
 variable     nfx equal -${fwallx}
 fix	     fupper upper aveforce ${fwallx} NULL NULL
 fix	     flower lower aveforce ${nfx} NULL NULL

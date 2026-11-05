@@ -60,7 +60,7 @@ aux2file=$(mktemp)
 ${restart2data} ${input} ${aux1file}
 awk -v cutoff=${cutoff} -v Nbeads=${Nbeads} -v Nsolvent=${Nsolvent} -v Npoly=${Npoly} \
     -v polyidfile=${polyidfile} -v addangle=${addangle} -v periodic_y=${periodic_y} \
-    -f ${lmpconfigdir}/scritps/addpolymer.awk ${aux1file} > ${aux2file}
+    -f ${lmpconfigdir}/scripts/addpolymer.awk ${aux1file} > ${aux2file}
 
 nangles=$(awk '/^Angles/{f=1; next} /^[A-Z]/{f=0} f && NF' ${aux2file} | wc -l | tr -d ' ')
 nbounds=$(awk '/^Bonds/{f=1; next} /^[A-Z]/{f=0} f && NF' ${aux2file} | wc -l | tr -d ' ')
@@ -72,7 +72,7 @@ fi
      -e "s/_NUMBER_OF_BOUNDS_/$nbounds/1" \
      ${aux2file} > ${aux2file}.tmp && mv ${aux2file}.tmp ${aux2file}
 
-awk -v polymer_type=3 -f ${lmpconfigdir}/scritps/addmolnumber.awk \
+awk -v polymer_type=3 -f ${lmpconfigdir}/scripts/addmolnumber.awk \
     -v polyidfile=${polyidfile} \
     ${aux2file} > ${aux1file}
 

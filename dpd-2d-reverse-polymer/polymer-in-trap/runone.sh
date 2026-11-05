@@ -19,7 +19,7 @@ mkdir -p ${id}
 vars="-var id ${id} -var ndim 2  -var dpdrandom ${RANDOM} -var Nb ${Nb} -var kst ${kst}"
 
 ${lmp} ${vars} -in in.geninit
-${lmpconfigdir}/scritps/addpolymer.sh \
+${lmpconfigdir}/scripts/addpolymer.sh \
     input=${id}/dpd.restart \
     polyidfile=${id}/poly.id \
     output=${id}/dpd.output \

@@ -1,0 +1,4 @@
+bond_style      fene
+special_bonds 	lj 1 1 1
+# FENE parameters
+bond_coeff	1 ${H} ${r0} 0.0 0.0

@@ -7,4 +7,4 @@ for ntime in $(./genid.sh  list=ntime); do
 	echo $fx 
 	echo ${ntime}
     done 
-done| ~/bin/parallel -N2 -j 8 --verbose ./runone.sh {1} {2}
+done| parallel -N2 -j 8 --verbose ./runone.sh {1} {2}
