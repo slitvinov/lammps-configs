@@ -7,6 +7,10 @@ multiphase SPH.
 
 ## Contents
 
+`le` in a directory name means Lees-Edwards boundary conditions:
+periodic boundaries that slide past each other to impose uniform shear
+(`fix deform` with `remap v`).
+
 DPD solvent
 - `dpd-solvent`, `dpd-resonance`: bulk solvent, Backer et al. (2005)
 - `dpd2d`, `dpd3d`, `dpd2d-wall`, `dpd2d-wall-hres`: reverse and wall-bounded Poiseuille flow
