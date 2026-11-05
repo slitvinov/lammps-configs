@@ -5,7 +5,7 @@ set -u
 
 fwallx=$1
 ntime=$2
-lmp=/scratch/work/lammps-ro/src/lmp_linux
+lmp=${LMP:-lmp_mpi}
 savetime=$(./genid.sh list=savetime)
 
 id=$(./genid.sh  fwallx=${fwallx} ntime=${ntime})

@@ -3,8 +3,8 @@ include         in.fedosov-parameters
 variable ntime equal 100000
 
 dimension       ${ndim}
-atom_style	atomic 2
-communicate	single vel yes
+atom_style	atomic
+comm_modify vel yes
 
 # lattice parameter
 variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
@@ -32,8 +32,9 @@ mass		2 ${pmass}
 print           ${cutoff}
 include         in.wall
 
-pair_style	dpd ${T} ${cutoff} 928948 vfd yes vfc no vfr no
-pair_coeff	* * ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_style hybrid/overlay dpd/ext ${T} ${cutoff} 928948 dpd ${T} ${cutoff} 928948
+pair_coeff * * dpd/ext 0.0 ${gamma} 0.0 ${m_power} ${m_power} ${cutoff}
+pair_coeff * * dpd ${adpd} 0.0 ${cutoff_cons}
 
 neighbor	0.5 bin
 neigh_modify    delay 0 every 1
@@ -42,19 +43,23 @@ fix		1 all nve
 
 variable        Nfreq   equal  ${ntime}
 variable        Nrepeat equal  round(0.9*${ntime})
-fix av_vy all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.2 vy file "vy.av"
-fix av_rho all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.5 density/number file "rho.av"
+compute chunk_av_vy all chunk/atom bin/1d x center 0.2
+fix av_vy all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_vy vy file "vy.av"
+compute chunk_av_rho all chunk/atom bin/1d x center 0.5
+fix av_rho all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_rho density/number file "rho.av"
 
 # simulation temperature (do not use vy, flow goes in this direction)
 variable simtemp atom mass*vx^2
-fix av_temp all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_simtemp file "simtemp.av"
+compute chunk_av_temp all chunk/atom bin/1d x lower 0.5
+fix av_temp all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_temp v_simtemp file "simtemp.av"
 
 # stresses are in units of pressure*volume must be divided by per-atom
 # volume to have units of stress (pressue); components of the stress
 # are in the following order xx(1), yy(2), zz(3), xy(4), xz(5), yz(6)
-compute stress flow stress/atom
+compute stress flow stress/atom NULL
 variable stress_pressure atom c_stress[4]*${number_density}
-fix av_xz_stress flow ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_stress_pressure file "sxy.av"
+compute chunk_av_xz_stress flow chunk/atom bin/1d x lower 0.5
+fix av_xz_stress flow ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_xz_stress v_stress_pressure file "sxy.av"
 
 variable fbody atom mass*${gy}
 fix body_force flow addforce 0.0 v_fbody 0.0 

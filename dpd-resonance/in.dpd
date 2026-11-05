@@ -43,8 +43,8 @@ timestep	0.005
 variable time equal dt*step
 
 dimension       ${ndim}
-atom_style	atomic 2
-communicate	single vel yes 
+atom_style	atomic
+comm_modify vel yes
 
 # lattice parameter
 variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
@@ -64,8 +64,8 @@ delete_atoms group extra_atoms
 mass		1 1.0
 #velocity	all create ${T} 87287 loop geom
 
-pair_style	dpd ${T} ${cutoff} 928948
-pair_coeff	* * ${adpd} ${gamma} ${cutoff} 0.25 
+pair_style dpd/ext ${T} ${cutoff} 928948
+pair_coeff * * ${adpd} ${gamma} 0.0 0.25 0.25 ${cutoff}
 
 if "${use_sphere}==1" then "include         in.sphere"
 
@@ -75,12 +75,16 @@ neigh_modify    delay 0 every 1
 
 fix		1 all nve
 
-fix av_rho all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.5 density/number file rho.av.dim${ndim}
+compute chunk_av_rho all chunk/atom bin/1d x center 0.5
+
+fix av_rho all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_rho density/number file rho.av.dim${ndim}
 # simulation temperature (we do not use vy, flow goes in this direction)
 if "${ndim}==3" then  "variable simtemp atom mass*(vx^2+vz^2)/2.0" else &
     "variable simtemp atom mass*vx^2"
 
-fix av_temp all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_simtemp file simtemp.av.dim${ndim}
+compute chunk_av_temp all chunk/atom bin/1d x lower 0.5
+
+fix av_temp all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_temp v_simtemp file simtemp.av.dim${ndim}
 compute alltemp all temp
 variable alltemp_var equal c_alltemp/${T}
 fix alltemp_fix all print 100 "${time} ${alltemp_var}" file "temp.dat"
@@ -88,9 +92,10 @@ fix alltemp_fix all print 100 "${time} ${alltemp_var}" file "temp.dat"
 # stresses are in units of pressure*volume must be divided by per-atom
 # volume to have units of stress (pressue); components of the stress
 # are in the following order xx(1), yy(2), zz(3), xy(4), xz(5), yz(6)
-compute stress all stress/atom
+compute stress all stress/atom NULL
 variable stress_pressure atom c_stress[4]*${number_density}
-fix av_xy_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.5 v_stress_pressure file sxy.av.dim${ndim}
+compute chunk_av_xy_stress all chunk/atom bin/1d x lower 0.5
+fix av_xy_stress all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_xy_stress v_stress_pressure file sxy.av.dim${ndim}
 
 if "${ndim}==2" then "dump mdump all custom 1000 dump.dpd${ndim}.* id type xu yu vx vy" else &
 "dump mdump all custom 1000 dump.dpd${ndim}.* id type xu yu zu vx vy vz"

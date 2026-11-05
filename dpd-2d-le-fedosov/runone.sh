@@ -4,8 +4,8 @@ set -e
 set -u
 
 R=$1
-lmp=/scratch/work/lammps-ro/src/lmp_linux
-mpirun=/scratch/prefix-ppm-mpi/bin/mpirun
+lmp=${LMP:-lmp_mpi}
+mpirun=${MPIRUN:-mpirun}
 
 id=$(./genid.sh R=${R})
 mkdir -p ${id}

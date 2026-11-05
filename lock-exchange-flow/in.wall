@@ -8,7 +8,7 @@ create_atoms	${type_solid} region region_X1
 group	     group_fluid  type ${type_fluid}
 group	     group_solid  type ${type_solid}
 
-set          group  group_solid meso_rho ${rho_sph}
+set          group  group_solid sph/rho ${rho_sph}
 
 #fix refid_X flow wall/reflect xlo ${X0} xhi ${X1} units box
 #fix refid_Y flow wall/reflect ylo ${Y0} yhi ${Y1} units box

@@ -34,8 +34,9 @@ group extra_atoms id > ${Npart}
 delete_atoms group extra_atoms
 mass		1 ${pmass}
 
-pair_style	dpd ${T} ${cutoff} 928948
-pair_coeff	* * ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_style hybrid/overlay dpd/ext ${T} ${cutoff} 928948 dpd ${T} ${cutoff} 928948
+pair_coeff * * dpd/ext 0.0 ${gamma} 0.0 ${m_power} ${m_power} ${cutoff}
+pair_coeff * * dpd ${adpd} 0.0 ${cutoff_cons}
 
 neighbor	0.5  bin
 neigh_modify    delay 0 every 1
@@ -47,15 +48,18 @@ variable        Nrepeat equal  round(0.9*${ntime})
 
 # "profile" corrected temperature
 compute         pTemp all temp/profile 1 1 0 y 5
-fix av_vy all ave/spatial 1 ${Nrepeat} ${Nfreq} y center 2.0 vx file vx.av
+compute chunk_av_vy all chunk/atom bin/1d y center 2.0
+fix av_vy all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_vy vx file vx.av
 
 # stresses are in units of pressure*volume must be divided by per-atom
 # volume to have units of stress (pressue); components of the stress
 # are in the following order xx(1), yy(2), zz(3), xy(4), xz(5), yz(6)
 # The {virial} keyword means include all terms except the kinetic energy {ke}.
-compute stress all stress/atom virial
-variable stress_pressure atom c_stress[4]-c_pTemp[4]/${Npart}
-fix av_xy_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 2.0 v_stress_pressure file sxy.av
+compute stress all stress/atom NULL virial
+variable pTemp4 equal c_pTemp[4]
+variable stress_pressure atom c_stress[4]-v_pTemp4/${Npart}
+compute chunk_av_xy_stress all chunk/atom bin/1d x lower 2.0
+fix av_xy_stress all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_xy_stress v_stress_pressure file sxy.av
 
 variable bodyfx atom mass*${gx}*((y>${ysize}/2.0)-(y<${ysize}/2.0))
 fix reverce_periodic all addforce v_bodyfx 0.0 0.0

@@ -30,8 +30,8 @@ variable       adpd_fw    equal 25.0
 timestep	0.005
 
 dimension       ${ndim}
-atom_style	bond 1
-communicate	single vel yes
+atom_style	bond
+comm_modify vel yes
 
 # lattice parameter
 variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
@@ -54,10 +54,13 @@ mass		* 1.0
 
 velocity	all set 0 0 0
 
-pair_style	dpd ${T} ${cutoff} 928948
-pair_coeff	1 1 ${adpd_ff} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
-pair_coeff	1 2 ${adpd_fw} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
-pair_coeff	2 2 ${adpd_fw} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_style hybrid/overlay dpd/ext ${T} ${cutoff} 928948 dpd ${T} ${cutoff} 928948
+pair_coeff 1 1 dpd/ext 0.0 ${gamma} 0.0 ${m_power} ${m_power} ${cutoff}
+pair_coeff 1 1 dpd ${adpd_ff} 0.0 ${cutoff_cons}
+pair_coeff 1 2 dpd/ext 0.0 ${gamma} 0.0 ${m_power} ${m_power} ${cutoff}
+pair_coeff 1 2 dpd ${adpd_fw} 0.0 ${cutoff_cons}
+pair_coeff 2 2 dpd/ext 0.0 ${gamma} 0.0 ${m_power} ${m_power} ${cutoff}
+pair_coeff 2 2 dpd ${adpd_fw} 0.0 ${cutoff_cons}
 
 neighbor	0.5 bin
 neigh_modify    delay 0 every 1
@@ -68,19 +71,24 @@ fix		2 all deform 1 xy erate 0.01 remap v
 
 variable        Nfreq   equal  ${ntime}
 variable        Nrepeat equal  round(0.9*${ntime})
-fix av_vx all ave/spatial 1 ${Nrepeat} ${Nfreq} y center 0.02 vx file vx.av.${id} units reduced
-fix av_rho all ave/spatial 1 ${Nrepeat} ${Nfreq} y center 0.02 density/number file rho.av.${id} units reduced
+compute chunk_av_vx all chunk/atom bin/1d y center 0.02 units reduced
+fix av_vx all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_vx vx file vx.av.${id}
+compute chunk_av_rho all chunk/atom bin/1d y center 0.02 units reduced
+fix av_rho all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_rho density/number file rho.av.${id}
 # simulation temperature (we do not use vx, flow goes in this direction)
 variable simtemp atom mass*vy^2
 
-fix av_temp all ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.02 v_simtemp file simtemp.av.${id} units reduced
+compute chunk_av_temp all chunk/atom bin/1d y lower 0.02 units reduced
+
+fix av_temp all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_temp v_simtemp file simtemp.av.${id}
 
 # stresses are in units of pressure*volume must be divided by per-atom
 # volume to have units of stress (pressue); components of the stress
 # are in the following order xx(1), yy(2), zz(3), xy(4), xz(5), yz(6)
-compute stress all stress/atom
+compute stress all stress/atom NULL
 variable stress_pressure atom c_stress[4]*${number_density}
-fix av_xy_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 0.02 v_stress_pressure file sxy.av.${id} units reduced
+compute chunk_av_xy_stress all chunk/atom bin/1d x lower 0.02 units reduced
+fix av_xy_stress all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_xy_stress v_stress_pressure file sxy.av.${id}
 
 dump mdump all custom ${savetime} dump.dpd.*.${id} id type xs ys zs vx vy vz
 dump_modify mdump pad 10

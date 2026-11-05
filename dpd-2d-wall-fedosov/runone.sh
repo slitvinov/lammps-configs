@@ -4,9 +4,9 @@ set -e
 set -u
 
 sigmaxy=$1
-lmp=/scratch/work/lammps-ro/src/lmp_linux
-restart2data=/scratch/work/lammps-ro/tools/restart2data
-mpirun=/scratch/prefix-ppm-mpi/bin/mpirun
+lmp=${LMP:-lmp_mpi}
+restart2data="${lmp} -restart2data"
+mpirun=${MPIRUN:-mpirun}
 
 id=$(./genid.sh sigmaxy=${sigmaxy})
 mkdir -p ${id}

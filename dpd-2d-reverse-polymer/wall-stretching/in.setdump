@@ -9,15 +9,14 @@ else &
 "dump idump all image ${savetime} ${id}/image.*.jpg type type atom yes bond atom 0.3 adiam 1.0 zoom 1.8  box yes 0.01 zoom ${zoomfactor} size 1512 1512"
 dump_modify idump pad 10
 
-fix av_vx_hist flow ave/spatial 1 10000 10000 &
-               x center 0.01 &
-               y center 0.01 vx file ${id}/vx.av.hist units reduced ave running
+compute chunk_av_vx_hist flow chunk/atom bin/2d x center 0.01 y center 0.01 units reduced
+
+fix av_vx_hist flow ave/chunk 1 10000 10000 chunk_av_vx_hist vx file ${id}/vx.av.hist ave running
 
 group polymer type 3
-fix av_nd_hist polymer ave/spatial 1 10000 10000 &
-               x center 0.01 &
-               y lower 0.01 density/number file ${id}/polymer.ndensyty.hist units reduced ave running
+compute chunk_av_nd_hist polymer chunk/atom bin/2d x center 0.01 y lower 0.01 units reduced
+fix av_nd_hist polymer ave/chunk 1 10000 10000 chunk_av_nd_hist density/number file ${id}/polymer.ndensyty.hist ave running
 
-fix av_sx_bond_hist flow ave/spatial 1 10000 10000 &
-               x center 0.01 &
-               y center 0.01 v_vstress_bond file ${id}/sxy-bond.hist units reduced ave running
+compute chunk_av_sx_bond_hist flow chunk/atom bin/2d x center 0.01 y center 0.01 units reduced
+
+fix av_sx_bond_hist flow ave/chunk 1 10000 10000 chunk_av_sx_bond_hist v_vstress_bond file ${id}/sxy-bond.hist ave running

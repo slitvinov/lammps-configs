@@ -1,7 +1,7 @@
 # LAMMPS does not compute temperature for single atom
 echo     both
 
-atom_modify map array sort 0.0 0.0
+atom_modify map array sort 0 0.0
 region		box block 0 10 0 10 0 10 units box
 create_box	1 box
 mass            1 1

@@ -30,8 +30,8 @@ variable       savetime equal 1000
 timestep	0.005
 
 dimension       ${ndim}
-atom_style	bond 1
-communicate	single vel yes
+atom_style	bond
+comm_modify vel yes
 
 # lattice parameter
 variable lsp    equal 1.0/${number_density}^(1.0/${ndim})
@@ -52,9 +52,11 @@ mass		* 1.0
 
 velocity	all set 0 0 0
 
-pair_style	dpd ${T} ${cutoff} 928948
-pair_coeff	1 1 ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
-pair_coeff	* * ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_style hybrid/overlay dpd/ext ${T} ${cutoff} 928948 dpd ${T} ${cutoff} 928948
+pair_coeff 1 1 dpd/ext 0.0 ${gamma} 0.0 ${m_power} ${m_power} ${cutoff}
+pair_coeff 1 1 dpd ${adpd} 0.0 ${cutoff_cons}
+pair_coeff * * dpd/ext 0.0 ${gamma} 0.0 ${m_power} ${m_power} ${cutoff}
+pair_coeff * * dpd ${adpd} 0.0 ${cutoff_cons}
 
 neighbor	0.5 bin
 neigh_modify    delay 0 every 1
@@ -69,19 +71,23 @@ variable        Nrepeat equal  round(0.9*${ntime})
 
 # "profile" corrected temperature
 compute         pTemp all temp/profile 1 1 0 y 5
-fix av_vx all ave/spatial 1 ${Nrepeat} ${Nfreq} y center 0.05 vx file ${id}/vx.av units reduced
+compute chunk_av_vx all chunk/atom bin/1d y center 0.05 units reduced
+fix av_vx all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_vx vx file ${id}/vx.av
 
 # stresses are in units of pressure*volume must be divided by per-atom
 # volume to have units of stress (pressue); components of the stress
 # are in the following order xx(1), yy(2), zz(3), xy(4), xz(5), yz(6)
 # The {virial} keyword means include all terms except the kinetic energy {ke}.
-compute stress all stress/atom virial
-variable stress_pressure atom c_stress[4]-c_pTemp[4]/count(all)
-fix av_xy_stress all ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.05 v_stress_pressure file ${id}/sxy.av units reduced
+compute stress all stress/atom NULL virial
+variable pTemp4 equal c_pTemp[4]
+variable stress_pressure atom c_stress[4]-v_pTemp4/count(all)
+compute chunk_av_xy_stress all chunk/atom bin/1d y lower 0.05 units reduced
+fix av_xy_stress all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_xy_stress v_stress_pressure file ${id}/sxy.av
 
-compute stress_bond all stress/atom bond
+compute stress_bond all stress/atom NULL bond
 variable vstress_bond atom c_stress_bond[4]
-fix av_xy_bond all ave/spatial 1 ${Nrepeat} ${Nfreq} y lower 0.05 v_vstress_bond file ${id}/sxy-bond.av units reduced
+compute chunk_av_xy_bond all chunk/atom bin/1d y lower 0.05 units reduced
+fix av_xy_bond all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_xy_bond v_vstress_bond file ${id}/sxy-bond.av
 
 thermo ${savetime}
 dump mdump all custom ${savetime} ${id}/dump.dpd.* xs ys zs vx vy vz type mol

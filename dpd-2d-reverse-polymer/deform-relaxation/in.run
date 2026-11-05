@@ -4,20 +4,23 @@ run ${ntime}
 bond_coeff 1 ${H} ${r0} 0 0 0 -${INF} ${INF} -${INF} ${INF} -${INF} ${INF}
 
 # unfix sxy, sxy-bond, polymer-ndensity, vx
-unfix av_vx
+unfix av_vx_running
+unfix av_vx_one
 unfix av_xy_stress
 unfix av_xy_bond
 unfix av_nd
 
 # create new averages
 variable saverelax equal 1000
-fix win_vx all ave/spatial 1 ${saverelax} ${saverelax} &
-y center 0.01 v_vx_cm file ${id}/vx.relax units reduced ave one
+compute chunk_win_vx all chunk/atom bin/1d y center 0.01 units reduced
+fix win_vx all ave/chunk 1 ${saverelax} ${saverelax} chunk_win_vx v_vx_cm file ${id}/vx.relax ave one
 
-fix win_xy_stress all ave/spatial 1 ${saverelax} ${saverelax} &
-y lower 0.01 v_stress_pressure file ${id}/sxy.relax units reduced ave one
+compute chunk_win_xy_stress all chunk/atom bin/1d y lower 0.01 units reduced
 
-fix win_xy_bond all ave/spatial 1 ${saverelax} ${saverelax} &
-y lower 0.01 v_vstress_bond file ${id}/sxy-bond.relax units reduced ave one
+fix win_xy_stress all ave/chunk 1 ${saverelax} ${saverelax} chunk_win_xy_stress v_stress_pressure file ${id}/sxy.relax ave one
+
+compute chunk_win_xy_bond all chunk/atom bin/1d y lower 0.01 units reduced
+
+fix win_xy_bond all ave/chunk 1 ${saverelax} ${saverelax} chunk_win_xy_bond v_vstress_bond file ${id}/sxy-bond.relax ave one
 
 run ${ntime}

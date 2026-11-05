@@ -1,2 +1,3 @@
+variable        R index 0.0
 fix		idnve all nve
 fix		deffix all deform 1 xy erate ${R} remap v

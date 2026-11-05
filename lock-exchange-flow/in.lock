@@ -26,7 +26,7 @@ variable        nu equal 1e-3
 variable        mu equal ${nu}/${rho_sph}
 variable        csound equal 5.77e-3
 
-variable        rho0 equal 0.1*${rho_sph}
+variable        rho0 equal ${rho_sph}
 
 # number of timesteps
 variable ntime equal 50000
@@ -35,8 +35,8 @@ include         in.timestep
 timestep	${dt_sph}
 
 dimension       ${ndim}
-atom_style      meso
-communicate	single vel yes
+atom_style      sph
+comm_modify vel yes
 
 
 include         in.createatoms
@@ -54,11 +54,11 @@ neighbor	${eps} bin
 neigh_modify    delay 0 every 1
 
 
-compute         rho_peratom all meso_rho/atom
+compute         rho_peratom all sph/rho/atom
 include         in.dump
 
-fix             integrate_fix_full group_fluid  meso
-fix             integrate_fix_stationary group_solid meso/stationary
+fix             integrate_fix_full group_fluid  sph
+fix             integrate_fix_stationary group_solid sph/stationary
 
 
 # variable     gx equal 3e-7

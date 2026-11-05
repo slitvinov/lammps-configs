@@ -6,7 +6,7 @@ set -u
 source vars.sh
 fwallx=$1
 
-lmp=/scratch/work/lammps-ro/src/lmp_linux
+lmp=${LMP:-lmp_mpi}
 ntime=${n1time}
 id=$(getid)
 ${lmp} \

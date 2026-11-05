@@ -42,7 +42,7 @@ variable        FreqOuput equal 10000
 
 dimension       ${ndim}
 atom_style	bond
-communicate	single vel yes
+comm_modify vel yes
 
 # lattice parameter
 variable lsp    equal 1.0/${number_density}^(1.0/${ndim})

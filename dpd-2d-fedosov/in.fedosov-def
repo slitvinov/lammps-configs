@@ -1,6 +1,6 @@
 units		si
 dimension       ${ndim}
-communicate	single vel yes
+comm_modify vel yes
 
 variable        number_density equal 3  # Table 1
 variable        kb equal 1.3806488e-23 

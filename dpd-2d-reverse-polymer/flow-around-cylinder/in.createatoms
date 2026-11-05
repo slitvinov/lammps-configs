@@ -14,6 +14,6 @@ variable        Nsmall equal ${Npart}*(${Stot}-${Scyl})/${Stot}
 
 # TODO: find the way to generate the right number of atoms
 # delete extra atoms
-group extra_atoms id > ${Nsmall}
+group extra_atoms id > $(round(v_Nsmall))
 delete_atoms group extra_atoms
 

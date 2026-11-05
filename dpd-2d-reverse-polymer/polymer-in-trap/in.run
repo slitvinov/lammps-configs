@@ -1,9 +1,10 @@
+variable        kst index 1.0
 # first move polymer to the center
 variable x0 equal 0.5*${xsize}
 variable y0 equal 0.5*${ysize}
 
 if "${ndim}==3" then &
-"variable z0 equal 0.5*${Lz}"
+"variable z0 equal 0.5*${zsize}"
 
 include polymer-in-trap/in.prerun
 

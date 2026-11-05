@@ -21,9 +21,12 @@ variable dfy atom ${fmod}*v_geomy*v_mask
 fix drforce all addforce v_dfx v_dfy 0
 
 # switching off conservative force
-pair_coeff	  *    *  0.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
-pair_coeff	${s} ${w} 0.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
-pair_coeff	${w} ${p} 0.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_coeff * * dpd/ext 0.0 ${gamma} 0.0 ${m_power} ${m_power} ${cutoff}
+pair_coeff * * dpd 0.0 0.0 ${cutoff_cons}
+pair_coeff ${s} ${w} dpd/ext 0.0 ${gamma} 0.0 ${m_power} ${m_power} ${cutoff}
+pair_coeff ${s} ${w} dpd 0.0 0.0 ${cutoff_cons}
+pair_coeff ${w} ${p} dpd/ext 0.0 ${gamma} 0.0 ${m_power} ${m_power} ${cutoff}
+pair_coeff ${w} ${p} dpd 0.0 0.0 ${cutoff_cons}
 group        flow type ${s} ${p}
 
 # drive particles away from the rectangle
@@ -39,9 +42,12 @@ group        gvoid type ${w}
 fix	     nvoid gvoid setforce 0 0 0
 
 # switch on conservative force
-pair_coeff	  *    *  ${adpd_ss} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
-pair_coeff	${s} ${w} 30.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
-pair_coeff	${w} ${p} 30.0 ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_coeff * * dpd/ext 0.0 ${gamma} 0.0 ${m_power} ${m_power} ${cutoff}
+pair_coeff * * dpd ${adpd_ss} 0.0 ${cutoff_cons}
+pair_coeff ${s} ${w} dpd/ext 0.0 ${gamma} 0.0 ${m_power} ${m_power} ${cutoff}
+pair_coeff ${s} ${w} dpd 30.0 0.0 ${cutoff_cons}
+pair_coeff ${w} ${p} dpd/ext 0.0 ${gamma} 0.0 ${m_power} ${m_power} ${cutoff}
+pair_coeff ${w} ${p} dpd 30.0 0.0 ${cutoff_cons}
 
 # add body force
 variable bodyfx atom mass*${gx}

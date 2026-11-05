@@ -3,9 +3,9 @@
 set -e
 set -u
 
-lmp=../../src/lmp_linux
-mpirun=/scratch/prefix-mpich/bin/mpirun
-restart2data=../../tools/restart2data
+lmp=${LMP:-lmp_mpi}
+mpirun=${MPIRUN:-mpirun}
+restart2data="${lmp} -restart2data"
 # number of processors
 np=1
 awk_debug_flags=

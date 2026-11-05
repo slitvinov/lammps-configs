@@ -3,7 +3,7 @@
 set -e
 set -u
 
-varlist="addangle input output polyidfile cutoff Nbeads Nsolvent Npoly"
+varlist="addangle input output polyidfile cutoff Nbeads Nsolvent Npoly periodic_y"
 # returns true if "$1" is a variable name defined in varlist (see genid_def.sh)
 function findvar() {
     local name="$1"
@@ -47,6 +47,9 @@ fi
 polyidfile=poly.id
 cutoff=3.0
 addangle=0
+periodic_y=1
+restart2data=${restart2data:-"${LMP:-lmp_mpi} -restart2data"}
+lmpconfigdir=${lmpconfigdir:-$(cd "$(dirname "$0")/.." && pwd)}
 # read input parameters
 readinputargs $*
 
@@ -56,16 +59,18 @@ aux2file=$(mktemp)
 # TODO: change location of the awk scripts
 ${restart2data} ${input} ${aux1file}
 awk -v cutoff=${cutoff} -v Nbeads=${Nbeads} -v Nsolvent=${Nsolvent} -v Npoly=${Npoly} \
-    -v polyidfile=${polyidfile} -v addangle=${addangle} \
+    -v polyidfile=${polyidfile} -v addangle=${addangle} -v periodic_y=${periodic_y} \
     -f ${lmpconfigdir}/scritps/addpolymer.awk ${aux1file} > ${aux2file}
 
-nangles=$(tail -n 1 ${aux2file} | awk '{print $1}')
-nbounds=$(awk '/Angles/{exit} NF' ${aux2file} | tail -n 1  | awk '{print $1}')
+nangles=$(awk '/^Angles/{f=1; next} /^[A-Z]/{f=0} f && NF' ${aux2file} | wc -l | tr -d ' ')
+nbounds=$(awk '/^Bonds/{f=1; next} /^[A-Z]/{f=0} f && NF' ${aux2file} | wc -l | tr -d ' ')
+if [ "${nbounds}" = 0 ]; then
+    awk '!/^Bonds$/' ${aux2file} > ${aux2file}.tmp && mv ${aux2file}.tmp ${aux2file}
+fi
 
- sed -i \
-     -e "s/_NUMBER_OF_ANGLES_/$nangles/1" \
+ sed -e "s/_NUMBER_OF_ANGLES_/$nangles/1" \
      -e "s/_NUMBER_OF_BOUNDS_/$nbounds/1" \
-     ${aux2file}
+     ${aux2file} > ${aux2file}.tmp && mv ${aux2file}.tmp ${aux2file}
 
 awk -v polymer_type=3 -f ${lmpconfigdir}/scritps/addmolnumber.awk \
     -v polyidfile=${polyidfile} \

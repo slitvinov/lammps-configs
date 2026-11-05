@@ -2,7 +2,7 @@ echo     both
 
 dimension 2
 units       si
-atom_modify map array sort 0.0 0.0
+atom_modify map array sort 0 0.0
 region	    box block 0 10 0 10 -0.2 0.1 units box
 create_box  1 box
 mass        1 1

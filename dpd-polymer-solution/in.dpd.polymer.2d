@@ -6,8 +6,8 @@ read_data dpd.input
 bond_style      fene
 special_bonds 	lj 1 1 1
 
-pair_style	dpd ${T} ${cutoff} ${dpdrandom}
-pair_coeff	1 1 ${adpd} ${gamma} ${cutoff} ${m_power}
+pair_style dpd/ext ${T} ${cutoff} ${dpdrandom}
+pair_coeff 1 1 ${adpd} ${gamma} 0.0 ${m_power} ${m_power} ${cutoff}
 
 neigh_modify    delay 0 every 1
 
@@ -34,7 +34,8 @@ fix pr_rg all print ${FreqOuput} "${prg}" file rg.dat.${Nbeads} screen no
 variable        runtime equal round(0.9*${ntime})
 variable        avtime equal round(0.8*${ntime})
 variable        ftime equal round(0.1*${ntime})
-fix av_vy all ave/spatial 1 ${ftime} ${avtime} x center 0.2 vy file vy.av.${Nbeads}
+compute chunk_av_vy all chunk/atom bin/1d x center 0.2
+fix av_vy all ave/chunk 1 ${ftime} ${avtime} chunk_av_vy vy file vy.av.${Nbeads}
 
 # add external force
 variable fy atom mass*${gy}*((x>${xsize}/2.0)-(x<${xsize}/2.0))

@@ -6,6 +6,7 @@ variable       ndim  index 2
 # domain size 
 variable        Npx  equal 55
 variable        xsize equal 2e-3
+variable        dh equal ${xsize}/${Npx}
 variable        ysize equal 1e-3
 if "${ndim}==3" then "variable        zsize equal 1e-3"
 
@@ -31,8 +32,8 @@ variable ntime equal 5000
 timestep	1e-4
 
 dimension       ${ndim}
-atom_style	mfsph
-communicate	single vel yes
+atom_style	sph
+comm_modify vel yes
 
 if "${ndim}==3" then "lattice sc      ${dh} origin 0.5 0.5 0.5" else &
     "lattice sq  ${dh} origin 0.5 0.5 0.0"
@@ -42,13 +43,16 @@ create_box	1 box
 create_atoms    1 box
 #create_atoms    1 random ${Npart} 123456 box
  
-variable        dh equal ${xsize}/${Npx}
 variable        m equal ${rho_sph}*${dh}^${ndim}
 mass		1 ${m}
 print           "mass: ${m}"
-pair_style	mfsph ${cutoff}
-pair_coeff	1 1 ${mu} ${csound} ${rho0} ${gamma}
-
+fix mp all property/atom rmass d2_cg 3 ghost yes
+set type 1 mass ${m}
+compute rhoatom all sph/rho/atom
+variable rhoat atom c_rhoatom
+pair_style	hybrid/overlay sph/rhosum/multiphase 1 sph/taitwater/multiphase
+pair_coeff	1 1 sph/rhosum/multiphase ${cutoff}
+pair_coeff	1 1 sph/taitwater/multiphase ${rho0} ${csound} ${mu} ${gamma} ${cutoff} 0
 neighbor	1e-5 bin
 neigh_modify    delay 0 every 1
 
@@ -56,11 +60,13 @@ fix		1 all nve
 
 variable        Nfreq   equal  ${ntime}
 variable        Nrepeat equal  round(0.9*${ntime})
-fix av_vy all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.2 vy file "vy.av"
-fix av_rho all ave/spatial 1 ${Nrepeat} ${Nfreq} x center 0.5 density/number file "rho.av"
+compute chunk_av_vy all chunk/atom bin/1d x center 0.2
+fix av_vy all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_vy vy file "vy.av"
+compute chunk_av_rho all chunk/atom bin/1d x center 0.5
+fix av_rho all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_av_rho density/number file "rho.av"
 
-if "${ndim}==3" then "dump mdump all custom 1000 dump.dpd.* id type x y z vx vy vz sph_rho" &
-    else "dump mdump all custom 1000 dump.dpd.* id type x y vx vy sph_rho"
+if "${ndim}==3" then "dump mdump all custom 1000 dump.dpd.* id type x y z vx vy vz c_rhoatom" &
+    else "dump mdump all custom 1000 dump.dpd.* id type x y vx vy c_rhoatom"
 
 dump_modify mdump sort id
 #dump myDump all image 1000 nb.*.ppm type type view 0 0

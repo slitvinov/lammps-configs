@@ -37,7 +37,7 @@ timestep	0.005 # TODO:
 
 dimension       ${ndim}
 atom_style	atomic
-communicate	single vel yes
+comm_modify vel yes
 variable        id index "solvent"
 
 # lattice parameter
@@ -61,8 +61,9 @@ delete_atoms group extra_atoms
 mass		1 ${pmass}
 velocity     all set 500.0 500.0 0.0 units box
 
-pair_style	dpd ${T} ${cutoff} 928948
-pair_coeff	* * ${adpd} ${gamma} ${cutoff} ${m_power} ${cutoff_cons}
+pair_style hybrid/overlay dpd/ext ${T} ${cutoff} 928948 dpd ${T} ${cutoff} 928948
+pair_coeff * * dpd/ext 0.0 ${gamma} 0.0 ${m_power} ${m_power} ${cutoff}
+pair_coeff * * dpd ${adpd} 0.0 ${cutoff_cons}
 
 neighbor	0.5  bin
 neigh_modify    delay 0 every 1
@@ -79,13 +80,16 @@ variable        ntemp atom c_thermo_temp*${kb}
 compute         pTemp all temp/profile 1 1 0 xy 5 5
 variable        proftemp atom c_pTemp*${kb}
 
-compute stress_virial all stress/atom virial
-variable stress_all atom c_stress_virial[4]-c_pTemp[4]/${Npart}
-fix id_stress_all all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 2.0 v_stress_all file sxy.av
+compute stress_virial all stress/atom NULL virial
+variable pTemp4 equal c_pTemp[4]
+variable stress_all atom c_stress_virial[4]-v_pTemp4/${Npart}
+compute chunk_id_stress_all all chunk/atom bin/1d x lower 2.0
+fix id_stress_all all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_id_stress_all v_stress_all file sxy.av
 
-compute stress_old all stress/atom
+compute stress_old all stress/atom NULL
 variable stress_old atom c_stress_old[4]+c_thermo_temp[4]/${Npart}
-fix id_stress_old all ave/spatial 1 ${Nrepeat} ${Nfreq} x lower 2.0 v_stress_old file sxy-old.av
+compute chunk_id_stress_old all chunk/atom bin/1d x lower 2.0
+fix id_stress_old all ave/chunk 1 ${Nrepeat} ${Nfreq} chunk_id_stress_old v_stress_old file sxy-old.av
 
 if "${ndim}==2" then "fix e2d all enforce2d"
 thermo 10

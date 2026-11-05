@@ -1,9 +1,9 @@
 echo               both
 dimension          2
 units              si
-atom_modify        map array sort 0.0 0.0
-atom_style         meso
-communicate	   single vel yes
+atom_modify        map array sort 0 0.0
+atom_style         sph
+comm_modify vel yes
 #2D box
 # domain size
 variable          Lx equal 1.000e-3
@@ -38,14 +38,14 @@ pair_coeff * *     sph/taitwater 1000 0.1 1.0 ${h}
 pair_coeff * *     sph/rhosum ${h}
 
 # do full time integration
-fix                integrate_fix_full all  meso
+fix                integrate_fix_full all  sph
 
 neighbor           3.0e-6 bin
 timestep           1e-5
 
 variable           force_sdpd_fx equal fx[1]
 variable           force_sdpd_fy equal fy[1]
-compute            rho_peratom all meso_rho/atom
+compute            rho_peratom all sph/rho/atom
 dump               dump_id all custom 1 dump*.dat x y vx vy c_rho_peratom
 
 variable      xone equal x[1]

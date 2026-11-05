@@ -38,8 +38,8 @@ include         in.timestep
 timestep	${dt_sph}
 
 dimension       ${ndim}
-atom_style	mfsph
-communicate	single vel yes
+atom_style	sph
+comm_modify vel yes
 
 if "${ndim}==3" then "lattice sc      ${dh} origin 0.5 0.5 0.5" else &
     "lattice sq  ${dh} origin 0.5 0.5 0.0"
@@ -47,14 +47,17 @@ if "${ndim}==3" then "region		box block 0 ${xsize} 0 ${ysize} 0 ${zsize} units b
     "region		box block 0 ${xsize} 0 ${ysize} -${EPS} ${EPS} units box"
 create_box	1 box
 #create_atoms    1 box
-create_atoms    1 random ${Npart} 123456 box
- 
+create_atoms    1 box
 variable        m equal ${rho_sph}*${dh}^${ndim}
 mass		1 ${m}
 print           "mass: ${m}"
-pair_style	mfsph ${cutoff}
-pair_coeff	1 1 ${mu} ${csound} ${rho0} ${gamma}
-
+fix mp all property/atom rmass d2_cg 3 ghost yes
+set type 1 mass ${m}
+compute rhoatom all sph/rho/atom
+variable rhoat atom c_rhoatom
+pair_style	hybrid/overlay sph/rhosum/multiphase 1 sph/taitwater/multiphase
+pair_coeff	1 1 sph/rhosum/multiphase ${cutoff}
+pair_coeff	1 1 sph/taitwater/multiphase ${rho0} ${csound} ${mu} ${gamma} ${cutoff} 0
 neighbor	${EPS} bin
 neigh_modify    delay 0 every 1
 
@@ -77,8 +80,8 @@ variable        yposlo equal ${ysize}-3.0*${dh}
 variable        yposhi equal ${ysize}
 include         in.profile
 
-if "${ndim}==3" then "dump mdump all custom 1000 dump.dpd.* id type x y z vx vy vz sph_rho" &
-    else "dump mdump all custom 1000 dump.dpd.* id type x y vx vy sph_rho"
+if "${ndim}==3" then "dump mdump all custom 1000 dump.dpd.* id type x y z vx vy vz c_rhoatom" &
+    else "dump mdump all custom 1000 dump.dpd.* id type x y vx vy c_rhoatom"
 
 dump_modify mdump sort id
 #dump myDump all image 1000 nb.*.ppm type type view 0 0

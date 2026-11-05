@@ -7,7 +7,7 @@ function isbound(atom_number,        period, rem, current_npoly) {
   period = Nbeads + Nsolvent
   rem = (atom_number-1)%(period) # from 0 to period-1
   current_npoly = int(atom_number/period) + 1
-  return (rem<Nbeads-1) && (atom_number<iatom)  && (current_npoly<=Npoly)
+  return (rem<Nbeads-1) && (atom_number<iatom)  && (current_npoly<=Npoly) && !(atom_number in nobond)
 }
 
 BEGIN {
@@ -18,6 +18,9 @@ BEGIN {
   lo=1; hi=2
   x=1; y=2; z=3
   iatom=0
+  if (length(periodic_y)==0) {
+    periodic_y = 1
+  }
   if (Npoly=="full") {
     Npoly = 1e22
   }
@@ -84,7 +87,8 @@ inatoms{
   if (iatom>1) {
     for (idim=1; idim<=3; idim++) {
       if (fabs(R[idim]- prevR[idim])>cutoff) {
-        if (R[idim]<prevR[idim]) image[idim]++; else image[idim]--
+        if (idim==y && !periodic_y) nobond[iatom-1] = 1
+        else if (R[idim]<prevR[idim]) image[idim]++; else image[idim]--
       }
     }
   } else {
